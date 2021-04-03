@@ -121,7 +121,6 @@ a:hover {
   }
 }
 
-
 @media (max-width: 576px) {
   .post-content img {
     max-width: 400px;
