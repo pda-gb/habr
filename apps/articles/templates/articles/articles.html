@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+          <h1>{{ hub }}</h1>
+          <hr />
+          {% for article in articles %}
+            {% include 'articles/includes/post.html' %}
+          {% empty %}
+            <p>Тут пока нет статей.</p>
+          {% endfor %}
+        </div>
+        <div class="col-1"></div>
+        <div class="col-3">
+          <div class="mini-post-column">
+            <h2 class="mb-4">Читают сейчас</h2>
+            <hr>
+            {% for article in read_now %}
+              {% include 'articles/includes/post.html' %}
+            {% empty %}
+              <p>Тут пока нет статей.</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+{% endblock content %}

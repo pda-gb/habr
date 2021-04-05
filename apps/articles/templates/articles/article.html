@@ -1,0 +1,95 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-8">
+      <div class="post mb-4">
+        <div class="post-head">
+          <a href="#" class="post-author">
+            <img src="{% static 'img/avatar.jpg' %}" alt="" />{{ article.author.username }}</a>
+          <span>сегодня в 13:00</span>
+          <a href="#" class="post-link"
+            >{{ article.title }}</a
+          >
+        </div>
+        <div class="post-content mt-3">
+          <img src="{% static 'img/photo2.jpg' %}" alt="" /><br />
+          <br />
+          <span>{{ article.body }}</span>
+          <div class="post-status">
+            <a href="#"><img src="{% static 'svg/like.svg' %}" /></a>
+            <small class="text-muted">{{ article.likes }}</small>
+            <a href="#"><img src="{% static 'svg/dislike.svg' %}" /></a>
+            <small class="text-muted">{{ article.dislikes }}</small>
+            <a href="#"><img src="{% static 'svg/bookmark.svg' %}" /></a>
+            <small class="text-muted">{{ article.bookmarks }}</small>
+            <img src="{% static 'svg/view.svg' %}" /><small class="text-muted">{{ article.views }}</small>
+            <img src="{% static 'svg/comment.svg' %}" /><small class="text-muted">2</small>
+          </div>
+        </div>
+      </div>
+      <div class="author-row">
+        <div class="author-block">
+          <img class="author-avatar" src="{% static 'svg/avatar.jpg' %}" alt="" />
+          <div class="author-rating">
+            <div class="author-rating-num">{{ article.author.rating }}</div>
+            <div class="author-rating-text">Рейтинг автора</div>
+          </div>
+        </div>
+        <div class="author-block">
+          <a href="#">
+            <div class="author-username">{{ article.author.username }}</div>
+          </a>
+        </div>
+      </div>
+      <div class="comment-row">
+        <h2 class="mb-4">Комментарии</h2>
+        <hr />
+        <div class="m-4">
+          <div>
+            <a href="#" class="post-author">
+              <img src="{% static 'img/avatar.jpg' %}" alt="" />
+              Username
+            </a>
+            <span>сегодня в 13:00</span>
+            <div class="comment-rating">
+              <a href="#"><img src="{% static 'svg/like.svg' %}" /></a>
+              <small class="text-muted">-9</small>
+              <a href="#"><img src="{% static 'svg/dislike(filled).svg' %}" /></a>
+            </div>
+          </div>
+          <div class="comment-text">
+            <div>Прочитал, ничего не понял, гугл переводчик тож тупит</div>
+          </div>
+        </div>
+        <div class="m-4">
+          <div>
+            <a href="#" class="post-author">
+              <img src="{% static 'img/avatar.jpg' %}" alt="" />
+              Username
+            </a>
+            <span>сегодня в 13:00</span>
+            <div class="comment-rating">
+              <a href="#"><img src="{% static 'svg/like(filled).svg' %}" /></a>
+              <small class="text-muted">55</small>
+              <a href="#"><img src="{% static 'svg/dislike.svg' %}" /></a>
+            </div>
+          </div>
+          <div class="comment-text">
+            <div>Отличная статья, нужно учить латынь</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-1"></div>
+    <div class="col-3">
+      <div class="mini-post-column">
+        <h2 class="mb-4">Читают сейчас</h2>
+        <hr />
+        {% for article in read_now %}
+            {% include 'articles/includes/post.html' %}
+        {% empty %}
+            <p>Тут пока нет статей.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

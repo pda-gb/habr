@@ -1,0 +1,15 @@
+<div class="mini-post">
+  <a href="#">{{ article.title }}</a>
+  <div class="post-status mini-post-status">
+    <img src="{% static 'svg/star(white).svg' %}" /><small class="text-muted"
+      >{{ article.stars }}</small
+    >
+    <img src="{% static 'svg/bookmark.svg' %}" /><small class="text-muted"
+      >{{ article.bookmarks }}</small
+    >
+    <img src="{% static 'svg/view.svg' %}" /><small class="text-muted"
+      >{{ article.views }}</small
+    >
+  </div>
+  <hr />
+</div>
