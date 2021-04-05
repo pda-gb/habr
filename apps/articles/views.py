@@ -1,13 +1,14 @@
 from django.shortcuts import render
-from  apps.articles.models import Article
+from apps.articles.models import Article
 
 
 def main_page(request):
     """рендер главной страницы"""
-    title = 'Главная страница'
+    title = 'главная страница'
+    articles = Article.get_annotation()
     page_data = {
         'title': title,
-        'articles': Article.get_annotation(),
+        'articles': articles,
 
     }
-    return render(request, 'articles/index.html', page_data)
+    return render(request, 'articles/articles.html', page_data)
