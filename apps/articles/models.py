@@ -1,6 +1,5 @@
 from django.db import models
 
-from django.conf import settings
 from django.utils import timezone
 
 from apps.authorization.models import HabrUser
@@ -52,8 +51,16 @@ class Article(models.Model):
         """
         return Article.objects.filter(draft=False)
 
-    def get_annotation(self):
-        pass
+    @staticmethod
+    def get_annotation() -> dict:
+        """
+        Return a dictionary, where the key is pk, and the value is the first 500 words of the article.
+        """
+        annotation = {}
+        articles = Article.get_articles()
+        for article in articles:
+            annotation[article.id] = str(article.body.split(' ')[:500])
+        return annotation
 
 
 class Comment(models.Model):
