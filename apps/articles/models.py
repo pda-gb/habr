@@ -33,21 +33,24 @@ class Article(models.Model):
 
     created = models.DateTimeField(verbose_name='создана', auto_now_add=True)
     updated = models.DateTimeField(verbose_name='обновлена', auto_now=True)
-    publish = models.DateTimeField(verbose_name='опубликована', default=timezone.now)
+    published = models.DateTimeField(verbose_name='дата публикации', default=timezone.now)
 
-    no_published = models.BooleanField(verbose_name='черновик', default=True)
+    draft = models.BooleanField(verbose_name='черновик', default=True)
 
     class Meta:
         verbose_name = 'статья'
         verbose_name_plural = 'статьи'
-        ordering = ('-publish',)
+        ordering = ('-published',)
 
     def __str__(self):
         return self.title
 
     @staticmethod
     def get_articles():
-        return Article.objects.filter(no_published=False)
+        """
+        Returns all published articles
+        """
+        return Article.objects.filter(draft=False)
 
     def get_annotation(self):
         pass
