@@ -70,7 +70,6 @@ a:hover {
 .post-status img {
   width: 1.5em;
   height: 1em;
-  filter: brightness(0.5) sepia(1) hue-rotate(-70deg) saturate(5);
 }
 
 .mini-post a {
