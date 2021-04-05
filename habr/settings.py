@@ -3,12 +3,10 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-secret_value = dict()
-
 with open(BASE_DIR.joinpath('secret.json'), 'r') as secret_file:
     secret_value = json.load(secret_file)
 
-SECRET_KEY = secret_value.get("SECRET_KEY", "123")
+SECRET_KEY = secret_value["SECRET_KEY"]
 
 DEBUG = secret_value.get("DEBUG", True)
 
