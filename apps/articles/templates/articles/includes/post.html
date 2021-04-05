@@ -1,0 +1,20 @@
+<div class="post mb-4">
+  <div class="post-head">
+    <a href="#" class="post-link">{{ article.title }}</a>
+    <a href="#" class="post-author">
+      <img src="{% static 'img/avatar.jpg' %}" alt="" />
+      {{ article.author.username }}
+    </a>
+    <span>{{ article.published }}</span>
+  </div>
+  <div class="post-content mt-3">
+    <p>{{ article.body }}</p>
+    <img src="{% static 'img/photo1.jpg' %}" alt="" /><br />
+    <a class="btn btn-outline-dark mt-4" href="#">Читать далее</a>
+    <div class="post-status">
+      <img src="{% static 'svg/star(white).svg' %}" /><small class="text-muted">{{ article.stars }}</small>
+      <img src="{% static 'svg/bookmark.svg' %}" /><small class="text-muted">{{ article.bookmarks }}</small>
+      <img src="{% static 'svg/view.svg' %}" /><small class="text-muted">{{ article.views }}</small>
+    </div>
+  </div>
+</div>
