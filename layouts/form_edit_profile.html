@@ -11,7 +11,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="style.css" />
-    <title>Создать статью</title>
+    <title>Редактировать профиль</title>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
@@ -57,24 +57,13 @@
         method="post"
         enctype="multipart/form-data"
         style="max-width: 80%; margin: 0 auto"
+        class="form-edit-profile"
       >
-        <h1>Добавить статью</h1>
-        <div class="mb-3">
-          <label class="form-label">Название статьи</label>
-          <input type="text" name="article-title" class="form-control" />
-        </div>
-        <div class="mb-3">
-          <select class="form-select" aria-label="Default select example">
-            <option selected>Выберите раздел</option>
-            <option value="1">Дизайн</option>
-            <option value="2">Веб-разработка</option>
-            <option value="3">Мобильная разработка</option>
-            <option value="4">Маркетинг</option>
-          </select>
-        </div>
+        <h1>Редактировать профиль</h1>
+
         <div class="mb-3">
           <label for="formFile" class="form-label"
-            >Загрузить заглавную картинку</label
+            >Загрузить аватарку</label
           >
           <input
             class="form-control"
@@ -83,19 +72,13 @@
             id="formFile"
           />
         </div>
-        <h6>Текст статьи</h6>
-        <textarea
-          name="article-text"
-          cols="100"
-          rows="20"
-          class="form-control"
-        ></textarea
-        ><br />
+        <h6>Возраст</h6>
+        <input type="number" class="form-control" name="age"><br>
         <button type="submit" class="btn btn-primary">Сохранить</button>
         <button type="submit" class="btn btn-danger">Очистить</button>
       </form>
     </div>
-    <div class="footer"><strong>habr clone</strong></div>
+<!--    <div class="footer"><strong>habr clone</strong></div>-->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
