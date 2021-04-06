@@ -23,9 +23,10 @@ class Tag(models.Model):
 
 class Article(models.Model):
     title = models.CharField(max_length=120, verbose_name='заголовок')
-    author = models.ForeignKey(HabrUser, on_delete=models.CASCADE)
-    hubs = models.ManyToManyField(Hub)
-    tags = models.ManyToManyField(Tag, blank=True)
+    # на время отстутствия  модели HabrUser
+    # author = models.ForeignKey(HabrUser, on_delete=models.CASCADE)
+    # hubs = models.ManyToManyField(Hub)
+    # tags = models.ManyToManyField(Tag, blank=True)
     body = models.TextField()
     image = models.ImageField(blank=True, verbose_name='картинка')
     link_to_original = models.URLField(blank=True, verbose_name='ссылка на оригинал')
