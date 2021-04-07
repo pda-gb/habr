@@ -52,15 +52,36 @@ class Article(models.Model):
         return Article.objects.filter(draft=False)
 
     @staticmethod
-    def get_annotation() -> dict:
+    def get_annotation(word_count: int) -> dict:
         """
         Return a dictionary, where the key is pk, and the value is the first 500 words of the article.
         """
         annotation = {}
         articles = Article.get_articles()
         for article in articles:
-            annotation[article.id] = str(article.body.split(' ')[:500])
+            annotation[article.id] = str(article.body.split(' ')[:word_count])
         return annotation
+
+    @staticmethod
+    def get_by_tag(tag: str):
+        """
+        Returns articles with the set tag
+        """
+        return Article.get_articles().filter(tags=tag)
+
+    @staticmethod
+    def get_by_hub(hub: str):
+        """
+        Returns articles with the set hub
+        """
+        return Article.get_articles().filter(hubs=hub)
+
+    @staticmethod
+    def get_by_author(author_pk: int):
+        """
+        Returns articles with the set author
+        """
+        return Article.get_articles().filter(author=author_pk)
 
 
 class Comment(models.Model):
