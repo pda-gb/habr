@@ -56,8 +56,7 @@ class Article(models.Model):
         """
         Returns article
         """
-
-        return Article.objects.filter(draft=False, id=id_article)
+        return Article.objects.get(id=id_article)
 
     @staticmethod
     def get_annotation(word_count: int) -> list:
@@ -72,6 +71,7 @@ class Article(models.Model):
             body_list = (article.body.split(' ')[:word_count])
             itm_annotation['body'] = ' '.join(body_list)
             itm_annotation['title'] = article.title
+            itm_annotation['id'] = article.id
             annotation.append(itm_annotation)
         return annotation
 
