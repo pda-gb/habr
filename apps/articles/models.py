@@ -52,19 +52,41 @@ class Article(models.Model):
         return Article.objects.filter(draft=False)
 
     @staticmethod
-    def get_annotation() -> dict:
+    def get_annotation(word_count: int) -> dict:
         """
         Return a dictionary, where the key is pk, and the value is the first 500 words of the article.
         """
         annotation = {}
         articles = Article.get_articles()
         for article in articles:
-            annotation[article.id] = str(article.body.split(' ')[:500])
+            annotation[article.id] = str(article.body.split(' ')[:word_count])
         return annotation
+
+    @staticmethod
+    def get_by_tag(tag: str):
+        """
+        Returns articles with the set tag
+        """
+        return Article.get_articles().filter(tags=tag)
+
+    @staticmethod
+    def get_by_hub(hub: str):
+        """
+        Returns articles with the set hub
+        """
+        return Article.get_articles().filter(hubs=hub)
+
+    @staticmethod
+    def get_by_author(author_pk: int):
+        """
+        Returns articles with the set author
+        """
+        return Article.get_articles().filter(author=author_pk)
 
 
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    comment_to = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
     author = models.ForeignKey(HabrUser, on_delete=models.CASCADE)
     body = models.TextField()
 
@@ -75,3 +97,14 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'комментарий'
         verbose_name_plural = 'комментарии'
+
+    @staticmethod
+    def create_comment(article_pk, comment_pk, author_pk, text_comment):
+        try:
+            comment_object = Comment.objects.get(pk=comment_pk)
+        except ValueError:
+            comment_object = None
+        author = HabrUser.objects.get(pk=author_pk)
+        article = Article.objects.get(pk=article_pk)
+        comment = Comment(body=text_comment, article=article, author=author, comment_to=comment_object)
+        comment.save()
