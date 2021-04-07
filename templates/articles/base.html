@@ -14,7 +14,7 @@
     {% block css %}
       <link href="{% static 'css/style.css' %}" rel="stylesheet" />
     {% endblock css %}
-    <title>{% block title %}{{ title }}{% endblock title %}</title>
+    <title>{% block title %}{{ title|title }}{% endblock title %}</title>
   </head>
   <body>
     {% block header %}{% include 'articles/includes/header.html' %}{% endblock header %}

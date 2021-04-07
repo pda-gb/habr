@@ -52,14 +52,19 @@ class Article(models.Model):
         return Article.objects.filter(draft=False)
 
     @staticmethod
-    def get_annotation(word_count: int) -> dict:
+    def get_annotation(word_count: int) -> list:
         """
-        Return a dictionary, where the key is pk, and the value is the first 500 words of the article.
+        Return a dictionary, where the key is pk, and the value is the
+        first 'word_count' words of the article.
         """
-        annotation = {}
+        annotation = []
         articles = Article.get_articles()
         for article in articles:
-            annotation[article.id] = str(article.body.split(' ')[:word_count])
+            itm_annotation = {}
+            body_list = (article.body.split(' ')[:word_count])
+            itm_annotation['body'] = ' '.join(body_list)
+            itm_annotation['title'] = article.title
+            annotation.append(itm_annotation)
         return annotation
 
     @staticmethod
