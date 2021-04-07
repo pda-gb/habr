@@ -97,3 +97,6 @@ STATICFILES_DIRS = (
 
 # используем своё приложение для аутентификации
 AUTH_USER_MODEL = 'authorization.HabrUser'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
