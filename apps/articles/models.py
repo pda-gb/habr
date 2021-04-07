@@ -52,6 +52,14 @@ class Article(models.Model):
         return Article.objects.filter(draft=False)
 
     @staticmethod
+    def get_article(id_article):
+        """
+        Returns article
+        """
+
+        return Article.objects.filter(draft=False, id=id_article)
+
+    @staticmethod
     def get_annotation(word_count: int) -> list:
         """
         Return a dictionary, where the key is pk, and the value is the
