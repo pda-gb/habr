@@ -57,8 +57,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'habr.wsgi.application'
 
-AUTH_USER_MODEL = 'authorization.HabrUser'
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -96,7 +94,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
-
 
 # используем своё приложение для аутентификации
 AUTH_USER_MODEL = 'authorization.HabrUser'
