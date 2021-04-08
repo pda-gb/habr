@@ -6,7 +6,7 @@ from apps.articles.models import Article, Hub
 def main_page(request):
     """рендер главной страницы"""
     title = 'главная страница'
-    len_article_body = 5
+    len_article_body = 25
     data = Article.get_annotation(len_article_body)
     page_data = {
         'title': title,
