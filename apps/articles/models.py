@@ -111,4 +111,4 @@ class Comment(models.Model):
 
 
 if __name__ == '__main__':
-    pass
+    hub = Hub(hub='development')
