@@ -6,6 +6,7 @@ from random import randint
 
 from django.conf import settings
 from django.core.management import BaseCommand
+from mimesis import Person
 
 from apps.articles.models import Article, Hub, Tag
 from apps.authorization.models import HabrUser
@@ -23,14 +24,33 @@ def load_from_json(file_name):
         return json.load(file_json)
 
 
+count_users = 20
+def get_user(number):
+    """
+    Creates random user data
+    :param number: number of users
+    """
+    for i in range(number):
+        person = Person('ru')
+        user = HabrUser(username=person.username(template='U_d'),
+                        email=person.email(domains=('yandex.ru', 'gmail.com')),
+                        password=person.password())
+        user.save()
+
+
+
+
 class Command(BaseCommand):  # свой класс унаследуем от BaseCommand
     def handle(self, *args, **options):  # с обязательным методом handle
 
-        users = load_from_json("authors")
-        for itm in users:
-            # распаковка словаря соответственно модели и распред. по ключам с
-            # одновременным сохр. в базу( .save() )
-            HabrUser.objects.create(**itm)
+        # users = load_from_json("authors")
+        # for itm in users:
+        #     # распаковка словаря соответственно модели и распред. по ключам с
+        #     # одновременным сохр. в базу( .save() )
+        #     HabrUser.objects.create(**itm)
+
+        # автогенерация библиотекой mimesis
+        get_user(count_users)
 
         tags = load_from_json("tags")
         for itm in tags:

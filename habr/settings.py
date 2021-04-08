@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.authorization',
     'apps.articles',
+    'apps.account',
 ]
 
 MIDDLEWARE = [
@@ -93,7 +94,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
-
 
 # используем своё приложение для аутентификации
 AUTH_USER_MODEL = 'authorization.HabrUser'
