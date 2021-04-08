@@ -1,0 +1,29 @@
+{% extends 'articles/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container mt-4">
+      <form
+        action=""
+        method="post"
+        enctype="multipart/form-data"
+        style="max-width: 80%; margin: 0 auto">
+
+        <h1>Редактировать профиль</h1>
+
+        <div class="mb-3">
+          <label for="formFile" class="form-label"
+            >Загрузить аватарку</label>
+          <input
+            class="form-control"
+            type="file"
+            accept="image/*"
+            id="formFile"
+          />
+        </div>
+        <h6>Возраст</h6>
+        <input type="number" class="form-control" name="age"><br>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <button type="submit" class="btn btn-danger">Очистить</button>
+      </form>
+    </div>
+{% endblock content %}

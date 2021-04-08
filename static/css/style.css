@@ -86,7 +86,7 @@ a:hover {
   right: 0;
   bottom: 0;
   left: 0;
-  margin-top: 4em;
+  margin-top: -56px;
   padding: 1rem;
   background-color: #212529;
   text-align: center;
@@ -213,4 +213,17 @@ a:hover {
 
 .comment-user-box {
   margin-bottom: 10px;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+.container {
+    min-height: 100%;
+}
+
+.clr {
+    height: 56px;
 }
