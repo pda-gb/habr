@@ -21,16 +21,13 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+import apps.account.views as account
 
+app_name = 'account'
 
 urlpatterns = [
-    path('', main_page.main_page, name='main_page'),
-    path('article/<int:pk>', main_page.article, name='article'),
-    path('hub/<int:pk>', main_page.hub, name='hub'),
-    path('account/', include('apps.account.urls', namespace='account')),
-    path('auth/', include('apps.authorization.urls', namespace='auth')),
-    path('admin/', admin.site.urls),
+    path('articles_list/', account.get_articles, name='articles_list'),
+    path('add_article/', account.add_article, name='add_article'),
+    path('edit_profile/', account.edit_profile, name='edit_profile'),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

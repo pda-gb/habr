@@ -37,3 +37,5 @@ def hub(request, pk=None):
         'hubs_menu': hubs_menu
     }
     return render(request, 'articles/articles.html', page_data)
+
+

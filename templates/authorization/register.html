@@ -1,8 +1,24 @@
-{% extends 'authorization/base.html' %}
+{% extends 'articles/base.html' %}
 {% load static %}
 
 {% block content %}
-    {% block register %}
-
-    {% endblock register %}
+<!--    {% block register %}-->
+    <div class="container mt-4">
+      <form class="auth-form">
+        <h1>Регистрация</h1>
+        <div class="mb-3">
+          <label class="form-label">Электронная почта</label>
+          <input type="email" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Пароль</label>
+          <input type="password" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+      </form>
+      <div class="label mt-4">
+        <p>Уже зарегистрированы? <a href="#">Войдите</a></p>
+      </div>
+    </div>
+<!--    {% endblock register %}-->
 {% endblock content %}
