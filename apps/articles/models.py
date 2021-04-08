@@ -1,5 +1,4 @@
 from django.db import models
-
 from django.utils import timezone
 
 from apps.authorization.models import HabrUser
@@ -11,6 +10,18 @@ class Hub(models.Model):
     class Meta:
         verbose_name = 'хаб'
         verbose_name_plural = 'хабы'
+
+    @staticmethod
+    def get_all_hubs():
+        """
+        Returns all hubs as dict
+        """
+        hubs_menu = []
+        hubs = Hub.objects.all()
+        for itm in hubs:
+            itm_menu = {'id': itm.id, 'hub': itm.hub}
+            hubs_menu.append(itm_menu)
+        return hubs_menu
 
 
 class Tag(models.Model):
@@ -59,7 +70,7 @@ class Article(models.Model):
         return Article.objects.get(id=id_article)
 
     @staticmethod
-    def get_annotation(word_count: int) -> list:
+    def get_annotation(word_count: int) -> tuple:
         """
         Return a dictionary, where the key is pk, and the value is the
         first 'word_count' words of the article.
@@ -67,13 +78,16 @@ class Article(models.Model):
         annotation = []
         articles = Article.get_articles()
         for article in articles:
-            itm_annotation = {}
             body_list = (article.body.split(' ')[:word_count])
-            itm_annotation['body'] = ' '.join(body_list)
-            itm_annotation['title'] = article.title
-            itm_annotation['id'] = article.id
+            itm_annotation = {'body': ' '.join(body_list),
+                              'title': article.title,
+                              'id': article.id
+                              }
             annotation.append(itm_annotation)
-        return annotation
+
+        # собипраем хабы для отображения кликабельного меню хабов
+        hubs_menu = Hub.get_all_hubs()
+        return annotation, hubs_menu
 
     @staticmethod
     def get_by_tag(tag: str):
@@ -83,11 +97,11 @@ class Article(models.Model):
         return Article.get_articles().filter(tags=tag)
 
     @staticmethod
-    def get_by_hub(hub: str):
+    def get_by_hub(hub_id: int):
         """
         Returns articles with the set hub
         """
-        return Article.get_articles().filter(hubs=hub)
+        return Article.get_articles().filter(hubs=hub_id)
 
     @staticmethod
     def get_by_author(author_pk: int):
