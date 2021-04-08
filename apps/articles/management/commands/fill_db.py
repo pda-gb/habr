@@ -6,7 +6,7 @@ from random import randint
 
 from django.conf import settings
 from django.core.management import BaseCommand
-from mimesis import Person
+from mimesis import Person, Text
 
 from apps.articles.models import Article, Hub, Tag
 from apps.authorization.models import HabrUser
@@ -25,6 +25,8 @@ def load_from_json(file_name):
 
 
 count_users = 20
+
+
 def get_user(number):
     """
     Creates random user data
@@ -38,6 +40,22 @@ def get_user(number):
         user.save()
 
 
+count_articles = 50
+
+
+def get_article():
+    """
+    Creates random text article
+    :param number: number of users
+    """
+    quantity = randint(200, 500)
+    text = Text('ru')
+    article = {
+        "title": text.title(),
+        "body": text.text(quantity=quantity),
+        "draft": False
+    }
+    return article
 
 
 class Command(BaseCommand):  # свой класс унаследуем от BaseCommand
@@ -64,16 +82,22 @@ class Command(BaseCommand):  # свой класс унаследуем от Bas
         count_tags = Tag.objects.count()
         count_hubs = Hub.objects.count()
 
-        articles = load_from_json("test_articles")
-        for itm in articles:
+        # articles = load_from_json("test_articles")
+        for itm in range(count_articles):
             #  выбираем случайные теги,хабы, авторы
             id_author = randint(1, count_authors)
             id_tag = randint(1, count_tags)
             id_hub = randint(1, count_hubs)
-            # добавляем автора
-            itm['author'] = HabrUser.objects.get(id=id_author)
+
             # создаём и заполняем статьи
-            itm_article = Article.objects.create(**itm)
+            dict_article = get_article()
+
+            # добавляем автора
+            dict_article['author'] = HabrUser.objects.get(id=id_author)
+
+            #  пишем в таблицу
+            itm_article = Article.objects.create(**dict_article)
+
             # (ManyToMany) добавляем отношения к тэгам и хабам
             itm_article.hubs.add(Hub.objects.get(id=id_hub))
             itm_article.tags.add(Tag.objects.get(id=id_tag))
