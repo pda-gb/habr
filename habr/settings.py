@@ -56,6 +56,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'habr.wsgi.application'
 
+AUTH_USER_MODEL = 'authorization.HabrUser'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

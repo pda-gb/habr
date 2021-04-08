@@ -135,3 +135,7 @@ class Comment(models.Model):
         article = Article.objects.get(pk=article_pk)
         comment = Comment(body=text_comment, article=article, author=author, comment_to=comment_object)
         comment.save()
+
+
+if __name__ == '__main__':
+    hub = Hub(hub='development')
