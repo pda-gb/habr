@@ -59,7 +59,7 @@ a:hover {
 
 .post-content img {
   max-width: 800px;
-  max-height: 400px;
+  max-height: 600px;
 }
 
 .post-status {
@@ -67,13 +67,19 @@ a:hover {
   padding: 0.3em;
 }
 
-.post-status img {
-  width: 1.5em;
-  height: 1em;
+.post-status img, .comment-rating img{
+  width: 1.8em;
+  height: 1.2em;
+  filter: brightness(0.5) sepia(1) hue-rotate(-70deg) saturate(5);
 }
 
 .mini-post a {
-  font-weight: 550;
+  font-weight: 500;
+  font-size: 20px;
+}
+
+.mini-post-status {
+  margin-top: 0.2em;
 }
 
 .footer {
@@ -90,7 +96,7 @@ a:hover {
 @media (max-width: 1200px) {
   .post-content img {
     max-width: 600px;
-    max-height: 400px;
+    max-height: 500px;
   }
 }
 
@@ -108,7 +114,7 @@ a:hover {
 @media (max-width: 768px) {
   .post-content img {
     max-width: 500px;
-    max-height: 300px;
+    max-height: 400px;
   }
 
   .col-1 {
@@ -118,11 +124,93 @@ a:hover {
   .col-3 {
     display: none;
   }
+
+  .col-8 {
+    width: 100%;
+  }
 }
 
 @media (max-width: 576px) {
   .post-content img {
     max-width: 400px;
-    max-height: 200px;
+    max-height: 300px;
   }
+  .col-8 {
+    min-width: 400px;
+  }
+}
+
+.mini-post-column {
+  padding: 15px;
+  background: #f7f7f7;
+  border-radius: 7px;
+}
+
+.promo {
+  width: 100%;
+  height: auto;
+}
+
+.promo-text {
+  margin: 5px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.author-row {
+  border: 1px solid #e4e8ea;
+  border-radius: 4px;
+  background: #f7f7f7;
+  display: flex;
+  flex-direction:column;
+  margin-bottom: 70px;
+}
+
+.author-block {
+  display: flex;
+}
+
+.author-avatar {
+  width: 80px;
+  height: 80px;
+  margin: 15px;
+}
+
+.author-rating {
+  margin: 15px;
+  flex-direction:column;
+  text-align: center;
+}
+
+.author-rating-num {
+  margin: 5px;
+  color: green;
+  font-family: "Arial Black", Gadget, sans-serif;
+  font-size: 24px;
+
+}
+
+.author-rating-text {
+  margin: 5px;
+  font-size: 18px;
+}
+
+.author-username {
+  font-family: "Arial Black", Gadget, sans-serif;
+  font-size: 26px;
+  margin: 5px 5px 20px 15px;
+}
+
+.comment-user-box {
+  display: inline-block;
+  width: 100%;
+}
+
+.comment-rating {
+  display: inline-block;
+  float: right;
+}
+
+.comment-user-box {
+  margin-bottom: 10px;
 }
