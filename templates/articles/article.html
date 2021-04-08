@@ -17,7 +17,9 @@
                         <a href="#" class="post-link">{{ article.title }}</a>
                     </div>
                     <div class="post-content mt-3">
-                        <img src="/media/img_articles/{{ article.image }}" alt=""/><br/>
+                        {% if article.image %}
+                            <img src="/media/img_articles/{{ article.image }}" alt=""/><br/>
+                        {% endif %}
                         <br/>
                         <span>{{ article.body }}</span>
                         <div class="post-status">
