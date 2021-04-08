@@ -7,7 +7,12 @@
                 <div class="post mb-4">
                     <div class="post-head">
                         <a href="#" class="post-author">
-                            <img src="{% static 'img/avatar.jpg' %}" alt=""/>{{ article.author.username }}</a>
+                            {% if article.author.avatar %}
+                                <img src="/media/avatars/{{ article.author.avatar }}" alt=""/>
+                                {{ article.author.username }}</a>
+                            {% else %}
+                                <img src="{% static 'img/avatar.jpg' %}" alt=""/>
+                            {% endif %}
                         <span>сегодня в 13:00</span>
                         <a href="#" class="post-link">{{ article.title }}</a>
                     </div>
