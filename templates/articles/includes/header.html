@@ -17,10 +17,10 @@
 
                 {% for hub in hubs_menu %}
                     <li class="nav-item">
-                    <a class="nav-link" href="{% url 'hub' hub.id %}">{{ hub.hub }}</a>
-                     </li>
-{#                {% empty %}#}
-{#                    <li class="nav-item"><a class="nav-link" href="#">hubs error</a></li>#}
+                        <a class="nav-link" href="{% url 'hub' hub.id %}">{{ hub.hub }}</a>
+                    </li>
+                    {#                {% empty %}#}
+                    {#                    <li class="nav-item"><a class="nav-link" href="#">hubs error</a></li>#}
                 {% endfor %}
 
             </ul>

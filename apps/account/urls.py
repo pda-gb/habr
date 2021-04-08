@@ -14,12 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-
-import apps.articles.views as main_page
-from django.contrib import admin
-from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
+from django.urls import path
 
 import apps.account.views as account
 
@@ -30,4 +25,3 @@ urlpatterns = [
     path('add_article/', account.add_article, name='add_article'),
     path('edit_profile/', account.edit_profile, name='edit_profile'),
 ]
-

@@ -1,8 +1,9 @@
 from django.shortcuts import render
+
 from apps.articles.models import Article, Hub
 
-def get_articles(request):
 
+def get_articles(request):
     # при создании модели User нужно будет добавить фильтровку по пользователю
     title = 'Список статей'
     len_article_body = 5
