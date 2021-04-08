@@ -3,5 +3,4 @@ from django.contrib.auth.models import AbstractUser
 
 
 class HabrUser(AbstractUser):
-    avatar = models.ImageField(upload_to='users_avatars', blank=True, verbose_name='аватарка')
-    age = models.PositiveSmallIntegerField(verbose_name='возраст', default=18)
+    user_name = models.CharField(max_length=100, verbose_name='имя')
