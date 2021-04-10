@@ -1,6 +1,9 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from django.models.signals import post_save
+from django.dispatch import receiver
+
 
 class HabrUser(AbstractUser):
     username = models.CharField(max_length=20, unique=True, verbose_name='пользователь')
@@ -28,3 +31,12 @@ class HabrUserProfile(models.Model):
     country = models.CharField(verbose_name='страна', max_length=64, blank=True)
     region = models.CharField(verbose_name='регион', max_length=64, blank=True)
     city = models.CharField(verbose_name='город', max_length=64, blank=True)
+
+    @receiver(post_save, sender=HabrUser)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            HabrUserProfile.objects.create(user=instance)
+
+    @receiver(post_save, sender=HabrUser)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.habruserprofile.save()
