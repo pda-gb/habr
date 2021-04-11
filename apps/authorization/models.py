@@ -3,9 +3,7 @@ from django.db import models
 
 
 class HabrUser(AbstractUser):
-    username = models.CharField(max_length=20, unique=True, verbose_name='пользователь')
-    avatar = models.ImageField(upload_to='avatars', blank=True, verbose_name='аватарка')
-    email = models.EmailField(unique=True)
+    pass
 
 
 class HabrUserProfile(models.Model):
