@@ -23,6 +23,10 @@ class Hub(models.Model):
             hubs_menu.append(itm_menu)
         return hubs_menu
 
+    # для отображения названий вместо id в админке
+    def __str__(self):
+        return f"{self.hub}"
+
 
 class Tag(models.Model):
     tag = models.CharField(max_length=100)
