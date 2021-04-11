@@ -22,12 +22,12 @@ from django.urls import path, include
 import apps.articles.views as main_page
 
 urlpatterns = [
-    path('', main_page.main_page, name='main_page'),
-    path('article/<int:pk>', main_page.article, name='article'),
-    path('hub/<int:pk>', main_page.hub, name='hub'),
-    path('account/', include('apps.account.urls', namespace='account')),
-    path('auth/', include('apps.authorization.urls', namespace='auth')),
-    path('admin/', admin.site.urls),
+    path("", main_page.main_page, name="main_page"),
+    path("article/<int:pk>", main_page.article, name="article"),
+    path("hub/<int:pk>", main_page.hub, name="hub"),
+    path("account/", include("apps.account.urls", namespace="account")),
+    path("auth/", include("apps.authorization.urls", namespace="auth")),
+    path("admin/", admin.site.urls),
 ]
 
 if settings.DEBUG:

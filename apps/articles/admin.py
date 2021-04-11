@@ -1,4 +1,5 @@
 from django.contrib import admin
-from .models import Hub
+from .models import Hub, Article
 
 admin.site.register(Hub)
+admin.site.register(Article)

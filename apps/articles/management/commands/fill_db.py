@@ -11,7 +11,7 @@ from mimesis import Person, Text
 from apps.articles.models import Article, Hub, Tag
 from apps.authorization.models import HabrUser
 
-path_json = os.path.join(settings.BASE_DIR, 'json')  # путь к json папке
+path_json = os.path.join(settings.BASE_DIR, "json")  # путь к json папке
 
 
 def load_from_json(file_name):
@@ -19,8 +19,9 @@ def load_from_json(file_name):
     :param file_name: имя необходимого json файла
     :return: выводит содержимое
     """
-    with open(os.path.join(path_json, file_name + '.json'), 'r',
-              encoding='utf-8') as file_json:
+    with open(
+        os.path.join(path_json, file_name + ".json"), "r", encoding="utf-8"
+    ) as file_json:
         return json.load(file_json)
 
 
@@ -33,10 +34,12 @@ def get_user(number):
     :param number: number of users
     """
     for i in range(number):
-        person = Person('ru')
-        user = HabrUser(username=person.username(template='U_d'),
-                        email=person.email(domains=('yandex.ru', 'gmail.com')),
-                        password=person.password())
+        person = Person("ru")
+        user = HabrUser(
+            username=person.username(template="U_d"),
+            email=person.email(domains=("yandex.ru", "gmail.com")),
+            password=person.password(),
+        )
         user.save()
 
 
@@ -48,11 +51,11 @@ def get_article():
     Creates random text article
     """
     quantity = randint(200, 500)
-    text = Text('ru')
+    text = Text("ru")
     article = {
         "title": text.title(),
         "body": text.text(quantity=quantity),
-        "draft": False
+        "draft": False,
     }
     return article
 
@@ -92,7 +95,7 @@ class Command(BaseCommand):  # свой класс унаследуем от Bas
             dict_article = get_article()
 
             # добавляем автора
-            dict_article['author'] = HabrUser.objects.get(id=id_author)
+            dict_article["author"] = HabrUser.objects.get(id=id_author)
 
             #  пишем в таблицу
             itm_article = Article.objects.create(**dict_article)

@@ -15,21 +15,16 @@ Including another URLconf
 """
 
 
-import apps.articles.views as main_page
-from django.contrib import admin
-from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
+from django.urls import path
 
 import apps.authorization.views as auth
 
-app_name = 'auth'
+app_name = "auth"
 
 urlpatterns = [
-    path('login/', auth.login, name='login'),
-    path('register/', auth.register, name='register'),
-    path("logout/", auth.logout, name='logout'),
-    path('edit/', auth.edit, name='edit'),
-    path('forgive', auth.forgive, name='forgive'),
+    path("login/", auth.login, name="login"),
+    path("register/", auth.register, name="register"),
+    path("logout/", auth.logout, name="logout"),
+    path("edit/", auth.edit, name="edit"),
+    path("forgive/", auth.forgive, name="forgive"),
 ]
-

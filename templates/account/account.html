@@ -10,7 +10,7 @@
                 <dl>
                     {% for article in articles %}
                         <dt>
-                            <a href="#accordion1" aria-expanded="false" aria-controls="accordion1"
+                            <a href="{% url 'article' article.id %}" aria-expanded="false" aria-controls="accordion1"
                                class="accordion-title accordionTitle js-accordionTrigger">
                                 Статья {{ forloop.counter }}. {{ article.title }}</a>
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">

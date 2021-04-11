@@ -27,23 +27,23 @@ class HabrUserRegisterForm(UserCreationForm):
         super(HabrUserRegisterForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs["class"] = "form-control"
-            field.help_text = ''
+            field.help_text = ""
 
     class Meta:
         model = HabrUser
         fields = ("email", "username", "password1", "password2")
 
 
-class HabrUserEditRegisterForm(UserCreationForm):
+class HabrUserEditForm(UserCreationForm):
     """
-    форма отвечающая за регистрацию
+    форма отвечающая за изменение
     """
 
     def __init__(self, *args, **kwargs) -> None:
-        super(HabrUserEditRegisterForm, self).__init__(*args, **kwargs)
+        super(HabrUserEditForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs["class"] = "form-control"
-            field.help_text = ''
+            field.help_text = ""
 
     class Meta:
         model = HabrUser
