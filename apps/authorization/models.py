@@ -6,7 +6,8 @@ from django.dispatch import receiver
 
 
 class HabrUser(AbstractUser):
-    pass
+    first_name = None
+    last_name = None
 
 
 class HabrUserProfile(models.Model):
