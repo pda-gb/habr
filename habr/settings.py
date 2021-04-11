@@ -9,7 +9,7 @@ with open(BASE_DIR.joinpath('secret.json'), 'r') as secret_file:
 
 SECRET_KEY = secret_value["SECRET_KEY"]
 
-DEBUG = True
+DEBUG = secret_value.get("DEBUG", True)
 
 ALLOWED_HOSTS = []
 
