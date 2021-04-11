@@ -24,9 +24,22 @@
                 {% endfor %}
 
             </ul>
+            {% if user.is_authenticated %}
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ user.username|default:'Пользователь' }}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                  <button class="dropdown-item" type="button">Создать статью</button>
+                  <a href="{% url 'account:articles_list' %}"><button class="dropdown-item" type="button">Личный кабинет</button></a>
+                  <div class="dropdown-divider"></div>
+                  <a href="{% url 'auth:logout' %}"><button class="dropdown-item" type="button">Выход</button></a>
+                </div>
+              </div>
+            {% else %}
             <a class="btn btn-outline-light me-2" href="{% url 'auth:login' %}">Войти</a>
-            <a class="btn btn-outline-light" href="{% url 'auth:register' %}">Регистрация</a>
-            <a class="btn btn-outline-light" href="{% url 'account:articles_list' %}">Личный кабинет</a>
+            <a class="btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
+            {% endif %}
         </div>
     </div>
 </nav>
