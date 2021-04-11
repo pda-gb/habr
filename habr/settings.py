@@ -11,7 +11,7 @@ SECRET_KEY = secret_value["SECRET_KEY"]
 
 DEBUG = secret_value.get("DEBUG", True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',

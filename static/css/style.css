@@ -227,3 +227,16 @@ body {
 .clr {
     height: 56px;
 }
+
+.outline-light {
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #212529;
+    border-color: white;
+}
+
+.form-control {
+  width: 25%;
+}
