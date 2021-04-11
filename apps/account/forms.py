@@ -6,7 +6,7 @@ from apps.authorization.models import HabrUser, HabrUserProfile
 class HabrUserEditForm(UserChangeForm):
     class Meta:
         model = HabrUser
-        fields = ('username', 'first_name', 'email', 'avatar')
+        fields = ('username', 'first_name', 'email')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

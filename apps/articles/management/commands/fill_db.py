@@ -46,7 +46,6 @@ count_articles = 50
 def get_article():
     """
     Creates random text article
-    :param number: number of users
     """
     quantity = randint(200, 500)
     text = Text('ru')
