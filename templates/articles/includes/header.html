@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
     <div class="container">
-        <a class="logo" href="{% url 'main_page' %}">Sputnik</a>
+        <a class="logo" href="{% url 'articles:main_page' %}">Sputnik</a>
         <button
                 class="navbar-toggler"
                 type="button"
@@ -16,7 +16,7 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 hubs">
                 {% for hub in hubs_menu %}
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.kwargs.pk == hub.id %} active {% endif %}" href="{% url 'hub' hub.id %}">{{ hub.hub }}</a>
+                        <a class="nav-link {% if request.resolver_match.kwargs.pk == hub.id %} active {% endif %}" href="{% url 'articles:hub' hub.id %}">{{ hub.hub }}</a>
                     </li>
                     {% empty %}
                         <li class="nav-item"><a class="nav-link" href="#">hubs error</a></li>

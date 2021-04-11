@@ -22,7 +22,7 @@ def login(request):
         user = auth.authenticate(username=username, password=password)
         if user and user.is_active:
             auth.login(request, user)
-            return HttpResponseRedirect(reverse("main_page"))
+            return HttpResponseRedirect(reverse("articles:main_page"))
 
     page_data = {"title": title, "login_form": login_form}
     return render(request, "authorization/login.html", page_data)
@@ -33,7 +33,7 @@ def logout(request):
     функция выполняет выход из аккаунта
     """
     auth.logout(request)
-    return HttpResponseRedirect(reverse("main_page"))
+    return HttpResponseRedirect(reverse("articles:main_page"))
 
 
 def register(request):
