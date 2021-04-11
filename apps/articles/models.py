@@ -85,7 +85,9 @@ class Article(models.Model):
             body_list = (article.body.split(' ')[:word_count])
             itm_annotation = {'body': ' '.join(body_list),
                               'title': article.title,
-                              'id': article.id
+                              'id': article.id,
+                              'published': article.published,
+                              'username': article.author
                               }
             annotation.append(itm_annotation)
 
