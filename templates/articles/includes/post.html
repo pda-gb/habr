@@ -11,11 +11,12 @@
         <a href="#" class="post-author">
             {% if article.author.avatar %}
                 <img src="/media/avatars/{{ article.author.avatar }}" alt=""/>
-                    {{ article.author.username }}</a>
+                    {{ article.author.username }}
             {% else %}
                 <img src="{% static 'img/avatar.jpg' %}" alt=""/>
+                    User
             {% endif %}
-            {{ article.author.username }}
+        </a>
             <span class="text-muted">{{ article.published }}</span>
     </div>
     <div class="post-content mt-3">
