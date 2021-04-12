@@ -6,6 +6,11 @@
             <div class="col-8">
                 <div class="post mb-4">
                     <div class="post-head">
+                        {% if article.image %}
+                            <img src="/media/img_articles/{{ article.image }}" alt=""/><br/>
+                        {% else %}
+                            <img src="{% static 'img/photo2.jpg' %}" alt="#" class="w-100 mb-2">
+                        {% endif %}
                         <a href="#" class="post-author">
                             {% if article.author.avatar %}
                                 <img src="/media/avatars/{{ article.author.avatar }}" alt=""/>
@@ -13,13 +18,10 @@
                             {% else %}
                                 <img src="{% static 'img/avatar.jpg' %}" alt=""/>
                             {% endif %}
-                        <span>сегодня в 13:00</span>
+                        <span>{{ article.published }}</span>
                         <a href="#" class="post-link">{{ article.title }}</a>
                     </div>
                     <div class="post-content mt-3">
-                        {% if article.image %}
-                            <img src="/media/img_articles/{{ article.image }}" alt=""/><br/>
-                        {% endif %}
                         <br/>
                         <span>{{ article.body }}</span>
                         <div class="post-status">
@@ -93,17 +95,7 @@
                 </div>
             </div>
             <div class="col-1"></div>
-            <div class="col-3">
-                <div class="mini-post-column">
-                    <h2 class="mb-4">Читают сейчас</h2>
-                    <hr/>
-                    {% for article in read_now %}
-                        {% include 'articles/includes/post.html' %}
-                    {% empty %}
-                        <p>Тут пока нет статей.</p>
-                    {% endfor %}
-                </div>
-            </div>
+            {% include 'articles/includes/right_block.html' %}
         </div>
     </div>
 {% endblock content %}

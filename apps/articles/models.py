@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+import datetime
 
 from apps.authorization.models import HabrUser
 
@@ -118,6 +119,32 @@ class Article(models.Model):
         Returns articles with the set author
         """
         return Article.get_articles().filter(author=author_pk)
+
+    @staticmethod
+    def get_last_articles():
+        """
+          Возвращает список последних статей для отображения в блоке
+          'Последние статьи' с заменой в сегодня опубликованных статьях
+          даты на 'сегодня'
+        """
+        len_last_articles = 3
+        last_articles_set = Article.get_articles().order_by('-published')[
+                            :len_last_articles].values()
+        last_articles = [{} for _ in range(len_last_articles)]
+        for i in range(len_last_articles):
+            last_articles[i]['id'] = last_articles_set[i]['id']
+            last_articles[i]['title'] = last_articles_set[i]['title']
+            if last_articles_set[i][
+                'published'].date() != datetime.datetime.now(
+
+            ).date():
+                last_articles[i]['date'] = last_articles_set[i][
+                    'published'].date()
+            else:
+                last_articles[i]['date'] = 'сегодня'
+            last_articles[i]['time'] = last_articles_set[i][
+                'published'].strftime('%H:%M')
+        return last_articles
 
 
 class Comment(models.Model):
