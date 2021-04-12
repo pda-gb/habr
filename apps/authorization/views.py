@@ -54,24 +54,6 @@ def register(request):
     return render(request, "authorization/register.html", page_data)
 
 
-def edit(request):
-    """
-    функция выполняет Изменение данных для входа
-    """
-    title = "Изменение данных для входа"
-
-    if request.method == "POST":
-        edit_form = HabrUserEditForm(request.POST, instance=request.user)
-
-        if edit_form.is_valid():
-            edit_form.save()
-            return HttpResponseRedirect(reverse("auth:login"))
-    edit_form = HabrUserRegisterForm(instance=request.user)
-
-    page_data = {"title": title, "edit_form": edit_form}
-    return render(request, "authorization/edit.html", page_data)
-
-
 def forgive(request):
     """
     Функция отвечающая если забыли пароль
