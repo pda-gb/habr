@@ -1,16 +1,15 @@
-{% extends 'account/base.html' %}
+{% extends 'my_articles/base.html' %}
 {% load static %}
 
 {% block content %}
-    <!--    {% block account %}-->
         <div class="container">
-            <h1 class="heading-primary">Личный кабинет</h1>
-            <h4 class="heading-second">Список статей</h4>
+            <h1 class="heading-primary">Мои Статьи</h1>
+            <a href="{% url 'account:add_article' %}" class="btn btn-primary me-md-2" type="button">Создать статью</a>
             <div class="accordion">
                 <dl>
                     {% for article in articles %}
                         <dt>
-                            <a href="{% url 'articles:article' article.id %}" aria-expanded="false" aria-controls="accordion1"
+                            <a href="#accordion1" aria-expanded="false" aria-controls="accordion1"
                                class="accordion-title accordionTitle js-accordionTrigger">
                                 Статья {{ forloop.counter }}. {{ article.title }}</a>
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -24,9 +23,5 @@
                     {% endfor %}
                 </dl>
             </div>
-            <a href="{% url 'account:add_article' %}" class="btn btn-primary me-md-2" type="button">Создать статью</a>
-            <a href="{% url 'my_articles:my_articles' %}" class="btn btn-primary me-md-2" type="button">Мои статьи</a>
-            <a href="{% url 'account:edit_profile' %}" class="btn btn-primary me-md-2" type="button">Редактировать профиль</a>
         </div>
-        <!--    {% endblock account %}-->
 {% endblock content %}

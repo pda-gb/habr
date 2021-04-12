@@ -8,6 +8,7 @@ urlpatterns = [
     path("account/", include("apps.account.urls", namespace="account")),
     path("auth/", include("apps.authorization.urls", namespace="auth")),
     path("admin/", admin.site.urls),
+    path('my_articles/', include("apps.my_articles.urls", namespace="my_articles"))
 ]
 
 if settings.DEBUG:

@@ -3,7 +3,6 @@ from django.shortcuts import HttpResponseRedirect, render
 from django.urls import reverse
 
 from apps.authorization.forms import (
-    HabrUserEditForm,
     HabrUserLoginForm,
     HabrUserRegisterForm,
 )
