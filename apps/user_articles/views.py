@@ -1,8 +1,7 @@
 from django.shortcuts import render
 
 
-
-def my_articles(request):
+def user_articles(request):
     """
     функция отвечает за Мои статьи
     """
@@ -12,7 +11,7 @@ def my_articles(request):
     page_data = {
         'title': title,
     }
-    return render(request, 'my_articles/my_articles.html', page_data)
+    return render(request, 'user_articles/user_articles.html', page_data)
 
 def publications(request):
     """
@@ -24,7 +23,7 @@ def publications(request):
     page_data = {
         'title': title,
     }
-    return render(request, 'my_articles/publications.html', page_data)
+    return render(request, 'user_articles/publications.html', page_data)
 
 def draft(request):
     """
@@ -36,4 +35,4 @@ def draft(request):
     page_data = {
         'title': title,
     }
-    return render(request, 'my_articles/draft.html', page_data)
+    return render(request, 'user_articles/draft.html', page_data)

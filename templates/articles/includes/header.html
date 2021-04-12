@@ -34,7 +34,7 @@
                   <div class="dropdown-divider"></div>
                   <a href="{% url 'auth:logout' %}"><button class="dropdown-item" type="button">Выход</button></a>
                 </div>
-              </div>
+              </div>    
             {% else %}
             <a class="btn btn-outline-light me-2" href="{% url 'auth:login' %}">Войти</a>
             <a class="btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>

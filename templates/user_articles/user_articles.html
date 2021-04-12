@@ -1,9 +1,9 @@
-{% extends 'my_articles/base.html' %}
+{% extends 'user_articles/base.html' %}
 {% load static %}
 
 {% block content %}
         <div class="container">
-            <h1 class="heading-primary">Мои публикации</h1>
+            <h1 class="heading-primary">Мои Статьи</h1>
             <a href="{% url 'account:add_article' %}" class="btn btn-primary me-md-2" type="button">Создать статью</a>
             <div class="accordion">
                 <dl>
