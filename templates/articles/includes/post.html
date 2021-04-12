@@ -20,7 +20,7 @@
             <span class="text-muted">{{ article.published }}</span>
     </div>
     <div class="post-content mt-3">
-        <p>{{ article.body }}</p>
+        <p>{{ article.body|truncatewords:"25" }}</p>
         <a class="btn btn-outline-dark mt-1" href="{% url 'articles:article' article.id %}">Читать далее</a>
         <div class="post-status">
             <img src="{% static 'svg/star(white).svg' %}"/><small class="text-muted">{{ article.stars }}</small>
