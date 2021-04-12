@@ -35,14 +35,14 @@ class Command(BaseCommand):
         """
         # Экземпляры данных из библиотеки mimesis
         text = Text('ru')
-        hubs = (Development('ru').programming_language(), Development('ru').os(), Food('ru').dish(), Food('ru').drink(),
-                Food('ru').fruit(), Food('ru').vegetable(), Food('ru').spices(), Transport('ru').truck(),
+        hubs = (Development('ru').programming_language(), Development('ru').os(), Food('ru').drink(),
+                Food('ru').fruit(), Food('ru').vegetable(), Transport('ru').truck(),
                 Transport('ru').airplane(), Transport('ru').car(), Transport('ru').manufacturer())
         internet = Internet('ru')
         # Количество создаваемых статей
         number = options['number']
         # Создаем хабы
-        if len(hubs) < 10:
+        if Hub.objects.values_list('hub', flat=True).count() < 10:
             for hub_item in hubs:
                 if hub_item in Hub.objects.values_list('hub', flat=True).distinct():
                     self.stdout.write(self.style.SUCCESS(f'This hub exist {hub_item}'))
