@@ -36,3 +36,6 @@ def draft(request):
         'title': title,
     }
     return render(request, 'user_articles/draft.html', page_data)
+
+def test():
+    pass
