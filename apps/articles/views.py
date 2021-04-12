@@ -6,9 +6,12 @@ from apps.articles.models import Article, Hub
 def main_page(request):
     """рендер главной страницы"""
     title = "главная страница"
-    len_article_body = 25
-    data = Article.get_annotation(len_article_body)
-    page_data = {"title": title, "articles": data[0], "hubs_menu": data[1]}
+    hub_articles = Article.get_articles()
+    last_articles = hub_articles.values('id','title')[0:3]
+    print(last_articles)
+    hubs_menu = Hub.get_all_hubs()
+    page_data = {"title": title, "articles": hub_articles,
+                 "hubs_menu": hubs_menu, "last_articles": last_articles}
     return render(request, "articles/articles.html", page_data)
 
 

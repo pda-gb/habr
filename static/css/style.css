@@ -240,3 +240,18 @@ body {
 .form-control {
   width: 25%;
 }
+
+.mini-title {
+  font-size: 13px;
+  font-weight:600;
+}
+
+.mini-time {
+   font-size: 11px;
+   color:green;
+}
+
+.right-column {
+  position: sticky;
+  top: 5.5em;
+}
