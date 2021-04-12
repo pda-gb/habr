@@ -1,3 +1,5 @@
+from django.contrib import auth
+from django.utils import timezone
 from mimesis import Person, Business, Datetime, Address
 
 from apps.authorization.models import HabrUser, HabrUserProfile
@@ -27,6 +29,7 @@ class Command(BaseCommand):
                             password=person.password(length=8, hashed=False))
             user.save()
             self.stdout.write(self.style.SUCCESS(f'Successfully created user {user.username}'))
+
             profile = HabrUserProfile(user=user, avatar=person.avatar(size=256),
                                       full_name=person.full_name(gender=None, reverse=False),
                                       place_of_work=business.company(), specialization=person.occupation(),
@@ -35,7 +38,6 @@ class Command(BaseCommand):
                                       country=address.country(allow_random=False),
                                       region=address.region(),
                                       city=address.city())
-
             profile.save()
 
             self.stdout.write(self.style.SUCCESS(f'Successfully created profile {profile.full_name}'))
