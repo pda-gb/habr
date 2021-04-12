@@ -8,8 +8,8 @@ class Hub(models.Model):
     hub = models.CharField(max_length=100)
 
     class Meta:
-        verbose_name = 'хаб'
-        verbose_name_plural = 'хабы'
+        verbose_name = "хаб"
+        verbose_name_plural = "хабы"
 
     @staticmethod
     def get_all_hubs():
@@ -19,38 +19,44 @@ class Hub(models.Model):
         hubs_menu = []
         hubs = Hub.objects.all()
         for itm in hubs:
-            itm_menu = {'id': itm.id, 'hub': itm.hub}
+            itm_menu = {"id": itm.id, "hub": itm.hub}
             hubs_menu.append(itm_menu)
         return hubs_menu
+
+    # для отображения названий вместо id в админке
+    def __str__(self):
+        return f"{self.hub}"
 
 
 class Tag(models.Model):
     tag = models.CharField(max_length=100)
 
     class Meta:
-        verbose_name = 'тег'
-        verbose_name_plural = 'теги'
+        verbose_name = "тег"
+        verbose_name_plural = "теги"
 
 
 class Article(models.Model):
-    title = models.CharField(max_length=120, verbose_name='заголовок')
+    title = models.CharField(max_length=120, verbose_name="заголовок")
     author = models.ForeignKey(HabrUser, on_delete=models.CASCADE)
-    hubs = models.ManyToManyField(Hub)
+    hubs = models.ManyToManyField(Hub, verbose_name="хабы")
     tags = models.ManyToManyField(Tag, blank=True)
-    body = models.TextField()
-    image = models.ImageField(blank=True, verbose_name='картинка')
-    link_to_original = models.URLField(blank=True, verbose_name='ссылка на оригинал')
+    body = models.TextField(verbose_name="Текст статьи")
+    image = models.ImageField(blank=True, verbose_name="главная картинка")
+    link_to_original = models.URLField(blank=True, verbose_name="ссылка на оригинал")
 
-    created = models.DateTimeField(verbose_name='создана', auto_now_add=True)
-    updated = models.DateTimeField(verbose_name='обновлена', auto_now=True)
-    published = models.DateTimeField(verbose_name='дата публикации', default=timezone.now)
+    created = models.DateTimeField(verbose_name="создана", auto_now_add=True)
+    updated = models.DateTimeField(verbose_name="обновлена", auto_now=True)
+    published = models.DateTimeField(
+        verbose_name="дата публикации", default=timezone.now
+    )
 
-    draft = models.BooleanField(verbose_name='черновик', default=True)
+    draft = models.BooleanField(verbose_name="черновик", default=False)
 
     class Meta:
-        verbose_name = 'статья'
-        verbose_name_plural = 'статьи'
-        ordering = ('-published',)
+        verbose_name = "статья"
+        verbose_name_plural = "статьи"
+        ordering = ("-published",)
 
     def __str__(self):
         return self.title
@@ -78,11 +84,14 @@ class Article(models.Model):
         annotation = []
         articles = Article.get_articles()
         for article in articles:
-            body_list = (article.body.split(' ')[:word_count])
-            itm_annotation = {'body': ' '.join(body_list),
-                              'title': article.title,
-                              'id': article.id
-                              }
+            body_list = article.body.split(" ")[:word_count]
+            itm_annotation = {
+                "body": " ".join(body_list),
+                "title": article.title,
+                "id": article.id,
+                "published": article.published,
+                "username": article.author,
+            }
             annotation.append(itm_annotation)
 
         # собипраем хабы для отображения кликабельного меню хабов
@@ -113,17 +122,19 @@ class Article(models.Model):
 
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    comment_to = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
+    comment_to = models.ForeignKey(
+        "self", null=True, blank=True, on_delete=models.CASCADE
+    )
     author = models.ForeignKey(HabrUser, on_delete=models.CASCADE)
     body = models.TextField()
 
-    created = models.DateTimeField(verbose_name='создан', auto_now_add=True)
-    updated = models.DateTimeField(verbose_name='обновлен', auto_now=True)
-    publish = models.DateTimeField(verbose_name='опубликован', default=timezone.now)
+    created = models.DateTimeField(verbose_name="создан", auto_now_add=True)
+    updated = models.DateTimeField(verbose_name="обновлен", auto_now=True)
+    publish = models.DateTimeField(verbose_name="опубликован", default=timezone.now)
 
     class Meta:
-        verbose_name = 'комментарий'
-        verbose_name_plural = 'комментарии'
+        verbose_name = "комментарий"
+        verbose_name_plural = "комментарии"
 
     @staticmethod
     def create_comment(article_pk, comment_pk, author_pk, text_comment):
@@ -133,9 +144,11 @@ class Comment(models.Model):
             comment_object = None
         author = HabrUser.objects.get(pk=author_pk)
         article = Article.objects.get(pk=article_pk)
-        comment = Comment(body=text_comment, article=article, author=author, comment_to=comment_object)
+        comment = Comment(
+            body=text_comment, article=article, author=author, comment_to=comment_object
+        )
         comment.save()
 
 
-if __name__ == '__main__':
-    hub = Hub(hub='development')
+if __name__ == "__main__":
+    hub = Hub(hub="development")

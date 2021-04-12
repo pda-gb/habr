@@ -10,7 +10,7 @@
                 <dl>
                     {% for article in articles %}
                         <dt>
-                            <a href="#accordion1" aria-expanded="false" aria-controls="accordion1"
+                            <a href="{% url 'articles:article' article.id %}" aria-expanded="false" aria-controls="accordion1"
                                class="accordion-title accordionTitle js-accordionTrigger">
                                 Статья {{ forloop.counter }}. {{ article.title }}</a>
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -25,8 +25,7 @@
                 </dl>
             </div>
             <a href="{% url 'account:add_article' %}" class="btn btn-primary me-md-2" type="button">Создать статью</a>
-            <a href="{% url 'account:edit_profile' %}" class="btn btn-primary me-md-2" type="button">Редактировать
-                профиль</a>
+            <a href="{% url 'account:edit_profile' %}" class="btn btn-primary me-md-2" type="button">Редактировать профиль</a>
         </div>
         <!--    {% endblock account %}-->
 {% endblock content %}

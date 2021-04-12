@@ -1,0 +1,14 @@
+{% extends 'authorization/base.html' %}
+{% load static %}
+
+{% block content %}
+      <form class="auth-form" action="{% url 'auth:edit' %}" method="POST">
+        {% csrf_token %}
+        <h1>Изменение данных для входа</h1>
+        {{ edit_form.as_p }}
+       <button type="submit" class="btn btn-primary">Сохранить</button> 
+       <button class="btn btn-primary">
+        <a class="outline-light" href="{% url 'main_page' %}">На главную</a>
+       </button>
+      </form>
+{% endblock content %}

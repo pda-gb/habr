@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 django = "*"
+pillow = "*"
+mimesis = "*"
 
 [dev-packages]
 flake8 = "*"
