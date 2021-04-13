@@ -113,11 +113,13 @@ class Article(models.Model):
         return Article.get_articles().filter(hubs=hub_id)
 
     @staticmethod
-    def get_by_author(author_pk: int):
+    def get_by_author(author_pk: int, draft=None):
         """
         Returns articles with the set author
         """
-        return Article.get_articles().filter(author=author_pk)
+        if draft == None:
+            return Article.objects.filter(author_id__pk=author_pk).order_by('updated')
+        return Article.objects.filter(author_id__pk=author_pk).filter(draft=draft).order_by('updated')
 
 
 class Comment(models.Model):

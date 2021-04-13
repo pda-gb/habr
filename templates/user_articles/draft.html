@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-        <a href="{% url 'account:articles_list' %}" class="button-back"><img src="{% static 'svg/arrow-back.svg' %}" alt="">назад</a>
+
         <div class="container">
             {% include 'user_articles/includes/inc_menu.html' %}
             <a href="{% url 'account:add_article' %}" class="btn btn-primary me-md-2" type="button">Создать статью</a>
