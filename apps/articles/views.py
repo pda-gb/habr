@@ -8,7 +8,6 @@ def main_page(request):
     title = "главная страница"
     hub_articles = Article.get_articles()
     last_articles = hub_articles.values('id','title')[0:3]
-    print(last_articles)
     hubs_menu = Hub.get_all_hubs()
     page_data = {"title": title, "articles": hub_articles,
                  "hubs_menu": hubs_menu, "last_articles": last_articles}

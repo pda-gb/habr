@@ -45,6 +45,11 @@ a:hover {
   font-size: 2em;
   color: black;
   display: block;
+  text-align: justify;
+}
+
+.post-content{
+  text-align: justify;
 }
 
 .post-author {
