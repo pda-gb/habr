@@ -20,7 +20,7 @@
         {% elif article.draft %}
         <a class="btn btn-outline-success mt-1" href="#">Опубликовать</a>
         {% endif %}
-        <a class="btn btn-outline-danger mt-1" href="{% url 'account:del_article'  article.id %}">Удалить</a>
+        <a class="btn btn-outline-danger mt-1" href="#">Удалить</a>
         <div class="post-status">
             <img src="{% static 'svg/star(white).svg' %}"/><small class="text-muted">{{ article.stars }}</small>
             <img src="{% static 'svg/view.svg' %}"/><small class="text-muted">{{ article.views }}</small>
@@ -28,4 +28,3 @@
     </div>
 </div>
 <br>
-<!-- <a class="btn btn-outline-danger mt-1" href="{% url 'account:del_article'  article.id %}">Удалить</a> -->
