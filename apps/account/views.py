@@ -45,13 +45,13 @@ def edit_profile(request):
     title = "Редактирование профиля"
     if request.method == "POST":
         profile_edit_form = HabrUserProfileEditForm(
-            request.POST, instance=request.user.habruserprofile
+            request.POST, instance=request.user
         )
         if profile_edit_form.is_valid():
             profile_edit_form.save()
             return HttpResponseRedirect(reverse("account:edit_profile"))
     hubs_menu = Hub.get_all_hubs()
-    profile_edit_form = HabrUserProfileEditForm(instance=request.user.habruserprofile)
+    profile_edit_form = HabrUserProfileEditForm(instance=request.user)
     page_data = {
         "title": title,
         "hubs_menu": hubs_menu,
