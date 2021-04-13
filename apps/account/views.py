@@ -45,16 +45,38 @@ def edit_profile(request):
     title = "Редактирование профиля"
     if request.method == "POST":
         profile_edit_form = HabrUserProfileEditForm(
-            request.POST, instance=request.user
+            request.POST, instance=request.user.habruserprofile
         )
         if profile_edit_form.is_valid():
             profile_edit_form.save()
-            return HttpResponseRedirect(reverse("account:edit_profile"))
+            return HttpResponseRedirect(reverse("account:articles_list"))
     hubs_menu = Hub.get_all_hubs()
-    profile_edit_form = HabrUserProfileEditForm(instance=request.user)
+    profile_edit_form = HabrUserProfileEditForm(instance=request.user.habruserprofile)
     page_data = {
         "title": title,
         "hubs_menu": hubs_menu,
         "edit_form": profile_edit_form,
     }
     return render(request, "account/edit_profile.html", page_data)
+
+
+@login_required
+# @transaction.atomic()
+def edit_password(request):
+    title = "Изменить пароль"
+    print('*'*100)
+    # if request.method == "POST":
+    #     profile_edit_form = HabrUserProfileEditForm(
+    #         request.POST, instance=request.user.habruserprofile
+    #     )
+    #     if profile_edit_form.is_valid():
+    #         profile_edit_form.save()
+    #         return HttpResponseRedirect(reverse("account:edit_profile"))
+    hubs_menu = Hub.get_all_hubs()
+    # profile_edit_form = HabrUserProfileEditForm(instance=request.user.habruserprofile)
+    page_data = {
+        "title": title,
+        "hubs_menu": hubs_menu,
+        # "edit_form": profile_edit_form,
+    }
+    return render(request, "account/edit_password.html", page_data)

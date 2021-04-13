@@ -8,4 +8,5 @@ urlpatterns = [
     path("articles_list/", account.get_articles, name="articles_list"),
     path("add_article/", account.add_article, name="add_article"),
     path("edit_profile/", account.edit_profile, name="edit_profile"),
+    path("edit_profile/edit_password/", account.edit_password, name="edit_password"),
 ]

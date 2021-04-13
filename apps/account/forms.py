@@ -12,6 +12,7 @@ class HabrUserProfileEditForm(forms.ModelForm):
             "place_of_work",
             "specialization",
             "gender",
+            'birth_date',
             "country",
             "region",
             "city",
@@ -40,3 +41,14 @@ class ArticleCreate(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs["class"] = "form-control"
             field.help_text = ""
+
+
+class PasswordUpdateForm(forms.ModelForm):
+    model = HabrUserProfile
+    fields = ('password',)
+
+    def __init__(self, *args, **kwargs):
+        super(PasswordUpdateForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = "form-control"
+            field.help_text = ''
