@@ -2,16 +2,9 @@
 {% load static %}
 
 {% block content %}
+        <a href="{% url 'account:articles_list' %}" class="button-back"><img src="{% static 'svg/arrow-back.svg' %}" alt="">назад</a>
         <div class="container">
-            <div class="featured">
-                <div class="featured-menu">
-                        <a class="active" href="{% url 'user_articles:user_articles'%}">Все статьи</a>
-                        <a href="{% url 'user_articles:publications'%}">Опубликованные статьи</a>
-                        <a href="{% url 'user_articles:draft'%}">Черновик</a>
-                        
-                </div>
-            </div>
-            <div class="clear-fix"></div>
+            {% include 'user_articles/includes/inc_menu.html' %}
             <a href="{% url 'account:add_article' %}" class="btn btn-primary me-md-2" type="button">Создать статью</a>
             <div class="row">
                 <div class="col-8">

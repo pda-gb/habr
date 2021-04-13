@@ -2,26 +2,17 @@
 {% load static %}
 
 {% block content %}
+        <a href="{% url 'account:articles_list' %}" class="button-back"><img src="{% static 'svg/arrow-back.svg' %}" alt="">назад</a>
         <div class="container">
-            <h1 class="heading-primary">Черновик</h1>
+            {% include 'user_articles/includes/inc_menu.html' %}
             <a href="{% url 'account:add_article' %}" class="btn btn-primary me-md-2" type="button">Создать статью</a>
-            <div class="accordion">
-                <dl>
+            <div class="row">
+                <div class="col-8">
                     {% for article in articles %}
-                        <dt>
-                            <a href="#accordion1" aria-expanded="false" aria-controls="accordion1"
-                               class="accordion-title accordionTitle js-accordionTrigger">
-                                Статья {{ forloop.counter }}. {{ article.title }}</a>
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a href="#" class="btn btn-primary me-md-2" type="button">Редактировать</a>
-                                <a href="#" class="btn btn-primary me-md-2" type="button">Удалить</a>
-                            </div>
-                        </dt>
-                        <dd class="accordion-content accordionItem is-collapsed" id="accordion1" aria-hidden="true">
-                            {{ article.body }}
-                        </dd>
+                        {% include 'user_articles/includes/post.html' %}
+                    {% empty %}
+                    <p>У вас нет статей.</p>
                     {% endfor %}
-                </dl>
+                </div>
             </div>
-        </div>
 {% endblock content %}
