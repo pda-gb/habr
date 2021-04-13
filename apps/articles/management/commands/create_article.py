@@ -35,9 +35,10 @@ class Command(BaseCommand):
         """
         # Экземпляры данных из библиотеки mimesis
         text = Text('ru')
-        hubs = (Development('ru').programming_language(), Development('ru').os(), Food('ru').drink(),
-                Food('ru').fruit(), Food('ru').vegetable(), Transport('ru').truck(),
-                Transport('ru').airplane(), Transport('ru').car(), Transport('ru').manufacturer())
+        # hubs = (Development('ru').programming_language(), Development('ru').os(), Food('ru').drink(),
+        #         Food('ru').fruit(), Food('ru').vegetable(), Transport('ru').truck(),
+        #         Transport('ru').airplane(), Transport('ru').car(), Transport('ru').manufacturer())
+        hubs = ["Все потоки", "Разработка", "Дизайн", "Маркетинг", "Мобильная разработка"]
         internet = Internet('ru')
         # Количество создаваемых статей
         number = options['number']
