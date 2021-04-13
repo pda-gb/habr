@@ -119,6 +119,15 @@ class Article(models.Model):
         """
         return Article.get_articles().filter(author=author_pk)
 
+    @staticmethod
+    def del_article(id):
+        """
+        delete(draft = True) article
+        """
+        art = Article.objects.get(id=id)
+        art.draft = True
+        art.save()
+
 
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
