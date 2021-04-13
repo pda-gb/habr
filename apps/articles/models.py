@@ -52,6 +52,7 @@ class Article(models.Model):
     )
 
     draft = models.BooleanField(verbose_name="черновик", default=False)
+    is_active = models.BooleanField(verbose_name="удалена", default=True)
 
     class Meta:
         verbose_name = "статья"
@@ -118,6 +119,15 @@ class Article(models.Model):
         Returns articles with the set author
         """
         return Article.get_articles().filter(author=author_pk)
+
+    @staticmethod
+    def del_article(id):
+        """
+        delete(is_active = False) article
+        """
+        art = Article.objects.get(id=id)
+        art.is_active = False
+        art.save()
 
 
 class Comment(models.Model):
