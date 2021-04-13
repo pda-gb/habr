@@ -52,6 +52,7 @@ class Article(models.Model):
     )
 
     draft = models.BooleanField(verbose_name="черновик", default=False)
+    is_active = models.BooleanField(verbose_name="удалена", default=True)
 
     class Meta:
         verbose_name = "статья"
@@ -120,6 +121,15 @@ class Article(models.Model):
         if draft == None:
             return Article.objects.filter(author_id__pk=author_pk).order_by('updated')
         return Article.objects.filter(author_id__pk=author_pk).filter(draft=draft).order_by('updated')
+
+    @staticmethod
+    def del_article(id):
+        """
+        delete(is_active = False) article
+        """
+        art = Article.objects.get(id=id)
+        art.is_active = False
+        art.save()
 
 
 class Comment(models.Model):

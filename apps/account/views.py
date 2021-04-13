@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
 from apps.account.forms import HabrUserProfileEditForm, ArticleCreate
@@ -37,6 +37,13 @@ def add_article(request):
         "article_add": article_add
     }
     return render(request, "account/form_add_article.html", page_data)
+
+
+def del_article(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    article.del_article(pk)
+
+    return HttpResponseRedirect(reverse("account:articles_list"))
 
 
 @login_required
