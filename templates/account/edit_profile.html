@@ -4,13 +4,13 @@
 
     <form class="form-horizontal" action="{% url 'account:edit_profile' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <img src="{{ avatar }}" alt="avatar">
         {{ edit_form.as_table }}
-        {{ edit_profile_form.as_table }}
+<!--        {{ edit_profile_form.as_table }}-->
         <br>
-        <a href="{% url 'account:edit_password' %}"><button class="btn btn-primary">Изменить пароль</button></a>
-        <br><br>
+
         <button type="submit" class="btn btn-primary">Сохранить</button>
         <button type="reset" class="btn btn-danger">Сбросить</button>
     </form>
+    <br><br>
+    <a href="{% url 'account:edit_password' %}"><button class="btn btn-primary">Изменить пароль</button></a>
 {% endblock content %}e

@@ -3,9 +3,13 @@ from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth.hashers import make_password
 
-from apps.account.forms import HabrUserProfileEditForm, ArticleCreate
+from apps.account.forms import HabrUserProfileEditForm, ArticleCreate, ChangePasswordForm
 from apps.articles.models import Article, Hub
+from apps.authorization.models import HabrUser
+
+from django.contrib.auth.hashers import check_password
 
 
 def get_articles(request):
@@ -27,7 +31,7 @@ def add_article(request):
             article_add.instance.author = request.user
             article_add.save()
             return HttpResponseRedirect(reverse("account:articles_list"))
-        return HttpResponseRedirect(reverse("account:add_article"))
+
     title = "Создание статьи"
     hubs_menu = Hub.get_all_hubs()
     article_add = ArticleCreate()
@@ -50,6 +54,7 @@ def edit_profile(request):
         if profile_edit_form.is_valid():
             profile_edit_form.save()
             return HttpResponseRedirect(reverse("account:articles_list"))
+        # return HttpResponseRedirect(reverse("account:edit_password"))
     hubs_menu = Hub.get_all_hubs()
     profile_edit_form = HabrUserProfileEditForm(instance=request.user.habruserprofile)
     page_data = {
@@ -64,19 +69,34 @@ def edit_profile(request):
 # @transaction.atomic()
 def edit_password(request):
     title = "Изменить пароль"
-    print('*'*100)
-    # if request.method == "POST":
-    #     profile_edit_form = HabrUserProfileEditForm(
-    #         request.POST, instance=request.user.habruserprofile
-    #     )
-    #     if profile_edit_form.is_valid():
-    #         profile_edit_form.save()
-    #         return HttpResponseRedirect(reverse("account:edit_profile"))
+    user = HabrUser.objects.get(username=request.user)
+    if request.method == 'POST':
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
+            old_password = request.POST.get("old_password")
+            new_password = request.POST.get("new_password")
+            repeat_password = request.POST.get("repeat_password")
+            # old_password = make_password(old_password)
+            print(old_password)
+            print(user.password)
+            print(new_password)
+            # if old_password == user.password:
+            print(user.check_password(new_password))
+            print(check_password(old_password, user.password))
+            # if user.check_password(old_passw):
+            if check_password(old_password, user.password):
+                print('*'*100)
+                return HttpResponseRedirect(reverse("account:add_article"))
+            else:
+                print('-'*100)
+                return HttpResponseRedirect(reverse("account:edit_profile"))
+
+    form = ChangePasswordForm()
     hubs_menu = Hub.get_all_hubs()
-    # profile_edit_form = HabrUserProfileEditForm(instance=request.user.habruserprofile)
+
     page_data = {
         "title": title,
         "hubs_menu": hubs_menu,
-        # "edit_form": profile_edit_form,
+        "edit_form": form,
     }
     return render(request, "account/edit_password.html", page_data)

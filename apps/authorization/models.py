@@ -37,7 +37,7 @@ class HabrUserProfile(models.Model):
     gender = models.CharField(
         verbose_name="пол", max_length=1, choices=GENDER_CHOICES, blank=True
     )
-    birth_date = models.DateField(null=True, blank=True)
+    birth_date = models.DateField(null=True, blank=True, verbose_name='дата рождения')
     country = models.CharField(verbose_name="страна", max_length=64, blank=True)
     region = models.CharField(verbose_name="регион", max_length=64, blank=True)
     city = models.CharField(verbose_name="город", max_length=64, blank=True)
@@ -45,11 +45,11 @@ class HabrUserProfile(models.Model):
     def __str__(self) -> str:
         return self.user.username
 
-    # @receiver(post_save, sender=HabrUser)
-    # def create_user_profile(sender, instance, created, **kwargs):
-    #     if created:
-    #         HabrUserProfile.objects.create(user=instance)
-    #
-    # @receiver(post_save, sender=HabrUser)
-    # def save_user_profile(sender, instance, **kwargs):
-    #     instance.habruserprofile.save()
+    @receiver(post_save, sender=HabrUser)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            HabrUserProfile.objects.create(user=instance)
+
+    @receiver(post_save, sender=HabrUser)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.habruserprofile.save()
