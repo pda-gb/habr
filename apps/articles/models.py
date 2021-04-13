@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+import datetime
 
 from apps.authorization.models import HabrUser
 
@@ -64,9 +65,22 @@ class Article(models.Model):
     @staticmethod
     def get_articles():
         """
-        Returns all published articles
+        Returns all published articles and last articles (right block)
         """
-        return Article.objects.filter(draft=False)
+        hub_articles = Article.objects.filter(draft=False)
+        len_last_articles = 3
+        last_articles_set = hub_articles.values('id', 'title', 'published')[0:len_last_articles]
+        last_articles = [{} for _ in range(len_last_articles)]
+        for i in range(len_last_articles):
+            last_articles[i]['id'] = last_articles_set[i]['id']
+            last_articles[i]['title'] = last_articles_set[i]['title']
+            if last_articles_set[i]['published'].date() != datetime.datetime.now().date():
+                last_articles[i]['date'] = last_articles_set[i]['published'].date()
+            else:
+                last_articles[i]['date'] = 'сегодня'
+            last_articles[i]['time'] = last_articles_set[i]['published'].strftime('%H:%M')
+        print(last_articles)
+        return hub_articles, last_articles
 
     @staticmethod
     def get_article(id_article):
@@ -82,7 +96,7 @@ class Article(models.Model):
         first 'word_count' words of the article.
         """
         annotation = []
-        articles = Article.get_articles()
+        articles = Article.get_articles()[0]
         for article in articles:
             body_list = article.body.split(" ")[:word_count]
             itm_annotation = {
@@ -103,21 +117,21 @@ class Article(models.Model):
         """
         Returns articles with the set tag
         """
-        return Article.get_articles().filter(tags=tag)
+        return Article.get_articles()[0].filter(tags=tag)
 
     @staticmethod
     def get_by_hub(hub_id: int):
         """
         Returns articles with the set hub
         """
-        return Article.get_articles().filter(hubs=hub_id)
+        return Article.get_articles()[0].filter(hubs=hub_id)
 
     @staticmethod
     def get_by_author(author_pk: int):
         """
         Returns articles with the set author
         """
-        return Article.get_articles().filter(author=author_pk)
+        return Article.get_articles()[0].filter(author=author_pk)
 
 
 class Comment(models.Model):
