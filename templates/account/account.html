@@ -5,28 +5,8 @@
     <!--    {% block account %}-->
         <div class="container">
             <h1 class="heading-primary">Личный кабинет</h1>
-            <h4 class="heading-second">Список статей</h4>
-            <div class="accordion">
-                <dl>
-                    {% for article in articles %}
-                        <dt>
-                            <a href="{% url 'articles:article' article.id %}" aria-expanded="false" aria-controls="accordion1"
-                               class="accordion-title accordionTitle js-accordionTrigger">
-                                Статья {{ forloop.counter }}. {{ article.title }}</a>
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a href="#" class="btn btn-primary me-md-2" type="button">Редактировать</a>
-                                <a href="#" class="btn btn-primary me-md-2" type="button">Удалить</a>
-                            </div>
-                        </dt>
-                        <dd class="accordion-content accordionItem is-collapsed" id="accordion1" aria-hidden="true">
-                            {{ article.body }}
-                        </dd>
-                    {% endfor %}
-                </dl>
-            </div>
             <a href="{% url 'account:add_article' %}" class="btn btn-primary me-md-2" type="button">Создать статью</a>
-            <a href="{% url 'auth:edit' %}" class="btn btn-primary me-md-2" type="button">Изменить данные для входа</a>
-            <a href="{% url 'account:edit_profile' %}" class="btn btn-primary me-md-2" type="button">Редактировать профиль</a>
+            <a href="{% url 'user_articles:user_articles' %}" class="btn btn-primary me-md-2" type="button">Мои статьи</a>
         </div>
         <!--    {% endblock account %}-->
 {% endblock content %}

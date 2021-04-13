@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
 from apps.account.forms import HabrUserProfileEditForm, ArticleCreate
@@ -39,19 +39,26 @@ def add_article(request):
     return render(request, "account/form_add_article.html", page_data)
 
 
+def del_article(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    article.del_article(pk)
+
+    return HttpResponseRedirect(reverse("account:articles_list"))
+
+
 @login_required
 @transaction.atomic()
 def edit_profile(request):
     title = "Редактирование профиля"
     if request.method == "POST":
         profile_edit_form = HabrUserProfileEditForm(
-            request.POST, instance=request.user.habruserprofile
+            request.POST, instance=request.user
         )
         if profile_edit_form.is_valid():
             profile_edit_form.save()
             return HttpResponseRedirect(reverse("account:edit_profile"))
     hubs_menu = Hub.get_all_hubs()
-    profile_edit_form = HabrUserProfileEditForm(instance=request.user.habruserprofile)
+    profile_edit_form = HabrUserProfileEditForm(instance=request.user)
     page_data = {
         "title": title,
         "hubs_menu": hubs_menu,

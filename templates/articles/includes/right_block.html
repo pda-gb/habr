@@ -1,0 +1,27 @@
+{% load static %}
+<div class="col-3">
+    <div class="right-column">
+        <div class="mini-post-column">
+            <h3 class="mb-4">Последние статьи</h3>
+            <hr>
+            {% for article in last_articles %}
+                <div class="post mb-4">
+                    <div class="post-head">
+                        <a href="{% url 'articles:article' article.id %}"
+                           class="post-link mini-title">{{ article.title }}</a>
+                    </div>
+                    <div class="post-content mt-3">
+                        <div class="mini-time">
+                            <span>сегодня в 10:55</span>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            {% empty %}
+                <p>Тут пока нет статей.</p>
+            {% endfor %}
+        </div>
+        <a href="https://geekbrains.ru/"><img class='promo' src="
+            {% static 'img/geekbrains_promo.jpg' %}" alt=""/></a>
+    </div>
+</div>
