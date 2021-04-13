@@ -3,25 +3,23 @@
 
 {% block content %}
         <div class="container">
-            <h1 class="heading-primary">Мои Статьи</h1>
-            <a href="{% url 'account:add_article' %}" class="btn btn-primary me-md-2" type="button">Создать статью</a>
-            <div class="accordion">
-                <dl>
-                    {% for article in articles %}
-                        <dt>
-                            <a href="#accordion1" aria-expanded="false" aria-controls="accordion1"
-                               class="accordion-title accordionTitle js-accordionTrigger">
-                                Статья {{ forloop.counter }}. {{ article.title }}</a>
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a href="#" class="btn btn-primary me-md-2" type="button">Редактировать</a>
-                                <a href="#" class="btn btn-primary me-md-2" type="button">Удалить</a>
-                            </div>
-                        </dt>
-                        <dd class="accordion-content accordionItem is-collapsed" id="accordion1" aria-hidden="true">
-                            {{ article.body }}
-                        </dd>
-                    {% endfor %}
-                </dl>
+            <div class="featured">
+                <div class="featured-menu">
+                        <a class="active" href="{% url 'user_articles:user_articles'%}">Все статьи</a>
+                        <a href="{% url 'user_articles:publications'%}">Опубликованные статьи</a>
+                        <a href="{% url 'user_articles:draft'%}">Черновик</a>
+                        
+                </div>
             </div>
-        </div>
+            <div class="clear-fix"></div>
+            <a href="{% url 'account:add_article' %}" class="btn btn-primary me-md-2" type="button">Создать статью</a>
+            <div class="row">
+                <div class="col-8">
+                    {% for article in articles %}
+                        {% include 'user_articles/includes/post.html' %}
+                    {% empty %}
+                    <p>У вас нет статей.</p>
+                    {% endfor %}
+                </div>
+            </div>
 {% endblock content %}

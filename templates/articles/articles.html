@@ -4,8 +4,6 @@
 {% block content %}
     <div class="row">
         <div class="col-8">
-{#            <h1>{{ hub }}</h1>#}
-            <hr/>
             {% for article in articles %}
                 {% include 'articles/includes/post.html' %}
             {% empty %}
