@@ -24,7 +24,7 @@ def publications(request):
         'title': title,
         'articles': articles,
     }
-    return render(request, 'user_articles/publications.html', page_data)
+    return render(request, 'user_articles/user_articles.html', page_data)
 
 
 def draft(request):
@@ -37,4 +37,4 @@ def draft(request):
         'title': title,
         'articles': articles,
     }
-    return render(request, 'user_articles/draft.html', page_data)
+    return render(request, 'user_articles/user_articles.html', page_data)
