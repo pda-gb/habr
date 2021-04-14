@@ -131,6 +131,18 @@ class Article(models.Model):
         art.is_active = False
         art.save()
 
+    @staticmethod
+    def draft_article(id):
+        """
+        turn draft article(True/False)
+        """
+        art = Article.objects.get(id=id)
+        if art.draft is False:
+            art.draft = True
+        else:
+            art.draft = False
+        art.save()
+
 
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)

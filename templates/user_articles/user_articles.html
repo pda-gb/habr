@@ -2,16 +2,18 @@
 {% load static %}
 
 {% block content %}
-        <div class="container">
-            {% include 'user_articles/includes/inc_menu.html' %}
-            <a href="{% url 'account:add_article' %}" class="btn btn-primary me-md-2" type="button">Создать статью</a>
-            <div class="row">
-                <div class="col-8">
-                    {% for article in articles %}
+    <div class="container">
+        {% include 'user_articles/includes/inc_menu.html' %}
+        <a href="{% url 'account:add_article' %}" class="btn btn-primary me-md-2" type="button">Создать статью</a>
+        <div class="row">
+            <div class="col-8">
+                {% for article in articles %}
+                    {% if article.is_active %}
                         {% include 'user_articles/includes/post.html' %}
-                    {% empty %}
+                    {% endif %}
+                {% empty %}
                     <p>У вас нет статей.</p>
-                    {% endfor %}
-                </div>
+                {% endfor %}
             </div>
+        </div>
 {% endblock content %}

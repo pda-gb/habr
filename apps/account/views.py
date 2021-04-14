@@ -32,8 +32,12 @@ def add_article(request):
 def del_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
     article.del_article(pk)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    return HttpResponseRedirect(reverse("account:articles_list"))
+def draft_article(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    article.draft_article(pk)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
