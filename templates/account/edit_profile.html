@@ -4,36 +4,23 @@
 
     <form class="form-horizontal" action="{% url 'account:edit_profile' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <img src="{{ avatar }}" alt="avatar">
+        {#            загрузка аваттарки    #}
+        {% if user.avatar %}
+            <img src="/media/avatars/{{ user.avatar }}" alt="avatar"/>
+        {% else %}
+            <img src="{% static 'img/avatar.jpg' %}" alt=""/>
+        {% endif %}
+        {#            загрузка юзернейм     #}
+        {% if user.username %}
+            {{ user.username }}
+        {% else %}
+            ?User?
+        {% endif %}
+        <br>
         {{ edit_form.as_table }}
         {{ edit_profile_form.as_table }}
         <br>
         <button type="submit" class="btn btn-primary">Сохранить</button>
         <button type="submit" class="btn btn-danger">Очистить</button>
     </form>
-<!--    <div class="container mt-4">-->
-<!--        <form-->
-<!--                action=""-->
-<!--                method="post"-->
-<!--                enctype="multipart/form-data"-->
-<!--                style="max-width: 80%; margin: 0 auto">-->
-
-<!--            <h1>Редактировать профиль</h1>-->
-
-<!--            <div class="mb-3">-->
-<!--                <label for="formFile" class="form-label"-->
-<!--                >Загрузить аватарку</label>-->
-<!--                <input-->
-<!--                        class="form-control"-->
-<!--                        type="file"-->
-<!--                        accept="image/*"-->
-<!--                        id="formFile"-->
-<!--                />-->
-<!--            </div>-->
-<!--            <h6>Возраст</h6>-->
-<!--            <input type="number" class="form-control" name="age"><br>-->
-<!--            <button type="submit" class="btn btn-primary">Сохранить</button>-->
-<!--            <button type="submit" class="btn btn-danger">Очистить</button>-->
-<!--        </form>-->
-<!--    </div>-->
 {% endblock content %}

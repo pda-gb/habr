@@ -8,16 +8,6 @@ from apps.account.forms import HabrUserProfileEditForm, ArticleCreate
 from apps.articles.models import Article, Hub
 
 
-def get_articles(request):
-    # при создании модели User нужно будет добавить фильтровку по пользователю
-    title = "Список статей"
-    len_article_body = 5
-    data = Article.get_annotation(len_article_body)
-    hubs_menu = Hub.get_all_hubs()
-    page_data = {"articles": data[0], "title": title, "hubs_menu": hubs_menu}
-    return render(request, "account/account.html", page_data)
-
-
 @login_required
 def add_article(request):
     if request.method == "POST":
