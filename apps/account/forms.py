@@ -56,6 +56,20 @@ class ChangePasswordForm(forms.Form):
             field.widget.attrs['class'] = "form-control"
             field.help_text = ''
 
+    def clean(self):
+        super().clean()
+        data_1 = self.cleaned_data['new_password']
+        data_2 = self.cleaned_data['repeat_password']
+        print('forms')
+        print(data_1)
+        print(data_2)
+        print(data_1 != data_2)
+        if data_1 != data_2:
+            raise forms.ValidationError('Ошибка!')
+            # raise forms.ValidationError({'old_password': ' Ошибка!!!'})
+        return data_1
+
+
 # class ChangePasswordForm(PasswordChangeForm):
 
 # class ChangePasswordForm(forms.Form):
