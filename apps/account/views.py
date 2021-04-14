@@ -16,8 +16,8 @@ def add_article(request):
             article_add.save(commit=False)
             article_add.instance.author = request.user
             article_add.save()
-            return HttpResponseRedirect(reverse("account:articles_list"))
-        return HttpResponseRedirect(reverse("account:add_article"))
+            return HttpResponseRedirect(reverse("user_articles:user_articles"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     title = "Создание статьи"
     hubs_menu = Hub.get_all_hubs()
     article_add = ArticleCreate()
