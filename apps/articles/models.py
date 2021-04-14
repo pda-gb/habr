@@ -134,8 +134,8 @@ class Article(models.Model):
         Returns articles with the set author
         """
         if draft == None:
-            return Article.objects.filter(author_id__pk=author_pk).order_by('updated')
-        return Article.objects.filter(author_id__pk=author_pk).filter(draft=draft).order_by('updated')
+            return Article.objects.filter(author_id__pk=author_pk).order_by('-updated')
+        return Article.objects.filter(author_id__pk=author_pk).filter(draft=draft).order_by('-updated')
 
     @staticmethod
     def del_article(id):

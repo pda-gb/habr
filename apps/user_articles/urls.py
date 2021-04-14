@@ -8,6 +8,6 @@ app_name = 'user_articles'
 urlpatterns = [
     path('', user_articles.user_articles, name='user_articles'),
     path('publications/', user_articles.publications, name='publications'),
-    path('user_articles/', user_articles.user_articles, name='my_articles'),
+    path('user_articles/', user_articles.user_articles, name='user_articles'),
     path('draft', user_articles.draft, name='draft'),
 ]

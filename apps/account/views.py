@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.conf import settings
+from django.utils import timezone
 
 from apps.account.forms import ArticleEditForm, HabrUserProfileEditForm, ArticleCreate
 from apps.articles.models import Article, Hub, HabrUser
@@ -67,17 +68,22 @@ def edit_profile(request):
 @login_required
 @transaction.atomic()
 def edit_article(request, pk):
+    '''
+    функция отвечает за редактирование статьи
+    '''
     title = "Создание статьи"
-    edit_user = get_object_or_404(HabrUser, pk=pk)
+    edit_article = get_object_or_404(Article, pk=pk)
     hubs_menu = Hub.get_all_hubs()
 
     if request.method == "POST":
-        edit_form = ArticleEditForm(request.POST, request.FILES, instance=edit_user)
+        edit_form = ArticleEditForm(request.POST, request.FILES, instance=edit_article)
         if edit_form.is_valid():
+            edit_article.updated = timezone.now()
+            edit_article.save()
             edit_form.save()
-            return HttpResponseRedirect(reverse("account:edit_article", args=[edit_user.pk]))
+            return HttpResponseRedirect(reverse("user_articles:user_articles"))
     else:
-        edit_form = ArticleEditForm(instance=edit_user)
+        edit_form = ArticleEditForm(instance=edit_article)
 
     page_data = {
         "title": title,
