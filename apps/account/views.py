@@ -11,7 +11,7 @@ from apps.authorization.models import HabrUser
 
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import update_session_auth_hash
-from django import forms
+
 
 def get_articles(request):
     # при создании модели User нужно будет добавить фильтровку по пользователю
@@ -67,7 +67,7 @@ def edit_profile(request):
 
 
 @login_required
-# @transaction.atomic()
+@transaction.atomic()
 def edit_password(request):
     title = "Изменить пароль"
     user = HabrUser.objects.get(username=request.user)
@@ -77,25 +77,14 @@ def edit_password(request):
         if form.is_valid():
             old_password = request.POST.get("old_password")
             new_password = request.POST.get("new_password")
-            repeat_password = request.POST.get("repeat_password")
-            # old_password = make_password(old_password)
-            # print(old_password)
-            # print(user.password)
-            # print(new_password)
-            # if old_password == user.password:
-            # print(check_password(old_password, user.password))
-            # if user.check_password(old_passw):
+
             if check_password(old_password, user.password):
-                print('*'*100)
                 user.password = make_password(new_password)
                 user.save()
                 update_session_auth_hash(request, user)
                 return HttpResponseRedirect(reverse("account:articles_list"))
             else:
-                print('-'*100)
-                forms.ValidationError('Ошибка!')
-                # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-                return HttpResponseRedirect(reverse("account:articles_list"))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     form = ChangePasswordForm()
     hubs_menu = Hub.get_all_hubs()
