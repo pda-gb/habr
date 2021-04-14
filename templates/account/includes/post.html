@@ -1,0 +1,21 @@
+{% extends 'articles/includes/post.html' %}
+{% load static %}
+{% block post-content %}
+    {{ block.super }}
+    <a class="btn btn-outline-dark mt-1" href="{% url 'articles:article' article.id %}">Перейти к статье</a>
+    <a class="btn btn-outline-info blue-word mt-1" href="#">Редактировать</a>
+    {% if not article.draft %}
+        <a class="btn btn-outline-warning mt-1" href="{% url 'account:draft_article' article.id %}">Снять с
+            публикации</a>
+    {% elif article.draft %}
+        <a class="btn btn-outline-success mt-1" href="{% url 'account:draft_article' article.id %}">Опубликовать</a>
+    {% endif %}
+    <a class="btn btn-outline-danger mt-1" href="{% url 'account:del_article'  article.id %}">Удалить</a>
+{% endblock post-content %}
+
+{% block post-status %}
+    <div class="post-status">
+        <img src="{% static 'svg/star(white).svg' %}"/><small class="text-muted">{{ article.stars }}</small>
+        <img src="{% static 'svg/view.svg' %}"/><small class="text-muted">{{ article.views }}</small>
+    </div>
+{% endblock post-status %}

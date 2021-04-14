@@ -1,37 +1,48 @@
 {% load static %}
-<div class="post mb-4">
-    <div class="post-head">
-        <a href="{% url 'articles:article' article.id %}" class="post-link mb-3"
-        >{{ article.title }}</a>
-        {% if article.image %}
-            <img src="/media/img_articles/{{ article.image }}" alt=""/><br/>
-        {% else %}
-            <img src="{% static 'img/photo1.jpg' %}" alt="#" class="w-100 mb-2">
-        {% endif %}
-        <a href="#" class="post-author">
-            {#            загрузка аваттарки    #}
-            {% if article.author.avatar %}
-                <img src="/media/avatars/{{ article.author.avatar }}" alt=""/>
-            {% else %}
-                <img src="{% static 'img/avatar.jpg' %}" alt=""/>
-            {% endif %}
-            {#            загрузка юзернейм     #}
-            {% if article.author.username %}
-                {{ article.author.username }}
-            {% else %}
-                User
-            {% endif %}
-        </a>
-        <span class="text-muted">{{ article.published }}</span>
+{% block post %}
+    <div class="post mb-4">
+        {% block post-head %}
+            <div class="post-head">
+                <a href="{% url 'articles:article' article.id %}" class="post-link mb-3"
+                >{{ article.title }}</a>
+                {% if article.image %}
+                    <img src="/media/img_articles/{{ article.image }}" alt=""/><br/>
+                {% else %}
+                    <img src="{% static 'img/photo1.jpg' %}" alt="#" class="w-100 mb-2">
+                {% endif %}
+                <a href="#" class="post-author">
+                    {#            загрузка аваттарки    #}
+                    {% if article.author.avatar %}
+                        <img src="/media/avatars/{{ article.author.avatar }}" alt=""/>
+                    {% else %}
+                        <img src="{% static 'img/avatar.jpg' %}" alt=""/>
+                    {% endif %}
+                    {#            загрузка юзернейм     #}
+                    {% if article.author.username %}
+                        {{ article.author.username }}
+                    {% else %}
+                        User
+                    {% endif %}
+                </a>
+                <span class="text-muted">{{ article.published }}</span>
+            </div>
+        {% endblock post-head %}
+        {% block post-content %}
+            <div class="post-content mt-3">
+                <p>{{ article.body|truncatewords:"25" }}</p>
+                <a class="btn btn-outline-dark mt-1" href="{% url 'articles:article' article.id %}">Читать далее</a>
+                {% block post-status %}
+                    <div class="post-status">
+                        <img src="{% static 'svg/star(white).svg' %}"/><small
+                            class="text-muted">{{ article.stars }}</small>
+                        <img src="{% static 'svg/bookmark.svg' %}"/><small
+                            class="text-muted">{{ article.bookmarks }}</small>
+                        <img src="{% static 'svg/view.svg' %}"/><small class="text-muted">{{ article.views }}</small>
+                    </div>
+                {% endblock post-status %}
+            </div>
+        {% endblock post-content %}
     </div>
-    <div class="post-content mt-3">
-        <p>{{ article.body|truncatewords:"25" }}</p>
-        <a class="btn btn-outline-dark mt-1" href="{% url 'articles:article' article.id %}">Читать далее</a>
-        <div class="post-status">
-            <img src="{% static 'svg/star(white).svg' %}"/><small class="text-muted">{{ article.stars }}</small>
-            <img src="{% static 'svg/bookmark.svg' %}"/><small class="text-muted">{{ article.bookmarks }}</small>
-            <img src="{% static 'svg/view.svg' %}"/><small class="text-muted">{{ article.views }}</small>
-        </div>
-    </div>
-</div>
+    <hr>
+{% endblock post %}
 <br>

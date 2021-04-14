@@ -3,13 +3,14 @@
 
 {% block content %}
     <div class="container">
-        {% include 'user_articles/includes/inc_menu.html' %}
+        {% include 'account/includes/inc_menu.html' %}
         <a href="{% url 'account:add_article' %}" class="btn btn-primary me-md-2" type="button">Создать статью</a>
         <div class="row">
             <div class="col-8">
+                <hr/>
                 {% for article in articles %}
                     {% if article.is_active %}
-                        {% include 'user_articles/includes/post.html' %}
+                        {% include 'account/includes/post.html' %}
                     {% endif %}
                 {% empty %}
                     <p>У вас нет статей.</p>

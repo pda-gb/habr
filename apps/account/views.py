@@ -78,7 +78,7 @@ def user_articles(request):
         'title': title,
         'articles': articles,
     }
-    return render(request, 'user_articles/user_articles.html', page_data)
+    return render(request, 'account/user_articles.html', page_data)
 
 
 @login_required
@@ -92,7 +92,7 @@ def publications(request):
         'title': title,
         'articles': articles,
     }
-    return render(request, 'user_articles/user_articles.html', page_data)
+    return render(request, 'account/user_articles.html', page_data)
 
 
 @login_required
@@ -106,4 +106,4 @@ def draft(request):
         'title': title,
         'articles': articles,
     }
-    return render(request, 'user_articles/user_articles.html', page_data)
+    return render(request, 'account/user_articles.html', page_data)
