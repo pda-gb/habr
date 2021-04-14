@@ -1,22 +1,16 @@
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.conf import settings
 
-from apps.account.forms import HabrUserProfileEditForm, ArticleCreate
-from apps.articles.models import Article, Hub
+from apps.account.forms import ArticleEditForm, HabrUserProfileEditForm, ArticleCreate
+from apps.articles.models import Article, Hub, HabrUser
 
 
-def get_articles(request):
-    # при создании модели User нужно будет добавить фильтровку по пользователю
-    title = "Список статей"
-    len_article_body = 5
-    data = Article.get_annotation(len_article_body)
-    hubs_menu = Hub.get_all_hubs()
-    page_data = {"articles": data[0], "title": title, "hubs_menu": hubs_menu}
-    return render(request, "account/account.html", page_data)
-
+def account(request):
+    return render(request, "account/account.html")
 
 @login_required
 def add_article(request):
@@ -26,8 +20,8 @@ def add_article(request):
             article_add.save(commit=False)
             article_add.instance.author = request.user
             article_add.save()
-            return HttpResponseRedirect(reverse("account:articles_list"))
-        return HttpResponseRedirect(reverse("account:add_article"))
+            return HttpResponseRedirect(reverse("user_articles:user_articles"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     title = "Создание статьи"
     hubs_menu = Hub.get_all_hubs()
     article_add = ArticleCreate()
@@ -37,6 +31,17 @@ def add_article(request):
         "article_add": article_add
     }
     return render(request, "account/form_add_article.html", page_data)
+
+
+def del_article(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    article.del_article(pk)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def draft_article(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    article.draft_article(pk)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
@@ -58,3 +63,27 @@ def edit_profile(request):
         "edit_form": profile_edit_form,
     }
     return render(request, "account/edit_profile.html", page_data)
+
+@login_required
+@transaction.atomic()
+def edit_article(request, pk):
+    title = "Создание статьи"
+    edit_user = get_object_or_404(HabrUser, pk=pk)
+    hubs_menu = Hub.get_all_hubs()
+
+    if request.method == "POST":
+        edit_form = ArticleEditForm(request.POST, request.FILES, instance=edit_user)
+        if edit_form.is_valid():
+            edit_form.save()
+            return HttpResponseRedirect(reverse("account:edit_article", args=[edit_user.pk]))
+    else:
+        edit_form = ArticleEditForm(instance=edit_user)
+
+    page_data = {
+        "title": title,
+        "hubs_menu": hubs_menu,
+        "update_form": edit_form,
+        "media_url": settings.MEDIA_URL
+    }
+
+    return render(request, "account/edit_article.html", page_data)

@@ -13,14 +13,14 @@
     </div>
     <div class="post-content mt-3">
         <p>{{ article.body|truncatewords:"25" }}</p>
-        <a class="btn btn-outline-dark mt-1" href="{% url 'articles:article' article.id %}">Перейти к статей</a>
-        <a class="btn btn-outline-info blue-word mt-1" href="#">Редактировать</a>
+        <a class="btn btn-outline-dark mt-1" href="{% url 'articles:article' article.id %}">Перейти к статье</a>
+        <a class="btn btn-outline-info blue-word mt-1" href="{% url 'account:edit_article' article.id %}">Редактировать</a>
         {% if not article.draft %}
-        <a class="btn btn-outline-warning mt-1" href="#">Снять с публикации</a>
+        <a class="btn btn-outline-warning mt-1" href="{% url 'account:draft_article' article.id %}">Снять с публикации</a>
         {% elif article.draft %}
-        <a class="btn btn-outline-success mt-1" href="#">Опубликовать</a>
+        <a class="btn btn-outline-success mt-1" href="{% url 'account:draft_article' article.id %}">Опубликовать</a>
         {% endif %}
-        <a class="btn btn-outline-danger mt-1" href="#">Удалить</a>
+        <a class="btn btn-outline-danger mt-1" href="{% url 'account:del_article' article.id %}">Удалить</a>
         <div class="post-status">
             <img src="{% static 'svg/star(white).svg' %}"/><small class="text-muted">{{ article.stars }}</small>
             <img src="{% static 'svg/view.svg' %}"/><small class="text-muted">{{ article.views }}</small>

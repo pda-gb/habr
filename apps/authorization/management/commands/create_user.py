@@ -7,7 +7,6 @@ from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
-
     help = 'Created random article data. Format python manage.py create_article number_article' \
            'First create user'
 
@@ -30,14 +29,17 @@ class Command(BaseCommand):
             user.save()
             self.stdout.write(self.style.SUCCESS(f'Successfully created user {user.username}'))
 
-            profile = HabrUserProfile(user=user, avatar=person.avatar(size=256),
-                                      full_name=person.full_name(gender=None, reverse=False),
-                                      place_of_work=business.company(), specialization=person.occupation(),
-                                      gender=person.gender(iso5218=False, symbol=False),
-                                      birth_date=datetime.date(start=1950, end=2018),
-                                      country=address.country(allow_random=False),
-                                      region=address.region(),
-                                      city=address.city())
+            profile = HabrUserProfile.objects.get(user=user)
+            profile.avatar = person.avatar(size=256)
+            profile.full_name = person.full_name(gender=None, reverse=False)
+            profile.place_of_work = business.company()
+            profile.specialization=person.occupation()
+            profile.gender = person.gender(iso5218=False, symbol=False)
+            profile.birth_date = datetime.date(start=1950, end=2018)
+            profile.country = address.country(allow_random=False)
+            profile.region = address.region()
+            profile.city = address.city()
+
             profile.save()
 
             self.stdout.write(self.style.SUCCESS(f'Successfully created profile {profile.full_name}'))
