@@ -32,17 +32,17 @@
                     <div class="post-content mt-3">
                         <br/>
                         <span>{{ article.body | linebreaksbr }}</span>
-                        <div class="post-status">
-                            <a href="#"><img src="{% static 'svg/like.svg' %}" alt=""/></a>
-                            <small class="text-muted">{{ article.likes }}</small>
-                            <a href="#"><img src="{% static 'svg/dislike.svg' %}" alt=""/></a>
-                            <small class="text-muted">{{ article.dislikes }}</small>
-                            <a href="#"><img src="{% static 'svg/bookmark.svg' %}" alt=""/></a>
-                            <small class="text-muted">{{ article.bookmarks }}</small>
-                            <img src="{% static 'svg/view.svg' %}" alt=""/><small
-                                class="text-muted">{{ article.views }}</small>
-                            <img src="{% static 'svg/comment.svg' %}" alt=""/><small class="text-muted">2</small>
-                        </div>
+{#                        <div class="post-status">#}
+{#                            <a href="#"><img src="{% static 'svg/like.svg' %}" alt=""/></a>#}
+{#                            <small class="text-muted">{{ article.likes }}</small>#}
+{#                            <a href="#"><img src="{% static 'svg/dislike.svg' %}" alt=""/></a>#}
+{#                            <small class="text-muted">{{ article.dislikes }}</small>#}
+{#                            <a href="#"><img src="{% static 'svg/bookmark.svg' %}" alt=""/></a>#}
+{#                            <small class="text-muted">{{ article.bookmarks }}</small>#}
+{#                            <img src="{% static 'svg/view.svg' %}" alt=""/><small#}
+{#                                class="text-muted">{{ article.views }}</small>#}
+{#                            <img src="{% static 'svg/comment.svg' %}" alt=""/><small class="text-muted">2</small>#}
+{#                        </div>#}
                     </div>
                 </div>
                 <div class="author-row">
@@ -54,7 +54,7 @@
                         {% endif %}
                         <div class="author-rating">
                             <div class="author-rating-num">{{ article.author.rating }}</div>
-                            <div class="author-rating-text">Рейтинг автора</div>
+{#                            <div class="author-rating-text">Рейтинг автора</div>#}
                         </div>
                     </div>
                     <div class="author-block">
@@ -64,40 +64,40 @@
                     </div>
                 </div>
                 <div class="comment-row">
-                    <h2 class="mb-4">Комментарии</h2>
+{#                    <h2 class="mb-4">Комментарии</h2>#}
                     <hr/>
                     <div class="m-4">
                         <div>
                             <a href="#" class="post-author">
-                                <img src="{% static 'img/avatar.jpg' %}" alt=""/>
-                                Username
+{#                                <img src="{% static 'img/avatar.jpg' %}" alt=""/>#}
+{#                                Username#}
                             </a>
-                            <span>сегодня в 13:00</span>
+{#                            <span>сегодня в 13:00</span>#}
                             <div class="comment-rating">
-                                <a href="#"><img src="{% static 'svg/like.svg' %}" alt=""/></a>
-                                <small class="text-muted">-9</small>
-                                <a href="#"><img src="{% static 'svg/dislike(filled).svg' %}" alt=""/></a>
+{#                                <a href="#"><img src="{% static 'svg/like.svg' %}" alt=""/></a>#}
+{#                                <small class="text-muted">-9</small>#}
+{#                                <a href="#"><img src="{% static 'svg/dislike(filled).svg' %}" alt=""/></a>#}
                             </div>
                         </div>
                         <div class="comment-text">
-                            <div>Прочитал, ничего не понял, гугл переводчик тож тупит</div>
+{#                            <div>Прочитал, ничего не понял, гугл переводчик тож тупит</div>#}
                         </div>
                     </div>
                     <div class="m-4">
                         <div>
                             <a href="#" class="post-author">
-                                <img src="{% static 'img/avatar.jpg' %}" alt=""/>
-                                Username
+{#                                <img src="{% static 'img/avatar.jpg' %}" alt=""/>#}
+{#                                Username#}
                             </a>
-                            <span>сегодня в 13:00</span>
+{#                            <span>сегодня в 13:00</span>#}
                             <div class="comment-rating">
-                                <a href="#"><img src="{% static 'svg/like(filled).svg' %}" alt=""/></a>
-                                <small class="text-muted">55</small>
-                                <a href="#"><img src="{% static 'svg/dislike.svg' %}" alt=""/></a>
+{#                                <a href="#"><img src="{% static 'svg/like(filled).svg' %}" alt=""/></a>#}
+{#                                <small class="text-muted">55</small>#}
+{#                                <a href="#"><img src="{% static 'svg/dislike.svg' %}" alt=""/></a>#}
                             </div>
                         </div>
                         <div class="comment-text">
-                            <div>Отличная статья, нужно учить латынь</div>
+{#                            <div>Отличная статья, нужно учить латынь</div>#}
                         </div>
                     </div>
                 </div>
