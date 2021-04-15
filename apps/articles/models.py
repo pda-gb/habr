@@ -80,7 +80,6 @@ class Article(models.Model):
             else:
                 last_articles[i]['date'] = 'сегодня'
             last_articles[i]['time'] = last_articles_set[i]['published'].strftime('%H:%M')
-        print(last_articles)
         return hub_articles, last_articles
 
     @staticmethod

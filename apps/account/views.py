@@ -61,7 +61,7 @@ def edit_profile(request):
         )
         if profile_edit_form.is_valid():
             profile_edit_form.save()
-            return HttpResponseRedirect(reverse("account:articles_list"))
+            return HttpResponseRedirect(reverse("account:edit_profile"))
         # return HttpResponseRedirect(reverse("account:edit_password"))
     hubs_menu = Hub.get_all_hubs()
     profile_edit_form = HabrUserProfileEditForm(instance=request.user.habruserprofile)
@@ -131,7 +131,7 @@ def edit_password(request):
                 user.password = make_password(new_password)
                 user.save()
                 update_session_auth_hash(request, user)
-                return HttpResponseRedirect(reverse("account:articles_list"))
+                return HttpResponseRedirect(reverse("account:user_articles"))
             else:
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
