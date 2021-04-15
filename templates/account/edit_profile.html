@@ -21,6 +21,8 @@
         {{ edit_profile_form.as_table }}
         <br>
         <button type="submit" class="btn btn-primary">Сохранить</button>
-        <button type="submit" class="btn btn-danger">Очистить</button>
+        <button type="reset" class="btn btn-danger">Сбросить</button>
     </form>
+    <br><br>
+    <a href="{% url 'account:edit_password' %}"><button class="btn btn-primary">Изменить пароль</button></a>
 {% endblock content %}

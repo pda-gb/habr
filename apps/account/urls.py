@@ -13,5 +13,6 @@ urlpatterns = [
     path('publications/', account.publications, name='publications'),
     path('user_articles/', account.user_articles, name='user_articles'),
     path('draft', account.draft, name='draft'),
+    path("edit_profile/edit_password/", account.edit_password, name="edit_password"),
 
 ]

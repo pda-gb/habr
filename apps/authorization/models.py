@@ -37,7 +37,7 @@ class HabrUserProfile(models.Model):
     gender = models.CharField(
         verbose_name="пол", max_length=1, choices=GENDER_CHOICES, blank=True
     )
-    birth_date = models.DateField(null=True, blank=True)
+    birth_date = models.DateField(null=True, blank=True, verbose_name='дата рождения')
     country = models.CharField(verbose_name="страна", max_length=64, blank=True)
     region = models.CharField(verbose_name="регион", max_length=64, blank=True)
     city = models.CharField(verbose_name="город", max_length=64, blank=True)
