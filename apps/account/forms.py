@@ -61,3 +61,21 @@ class ChangePasswordForm(forms.Form):
         if data_1 != data_2:
             raise forms.ValidationError('Ошибка!')
         return data_1
+
+
+class ArticleEditForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = (
+            "title",
+            "hubs",
+            "body",
+            "image",
+            "link_to_original"
+        )
+
+    def __init__(self, *args, **kwargs):
+        super(ArticleEditForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs["class"] = "form-control"
+            field.help_text = ""

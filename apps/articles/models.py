@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 import datetime
+from django.conf import settings
 
 from apps.authorization.models import HabrUser
 
@@ -39,7 +40,7 @@ class Tag(models.Model):
 
 class Article(models.Model):
     title = models.CharField(max_length=120, verbose_name="заголовок")
-    author = models.ForeignKey(HabrUser, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     hubs = models.ManyToManyField(Hub, verbose_name="хабы")
     tags = models.ManyToManyField(Tag, blank=True)
     body = models.TextField(verbose_name="Текст статьи")

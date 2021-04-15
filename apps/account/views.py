@@ -6,8 +6,10 @@ from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.conf import settings
+from django.utils import timezone
 
-from apps.account.forms import ChangePasswordForm
+from apps.account.forms import ChangePasswordForm, ArticleEditForm
 from apps.account.forms import HabrUserProfileEditForm, ArticleCreate
 from apps.articles.models import Article, Hub
 from apps.authorization.models import HabrUser
@@ -144,3 +146,32 @@ def edit_password(request):
         "edit_form": form,
     }
     return render(request, "account/edit_password.html", page_data)
+
+@login_required
+@transaction.atomic()
+def edit_article(request, pk):
+    '''
+    функция отвечает за редактирование статьи
+    '''
+    title = "Создание статьи"
+    edit_article = get_object_or_404(Article, pk=pk)
+    hubs_menu = Hub.get_all_hubs()
+
+    if request.method == "POST":
+        edit_form = ArticleEditForm(request.POST, request.FILES, instance=edit_article)
+        if edit_form.is_valid():
+            edit_article.updated = timezone.now()
+            edit_article.save()
+            edit_form.save()
+            return HttpResponseRedirect(reverse("account:user_articles"))
+    else:
+        edit_form = ArticleEditForm(instance=edit_article)
+
+    page_data = {
+        "title": title,
+        "hubs_menu": hubs_menu,
+        "update_form": edit_form,
+        "media_url": settings.MEDIA_URL
+    }
+
+    return render(request, "account/edit_article.html", page_data)

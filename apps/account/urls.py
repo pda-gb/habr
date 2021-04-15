@@ -14,5 +14,5 @@ urlpatterns = [
     path('user_articles/', account.user_articles, name='user_articles'),
     path('draft', account.draft, name='draft'),
     path("edit_profile/edit_password/", account.edit_password, name="edit_password"),
-
+    path("edit_article/<int:pk>", account.edit_article, name="edit_article"),
 ]
