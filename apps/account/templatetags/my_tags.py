@@ -19,5 +19,5 @@ def media_folder_images(string):
     if str(string).startswith('http'):
         return string
     elif not string:
-        string = 'main_img_articles/default.jpg'
+        string = 'img_articles/default.jpg'
     return f'{settings.MEDIA_URL}{string}'
