@@ -23,6 +23,8 @@ INSTALLED_APPS = [
     "apps.authorization",
     "apps.articles",
     "apps.account",
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +54,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.articles.context_processors.get_all_hubs",
             ],
         },
     },
@@ -92,14 +95,21 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = "/static/"
-
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-
-# используем своё приложение для аутентификации
-AUTH_USER_MODEL = "authorization.HabrUser"
+STATIC_ROOT = os.path.join(BASE_DIR, "static_dev")
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_CONFIGS = {
+    'awesome_ckeditor': {
+        'toolbar': 'Basic',
+    },
+}
+
+# используем своё приложение для аутентификации
+AUTH_USER_MODEL = "authorization.HabrUser"
 
 
 # нововведение в джанго 3.2

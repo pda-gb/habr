@@ -8,7 +8,7 @@ urlpatterns = [
     path("account/", include("apps.account.urls", namespace="account")),
     path("auth/", include("apps.authorization.urls", namespace="auth")),
     path("admin/", admin.site.urls),
-    # path("user_articles/", include("apps.user_articles.urls", namespace='user_articles'))
+    path(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ]
 
 if settings.DEBUG:
