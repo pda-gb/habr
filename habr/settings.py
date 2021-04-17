@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "apps.authorization",
     "apps.articles",
     "apps.account",
+    "apps.comments",
 ]
 
 MIDDLEWARE = [
@@ -104,3 +105,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # нововведение в джанго 3.2
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+# Set login path:
+#   https://docs.djangoproject.com/en/2.2/ref/settings/#login-url
+LOGIN_URL = "apps.authorization:login"

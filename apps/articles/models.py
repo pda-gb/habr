@@ -160,35 +160,6 @@ class Article(models.Model):
         art.save()
 
 
-class Comment(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    comment_to = models.ForeignKey(
-        "self", null=True, blank=True, on_delete=models.CASCADE
-    )
-    author = models.ForeignKey(HabrUser, on_delete=models.CASCADE)
-    body = models.TextField()
-
-    created = models.DateTimeField(verbose_name="создан", auto_now_add=True)
-    updated = models.DateTimeField(verbose_name="обновлен", auto_now=True)
-    publish = models.DateTimeField(verbose_name="опубликован", default=timezone.now)
-
-    class Meta:
-        verbose_name = "комментарий"
-        verbose_name_plural = "комментарии"
-
-    @staticmethod
-    def create_comment(article_pk, comment_pk, author_pk, text_comment):
-        try:
-            comment_object = Comment.objects.get(pk=comment_pk)
-        except ValueError:
-            comment_object = None
-        author = HabrUser.objects.get(pk=author_pk)
-        article = Article.objects.get(pk=article_pk)
-        comment = Comment(
-            body=text_comment, article=article, author=author, comment_to=comment_object
-        )
-        comment.save()
-
 
 if __name__ == "__main__":
     hub = Hub(hub="development")
