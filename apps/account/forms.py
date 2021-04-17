@@ -44,7 +44,7 @@ class ArticleCreate(forms.ModelForm):
 
 
 class ChangePasswordForm(forms.Form):
-    old_password = forms.CharField(max_length=30, label='введите старый пароль')
+    old_password = forms.CharField(widget=forms.PasswordInput(), label='введите старый пароль')
     new_password = forms.CharField(widget=forms.PasswordInput(), label='введите новый пароль')
     repeat_password = forms.CharField(widget=forms.PasswordInput(), label='повторите пароль')
 
