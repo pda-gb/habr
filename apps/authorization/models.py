@@ -3,7 +3,7 @@ from django.db import models
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+from django.conf import settings
 
 class HabrUser(AbstractUser):
     first_name = None
@@ -20,7 +20,7 @@ class HabrUserProfile(models.Model):
     )
 
     avatar = models.ImageField(
-        upload_to="users_avatars", blank=True, verbose_name="аватарка"
+        upload_to="avatars/", blank=True, verbose_name="аватарка"
     )
     user = models.OneToOneField(
         HabrUser, unique=True, null=False, db_index=True, on_delete=models.CASCADE

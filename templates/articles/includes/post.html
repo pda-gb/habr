@@ -1,22 +1,16 @@
 {% load static %}
+{% load my_tags %}
 {% block post %}
     <div class="post mb-4">
         {% block post-head %}
             <div class="post-head">
                 <a href="{% url 'articles:article' article.id %}" class="post-link mb-3"
                 >{{ article.title }}</a>
-                {% if article.image %}
-                    <img src="/media/img_articles/{{ article.image }}" alt=""/><br/>
-                {% else %}
-                    <img src="{% static 'img/photo1.jpg' %}" alt="#" class="w-100 mb-2">
-                {% endif %}
+                {#            загрузка главной картинки    #}
+                <img class="main-image" src="{{ article.image|media_folder_images }}" alt="main-image"/><br/>
                 <a href="#" class="post-author">
                     {#            загрузка аваттарки    #}
-                    {% if article.author.avatar %}
-                        <img src="/media/avatars/{{ article.author.avatar }}" alt=""/>
-                    {% else %}
-                        <img src="{% static 'img/avatar.jpg' %}" alt=""/>
-                    {% endif %}
+                    <img src="{{ article.author.habruserprofile.avatar|media_folder_users }}" alt="avatar"/>
                     {#            загрузка юзернейм     #}
                     {% if article.author.username %}
                         {{ article.author.username }}

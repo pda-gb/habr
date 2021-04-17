@@ -1,16 +1,10 @@
 {% extends 'articles/base.html' %}
-{% load static %}
+{% load my_tags %}
 {% block content %}
 
     <form class="form-horizontal" action="{% url 'account:edit_profile' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {#            загрузка аваттарки    #}
-        {% if user.avatar %}
-            <img src="/media/avatars/{{ user.avatar }}" alt="avatar"/>
-        {% else %}
-            <img src="{% static 'img/avatar.jpg' %}" alt=""/>
-        {% endif %}
-        {#            загрузка юзернейм     #}
+        <img class="ava-img" src="{{ user.habruserprofile.avatar|media_folder_users }}" alt="avatar">
         {% if user.username %}
             {{ user.username }}
         {% else %}
@@ -18,7 +12,6 @@
         {% endif %}
         <br>
         {{ edit_form.as_table }}
-        {{ edit_profile_form.as_table }}
         <br>
         <button type="submit" class="btn btn-primary">Сохранить</button>
         <button type="reset" class="btn btn-danger">Сбросить</button>

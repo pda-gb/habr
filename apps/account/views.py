@@ -19,7 +19,7 @@ from apps.authorization.models import HabrUser
 @transaction.atomic()
 def add_article(request):
     if request.method == "POST":
-        article_add = ArticleCreate(request.POST)
+        article_add = ArticleCreate(request.POST, request.FILES)
         if article_add.is_valid():
             article_add.save(commit=False)
             article_add.instance.author = request.user
@@ -27,11 +27,9 @@ def add_article(request):
             return HttpResponseRedirect(reverse("account:user_articles"))
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     title = "Создание статьи"
-    hubs_menu = Hub.get_all_hubs()
     article_add = ArticleCreate()
     page_data = {
         "title": title,
-        "hubs_menu": hubs_menu,
         "article_add": article_add
     }
     return render(request, "account/form_add_article.html", page_data)
@@ -59,12 +57,11 @@ def edit_profile(request):
     title = "Редактирование профиля"
     if request.method == "POST":
         profile_edit_form = HabrUserProfileEditForm(
-            request.POST, instance=request.user.habruserprofile
+            request.POST, request.FILES, instance=request.user.habruserprofile
         )
         if profile_edit_form.is_valid():
             profile_edit_form.save()
             return HttpResponseRedirect(reverse("account:edit_profile"))
-        # return HttpResponseRedirect(reverse("account:edit_password"))
     hubs_menu = Hub.get_all_hubs()
     profile_edit_form = HabrUserProfileEditForm(instance=request.user.habruserprofile)
     page_data = {
@@ -138,11 +135,9 @@ def edit_password(request):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     form = ChangePasswordForm()
-    hubs_menu = Hub.get_all_hubs()
 
     page_data = {
         "title": title,
-        "hubs_menu": hubs_menu,
         "edit_form": form,
     }
     return render(request, "account/edit_password.html", page_data)
@@ -155,7 +150,6 @@ def edit_article(request, pk):
     '''
     title = "Создание статьи"
     edit_article = get_object_or_404(Article, pk=pk)
-    hubs_menu = Hub.get_all_hubs()
 
     if request.method == "POST":
         edit_form = ArticleEditForm(request.POST, request.FILES, instance=edit_article)
@@ -169,7 +163,6 @@ def edit_article(request, pk):
 
     page_data = {
         "title": title,
-        "hubs_menu": hubs_menu,
         "update_form": edit_form,
         "media_url": settings.MEDIA_URL
     }

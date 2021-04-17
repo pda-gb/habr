@@ -1,23 +1,17 @@
 {% extends 'articles/base.html' %}
 {% load static %}
+{% load my_tags %}
 {% block content %}
     <div class="container mt-4">
         <div class="row">
             <div class="col-8">
                 <div class="post mb-4">
                     <div class="post-head">
-                        {% if article.image %}
-                            <img src="/media/img_articles/{{ article.image }}" alt=""/><br/>
-                        {% else %}
-                            <img src="{% static 'img/photo2.jpg' %}" alt="#" class="w-100 mb-2">
-                        {% endif %}
+                        {#            загрузка заглавной картинки    #}
+                        <img class="main-image" src="{{ article.image|media_folder_images }}" alt="main-image"/><br/>
                         <a href="#" class="post-author">
                             {#            загрузка аваттарки    #}
-                            {% if article.author.avatar %}
-                                <img src="/media/avatars/{{ article.author.avatar }}" alt=""/>
-                            {% else %}
-                                <img src="{% static 'img/avatar.jpg' %}" alt=""/>
-                            {% endif %}
+                            <img src="{{ article.author.habruserprofile.avatar|media_folder_users }}" alt=""/>
                             {#            загрузка юзернейм     #}
                             {% if article.author.username %}
                                 {{ article.author.username }}
@@ -47,11 +41,7 @@
                 </div>
                 <div class="author-row">
                     <div class="author-block">
-                        {% if article.author.avatar %}
-                            <img class="author-avatar" src="/media/avatars/{{ article.author.avatar }}" alt=""/>
-                        {% else %}
-                            <img class="author-avatar" src="{% static 'img/avatar.jpg' %}" alt=""/>
-                        {% endif %}
+                        <img class="author-avatar" src="{{ article.author.habruserprofile.avatar|media_folder_users }}" alt="avatar"/>
                         <div class="author-rating">
                             <div class="author-rating-num">{{ article.author.rating }}</div>
                             <div class="author-rating-text">Рейтинг автора</div>
