@@ -65,6 +65,7 @@ a:hover {
 .post-author img {
   width: 1.5em;
   height: 1.5em;
+  border-radius: 0.75em;
 }
 
 .post-content img {
@@ -318,4 +319,14 @@ body {
 	color: #6c6c6c;
 	border-bottom: 3px solid #212121;
 	padding-bottom: 8px;
+}
+
+.ava-img {
+    width: 200px;
+    display: block;
+}
+
+.main-image {
+    width: 840px;
+    height: 561.75px;
 }
