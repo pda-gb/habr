@@ -16,6 +16,7 @@ class HabrUserProfileEditForm(forms.ModelForm):
             "country",
             "region",
             "city",
+            'avatar',
         )
 
     def __init__(self, *args, **kwargs):
