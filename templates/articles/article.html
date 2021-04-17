@@ -1,5 +1,10 @@
 {% extends 'articles/base.html' %}
 {% load static %}
+
+{% block title %}
+  {{ article.title }}
+{% endblock title %}
+
 {% block content %}
     <div class="container mt-4">
         <div class="row">
@@ -27,11 +32,30 @@
                         </a>
                         <span>{{ article.published }}</span>
                         <h1>{{ article.title }}</h1>
+                        <div class="hubs mt-2">                            
+                            {% for hub in article.hubs.all %}
+                            <a href="{% url 'articles:hub' hub.id %}" class="post-author">{{ hub }}</a>
+                            {% endfor %}
+                        </div>
 {#                        <a href="#" class="post-link">{{ article.title }}</a>#}
                     </div>
                     <div class="post-content mt-3">
                         <br/>
                         <span>{{ article.body | linebreaksbr }}</span>
+                        <div class="hubs mt-2">
+                            <p>Теги: 
+                                {% for tag in article.tags.all %}
+                                <a href="#" class="post-author">{{ tag.tag }}</a>
+                                {% endfor %}
+                            </p>
+                        </div>
+                        <div class="hubs mt-2">
+                            <p>Хабы: 
+                                {% for hub in article.hubs.all %}
+                                <a href="{% url 'articles:hub' hub.id %}" class="post-author">{{ hub }}</a>
+                                {% endfor %}
+                            </p>
+                        </div>
                         <div class="post-status">
                             <a href="#"><img src="{% static 'svg/like.svg' %}" alt=""/></a>
                             <small class="text-muted">{{ article.likes }}</small>

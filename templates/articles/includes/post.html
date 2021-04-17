@@ -25,6 +25,13 @@
                     {% endif %}
                 </a>
                 <span class="text-muted">{{ article.published }}</span>
+                <div class="hubs mt-2">
+                    <p>Хабы: 
+                        {% for hub in article.hubs.all %}
+                          <a href="{% url 'articles:hub' hub.id %}" class="post-author">{{ hub }}</a>
+                        {% endfor %}
+                    </p>
+                </div>
             </div>
         {% endblock post-head %}
         {% block post-content %}
