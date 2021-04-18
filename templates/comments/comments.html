@@ -6,8 +6,9 @@
     <h2 class="mb-4">Комментарии</h2>
     <hr/>
     {% for comment in comments %}
-    <div class="m-4">
-        <div>
+    <a name="comment-{{ comment.id }}"></a>
+    <div class="m-4 row" id="{{ comment.id }}">
+        <div class="col-md-{{ comment.get_col }} col-md-offset-{{ comment.get_offset }}">
             <a href="#" class="post-author">
                 {% if comment.author.avatar %}
                 <img src="{{ media_url}}{{ comment.author.habruserprofile.avatar }}" alt=""/>

@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 import datetime
 from django.conf import settings
+from django.contrib.postgres.fields import ArrayField
 
 from apps.articles.models import Article
 from apps.authorization.models import HabrUser, HabrUserProfile
@@ -10,9 +11,7 @@ from apps.authorization.models import HabrUser, HabrUserProfile
 # Create your models here.
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    comment_to = models.ForeignKey(
-        "self", null=True, blank=True, on_delete=models.CASCADE
-    )
+    path = ArrayField(models.IntegerField(),default=[])
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     body = models.TextField(verbose_name='Текст статьи')
 
@@ -22,6 +21,18 @@ class Comment(models.Model):
     class Meta:
         verbose_name = "комментарий"
         verbose_name_plural = "комментарии"
+
+    def get_offset(self):
+        level = len(self.path) - 1
+        if level > 5:
+            level = 5
+        return level
+    
+    def get_col(self):
+        level = len(self.path) - 1
+        if level > 5:
+            level = 5
+        return level
 
     @staticmethod
     def create_comment(article_pk, comment_pk, author_pk, text_comment):

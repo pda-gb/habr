@@ -1,7 +1,14 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, render, redirect
 from django.conf import settings
 from django.views.generic import ListView, DetailView, CreateView
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
+from django.views import View
+from django.template.context_processors import csrf
+from django.contrib import auth
+
 
 from .models import Article, Hub
 from apps.comments.models import Comment
@@ -28,7 +35,7 @@ def hub(request, pk=None):
     page_data = {"articles": hub_articles, "hubs_menu": hubs_menu, "last_articles": last_articles}
     return render(request, "articles/articles.html", page_data)
 
-
+@login_required
 def article(request, pk=None):
     last_articles = Article.get_articles()[1]
     current_article = get_object_or_404(Article, id=pk)
@@ -53,3 +60,50 @@ def article(request, pk=None):
         "media_url": settings.MEDIA_URL,
     }
     return render(request, "articles/article.html", page_data)
+
+class ArticleView(View):
+    template_name = 'articles/article.html'
+    form_comment = CommentCreateForm
+
+    def get(self, request, *args, **kwargs):
+        last_articles = Article.get_articles()[1]
+        current_article = get_object_or_404(Article, id=self.kwargs['pk'])
+        hubs_menu = Hub.get_all_hubs()
+        context = {}
+        context.update(csrf(request))
+        user = auth.get_user(request)
+        context['comments'] = current_article.comment_set.all().order_by('path')
+        context['next'] = current_article.get_absolute_url()
+        context['article'] = current_article
+        context['hubs_menu'] = hubs_menu
+        context['last_articles'] = last_articles
+        for el in context['comments']:
+            print(el)
+        if user.is_authenticated:
+            context['form'] = self.form_comment
+
+        return render(request, template_name=self.template_name, context=context)
+
+@login_required
+@require_http_methods('POST')
+def add_comment(request, pk):
+
+    form = CommentCreateForm(request.POST)
+    article = get_object_or_404(Article, id=pk)
+
+    if form.is_valid():
+        comment = Comment()
+        comment.path = []
+        comment.article = article
+        comment.author = auth.get_user(request)
+        comment.body = form.cleaned_data['comment_area']
+        comment.save()
+        try:
+            comment.path.extend(Comment.objects.get(id=form.cleaned_data['parent_comment']).path)
+            comment.path.append(comment)
+        except ObjectDoesNotExist:
+            comment.path.append(comment)
+
+        comment.save()
+
+    return redirect(article.get_absolute_url())
