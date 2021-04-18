@@ -104,4 +104,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
 # нововведение в джанго 3.2
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

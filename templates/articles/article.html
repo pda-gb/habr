@@ -27,14 +27,14 @@
                         <br/>
                         <span>{{ article.body | linebreaksbr }}</span>
                         <div class="post-status">
-                            <a href="#"><img src="{% static 'svg/like.svg' %}" alt=""/></a>
-                            <small class="text-muted">{{ article.likes }}</small>
-                            <a href="#"><img src="{% static 'svg/dislike.svg' %}" alt=""/></a>
-                            <small class="text-muted">{{ article.dislikes }}</small>
-                            <a href="#"><img src="{% static 'svg/bookmark.svg' %}" alt=""/></a>
-                            <small class="text-muted">{{ article.bookmarks }}</small>
-                            <img src="{% static 'svg/view.svg' %}" alt=""/><small
-                                class="text-muted">{{ article.views }}</small>
+                            <img src="{% static 'svg/like.svg' %}" alt="" id="like"/>
+                            <small class="text-muted" id="likes_count">{{ article.likes }}</small>
+                            <img src="{% static 'svg/dislike.svg' %}" alt="" id="dislike"/>
+                            <small class="text-muted" id="dislikes_count">{{ article.dislikes }}</small>
+                            <img src="{% static 'svg/bookmark.svg' %}" alt="" id="bookmark"/>
+                            <small class="text-muted" id="bookmarks_count">{{ article.bookmarks }}</small>
+                            <img src="{% static 'svg/view.svg' %}" alt=""/>
+                            <small class="text-muted">{{ article.views }}</small>
                             <img src="{% static 'svg/comment.svg' %}" alt=""/><small class="text-muted">2</small>
                         </div>
                     </div>
@@ -97,3 +97,60 @@
         </div>
     </div>
 {% endblock content %}
+
+{% block js %}
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+    crossorigin="anonymous"
+></script>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous"
+></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script>
+function sendAjax(fieldName) {
+  $.ajax({
+      data: {field: fieldName, user: {{ request.user.pk }}, article: {{ article.pk }}},
+      url: "{% url 'articles:ajax_change_rate' %}",
+      success: function(response) {
+        $("#likes_count").text(response.likes)
+        $("#dislikes_count").text(response.dislikes)
+        $("#bookmarks_count").text(response.bookmarks)
+      }
+  });
+};
+
+$(document).ready(function(){
+  $('#like').click(function () {
+    sendAjax("like")
+  });
+
+  $('#dislike').click(function () {
+    sendAjax("dislike")
+  });
+
+  $('#bookmark').click(function () {
+    sendAjax("bookmark")
+  });
+
+  $('#like').hover(function(){
+    $(this).attr('src', "{% static 'svg/like(filled).svg' %}");
+    }, function(){
+    $(this).attr('src', "{% static 'svg/like.svg' %}");
+  });
+  $('#dislike').hover(function(){
+    $(this).attr('src', "{% static 'svg/dislike(filled).svg' %}");
+    }, function(){
+    $(this).attr('src', "{% static 'svg/dislike.svg' %}");
+  });
+  $('#bookmark').hover(function(){
+    $(this).attr('src', "{% static 'svg/bookmark(filled).svg' %}");
+    }, function(){
+    $(this).attr('src', "{% static 'svg/bookmark.svg' %}");
+  });
+});
+</script>
+{% endblock js %}

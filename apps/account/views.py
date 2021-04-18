@@ -25,13 +25,10 @@ def add_article(request):
             article_add.instance.author = request.user
             article_add.save()
             return HttpResponseRedirect(reverse("account:user_articles"))
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
     title = "Создание статьи"
     article_add = ArticleCreate()
-    page_data = {
-        "title": title,
-        "article_add": article_add
-    }
+    page_data = {"title": title, "article_add": article_add}
     return render(request, "account/form_add_article.html", page_data)
 
 
@@ -40,7 +37,7 @@ def add_article(request):
 def del_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
     article.del_article(pk)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 @login_required
@@ -48,7 +45,7 @@ def del_article(request, pk):
 def draft_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
     article.draft_article(pk)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 @login_required
@@ -77,13 +74,13 @@ def user_articles(request):
     """
     функция отвечает за Мои статьи
     """
-    title = 'Мои статьи'
+    title = "Мои статьи"
     articles = Article.get_by_author(author_pk=request.user.id)
     page_data = {
-        'title': title,
-        'articles': articles,
+        "title": title,
+        "articles": articles,
     }
-    return render(request, 'account/user_articles.html', page_data)
+    return render(request, "account/user_articles.html", page_data)
 
 
 @login_required
@@ -91,13 +88,13 @@ def publications(request):
     """
     функция отвечает за мои публикации
     """
-    title = 'Мои публикации'
+    title = "Мои публикации"
     articles = Article.get_by_author(author_pk=request.user.id, draft=0)
     page_data = {
-        'title': title,
-        'articles': articles,
+        "title": title,
+        "articles": articles,
     }
-    return render(request, 'account/user_articles.html', page_data)
+    return render(request, "account/user_articles.html", page_data)
 
 
 @login_required
@@ -105,13 +102,13 @@ def draft(request):
     """
     функция отвечает за Черновик
     """
-    title = 'Черновик'
+    title = "Черновик"
     articles = Article.get_by_author(author_pk=request.user.id, draft=1)
     page_data = {
-        'title': title,
-        'articles': articles,
+        "title": title,
+        "articles": articles,
     }
-    return render(request, 'account/user_articles.html', page_data)
+    return render(request, "account/user_articles.html", page_data)
 
 
 @login_required
@@ -120,7 +117,7 @@ def edit_password(request):
     title = "Изменить пароль"
     user = HabrUser.objects.get(username=request.user)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ChangePasswordForm(request.POST)
         if form.is_valid():
             old_password = request.POST.get("old_password")
@@ -132,7 +129,7 @@ def edit_password(request):
                 update_session_auth_hash(request, user)
                 return HttpResponseRedirect(reverse("account:user_articles"))
             else:
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
     form = ChangePasswordForm()
 
@@ -142,12 +139,13 @@ def edit_password(request):
     }
     return render(request, "account/edit_password.html", page_data)
 
+
 @login_required
 @transaction.atomic()
 def edit_article(request, pk):
-    '''
+    """
     функция отвечает за редактирование статьи
-    '''
+    """
     title = "Создание статьи"
     edit_article = get_object_or_404(Article, pk=pk)
 
@@ -164,7 +162,7 @@ def edit_article(request, pk):
     page_data = {
         "title": title,
         "update_form": edit_form,
-        "media_url": settings.MEDIA_URL
+        "media_url": settings.MEDIA_URL,
     }
 
     return render(request, "account/edit_article.html", page_data)

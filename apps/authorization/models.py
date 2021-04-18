@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
 
+
 class HabrUser(AbstractUser):
     first_name = None
     last_name = None
@@ -37,7 +38,7 @@ class HabrUserProfile(models.Model):
     gender = models.CharField(
         verbose_name="пол", max_length=1, choices=GENDER_CHOICES, blank=True
     )
-    birth_date = models.DateField(null=True, blank=True, verbose_name='дата рождения')
+    birth_date = models.DateField(null=True, blank=True, verbose_name="дата рождения")
     country = models.CharField(verbose_name="страна", max_length=64, blank=True)
     region = models.CharField(verbose_name="регион", max_length=64, blank=True)
     city = models.CharField(verbose_name="город", max_length=64, blank=True)

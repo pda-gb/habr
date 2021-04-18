@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.fields import BooleanField
+from django.db.models.fields.related import ForeignKey
 from django.utils import timezone
 import datetime
 from django.conf import settings
@@ -44,7 +46,9 @@ class Article(models.Model):
     hubs = models.ManyToManyField(Hub, verbose_name="хабы")
     tags = models.ManyToManyField(Tag, blank=True)
     body = models.TextField(verbose_name="Текст статьи")
-    image = models.ImageField(upload_to="img_articles/", blank=True, verbose_name="главная картинка")
+    image = models.ImageField(
+        upload_to="img_articles/", blank=True, verbose_name="главная картинка"
+    )
     link_to_original = models.URLField(blank=True, verbose_name="ссылка на оригинал")
 
     created = models.DateTimeField(verbose_name="создана", auto_now_add=True)
@@ -55,6 +59,11 @@ class Article(models.Model):
 
     draft = models.BooleanField(verbose_name="черновик", default=False)
     is_active = models.BooleanField(verbose_name="удалена", default=True)
+
+    likes = models.PositiveIntegerField(verbose_name="лайки", default=0)
+    dislikes = models.PositiveIntegerField(verbose_name="дизлайки", default=0)
+    views = models.PositiveIntegerField(verbose_name="просмотры", default=0)
+    bookmarks = models.PositiveIntegerField(verbose_name="заметки", default=0)
 
     class Meta:
         verbose_name = "статья"
@@ -71,16 +80,23 @@ class Article(models.Model):
         """
         hub_articles = Article.objects.filter(draft=False)
         len_last_articles = 3
-        last_articles_set = hub_articles.values('id', 'title', 'published')[0:len_last_articles]
+        last_articles_set = hub_articles.values("id", "title", "published")[
+            0:len_last_articles
+        ]
         last_articles = [{} for _ in range(len_last_articles)]
         for i in range(len_last_articles):
-            last_articles[i]['id'] = last_articles_set[i]['id']
-            last_articles[i]['title'] = last_articles_set[i]['title']
-            if last_articles_set[i]['published'].date() != datetime.datetime.now().date():
-                last_articles[i]['date'] = last_articles_set[i]['published'].date()
+            last_articles[i]["id"] = last_articles_set[i]["id"]
+            last_articles[i]["title"] = last_articles_set[i]["title"]
+            if (
+                last_articles_set[i]["published"].date()
+                != datetime.datetime.now().date()
+            ):
+                last_articles[i]["date"] = last_articles_set[i]["published"].date()
             else:
-                last_articles[i]['date'] = 'сегодня'
-            last_articles[i]['time'] = last_articles_set[i]['published'].strftime('%H:%M')
+                last_articles[i]["date"] = "сегодня"
+            last_articles[i]["time"] = last_articles_set[i]["published"].strftime(
+                "%H:%M"
+            )
         return hub_articles, last_articles
 
     @staticmethod
@@ -132,9 +148,13 @@ class Article(models.Model):
         """
         Returns articles with the set author
         """
-        if draft == None:
-            return Article.objects.filter(author_id__pk=author_pk).order_by('updated')
-        return Article.objects.filter(author_id__pk=author_pk).filter(draft=draft).order_by('-updated')
+        if draft is None:
+            return Article.objects.filter(author_id__pk=author_pk).order_by("updated")
+        return (
+            Article.objects.filter(author_id__pk=author_pk)
+            .filter(draft=draft)
+            .order_by("-updated")
+        )
 
     @staticmethod
     def del_article(id):
@@ -186,6 +206,23 @@ class Comment(models.Model):
             body=text_comment, article=article, author=author, comment_to=comment_object
         )
         comment.save()
+
+
+class ArticleRate(models.Model):
+    article = ForeignKey(Article, on_delete=models.CASCADE)
+    user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    liked = BooleanField(null=True, default=None)
+    watched = BooleanField(default=True)
+    in_bookmarks = BooleanField(default=False)
+
+    @staticmethod
+    def create(article, user):
+        try:
+            return ArticleRate.objects.get(article=article, user=user)
+        except Exception:
+            article.views += 1
+            article.save()
+            return ArticleRate.objects.create(article=article, user=user)
 
 
 if __name__ == "__main__":
