@@ -102,15 +102,25 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
+
+CKEDITOR_IMAGE_BACKEND = "pillow"
+
 CKEDITOR_CONFIGS = {
-    'awesome_ckeditor': {
-        'toolbar': 'Basic',
+    "for_user": {
+        'toolbar_Basic': [
+            ['Source', '-', 'Bold', 'Italic', '-', 'JustifyLeft',
+             'JustifyCenter', 'JustifyRight', 'JustifyBlock']
+        ],
+    },
+    "default": {
+        "toolbar": "full",
+        "height": 800,
+        "width": 800,
     },
 }
 
 # используем своё приложение для аутентификации
 AUTH_USER_MODEL = "authorization.HabrUser"
-
 
 # нововведение в джанго 3.2
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

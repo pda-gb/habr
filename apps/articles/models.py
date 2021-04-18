@@ -1,3 +1,4 @@
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 from django.utils import timezone
 import datetime
@@ -43,7 +44,7 @@ class Article(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     hubs = models.ManyToManyField(Hub, verbose_name="хабы")
     tags = models.ManyToManyField(Tag, blank=True)
-    body = models.TextField(verbose_name="Текст статьи")
+    body = models.TextField()
     image = models.ImageField(upload_to="img_articles/", blank=True, verbose_name="главная картинка")
     link_to_original = models.URLField(blank=True, verbose_name="ссылка на оригинал")
 

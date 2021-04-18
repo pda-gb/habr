@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
@@ -6,11 +7,11 @@ from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-from django.conf import settings
 from django.utils import timezone
 
-from apps.account.forms import ChangePasswordForm, ArticleEditForm
-from apps.account.forms import HabrUserProfileEditForm, ArticleCreate
+from apps.account.forms import ChangePasswordForm, ArticleEditForm, ArticleCreate
+# from apps.account.forms import ChangePasswordForm
+from apps.account.forms import HabrUserProfileEditForm
 from apps.articles.models import Article, Hub
 from apps.authorization.models import HabrUser
 
@@ -18,16 +19,16 @@ from apps.authorization.models import HabrUser
 @login_required
 @transaction.atomic()
 def add_article(request):
+    article_add = ArticleCreate(request.POST, request.FILES)
     if request.method == "POST":
-        article_add = ArticleCreate(request.POST, request.FILES)
         if article_add.is_valid():
             article_add.save(commit=False)
             article_add.instance.author = request.user
             article_add.save()
             return HttpResponseRedirect(reverse("account:user_articles"))
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
     title = "Создание статьи"
-    article_add = ArticleCreate()
     page_data = {
         "title": title,
         "article_add": article_add
@@ -141,6 +142,7 @@ def edit_password(request):
         "edit_form": form,
     }
     return render(request, "account/edit_password.html", page_data)
+
 
 @login_required
 @transaction.atomic()

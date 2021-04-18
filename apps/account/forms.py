@@ -1,7 +1,9 @@
+from ckeditor.widgets import CKEditorWidget
 from django import forms
+from django.forms import CharField
 
-from apps.authorization.models import HabrUserProfile
 from apps.articles.models import Article
+from apps.authorization.models import HabrUserProfile
 
 
 class HabrUserProfileEditForm(forms.ModelForm):
@@ -25,23 +27,36 @@ class HabrUserProfileEditForm(forms.ModelForm):
             field.widget.attrs["class"] = "form-control"
             field.help_text = ""
 
-
 class ArticleCreate(forms.ModelForm):
+    body = CharField(widget=CKEditorWidget(config_name="for_user"))
+
     class Meta:
         model = Article
         fields = (
             "title",
             "hubs",
             "body",
-            "image",
             "link_to_original"
         )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs["class"] = "form-control"
-            field.help_text = ""
+
+# class ArticleCreate(forms.ModelForm):
+#
+#     class Meta:
+#         model = Article
+#         # fields = (
+#         #     "title",
+#         #     "hubs",
+#         #     "body",
+#         #     "image",
+#         #     "link_to_original"
+#         # )
+#
+# def __init__(self, *args, **kwargs):
+#     super().__init__(*args, **kwargs)
+#     for field_name, field in self.fields.items():
+#         field.widget.attrs["class"] = "form-control"
+#         field.help_text = ""
 
 
 class ChangePasswordForm(forms.Form):
