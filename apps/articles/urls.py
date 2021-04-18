@@ -1,6 +1,7 @@
 from django.urls import path
 
 import apps.articles.views as main_page
+import apps.comments.views as comments
 
 app_name = "articles"
 

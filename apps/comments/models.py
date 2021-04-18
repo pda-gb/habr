@@ -5,7 +5,7 @@ import datetime
 from django.conf import settings
 
 from apps.articles.models import Article
-from apps.authorization.models import HabrUser
+from apps.authorization.models import HabrUser, HabrUserProfile
 
 # Create your models here.
 class Comment(models.Model):
@@ -35,3 +35,8 @@ class Comment(models.Model):
             body=text_comment, article=article, author=author, comment_to=comment_object
         )
         comment.save()
+
+    @staticmethod
+    def get_comments(article_pk):
+        comments = Comment.objects.filter(article__pk=article_pk).order_by('updated')
+        return comments
