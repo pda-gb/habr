@@ -109,10 +109,24 @@ CKEDITOR_IMAGE_BACKEND = "pillow"
 
 CKEDITOR_CONFIGS = {
     "for_user": {
-        'toolbar_Basic': [
-            ['Source', '-', 'Bold', 'Italic', '-', 'JustifyLeft',
-             'JustifyCenter', 'JustifyRight', 'JustifyBlock']
+        'toolbar': [
+            [
+                'Undo', 'Redo',
+                '-', 'Format',
+                '-', 'FontSize',
+                '-', 'Blockquote',
+                '-', 'Bold', 'Italic', 'Underline',
+                '-', 'HorizontalRule',
+                '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',
+                '-', 'NumberedList', 'BulletedList',
+                '-', 'Image',
+                '-', 'Source'
+            ]
         ],
+        'height': 500,
+        'width': '100%',
+        'toolbarCanCollapse': False,
+        'forcePasteAsPlainText': True
     },
     "default": {
         "toolbar": "full",
