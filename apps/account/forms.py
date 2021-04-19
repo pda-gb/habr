@@ -29,13 +29,14 @@ class HabrUserProfileEditForm(forms.ModelForm):
 
 
 class ArticleCreate(forms.ModelForm):
-    body = CharField(widget=CKEditorUploadingWidget(config_name="default"))
+    body = CharField(widget=CKEditorUploadingWidget(config_name="for_user"))
 
     class Meta:
         model = Article
         fields = (
             "title",
             "hubs",
+            "image",
             "body",
             "link_to_original"
         )
