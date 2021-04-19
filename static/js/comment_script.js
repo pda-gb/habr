@@ -28,9 +28,13 @@ $(document).ready(function(){
     })
     $(".submit-reply").on('click', function(e){
         e.preventDefault()
+        let target = event.target;
         var parentId = $(this).attr('data-submit-reply')
         var id = $(this).attr('data-id')
         var text = $('#form-'+id).find('textarea[name="comment-text"]').val();
+        let pk = target.baseURI.split('/').slice(-1)[0]
+        var url = "/create-child-comment/" + pk
+
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -54,5 +58,14 @@ $(document).ready(function(){
             id: id,
             csrfmiddlewaretoken: csrftoken
         }
+        $.ajax({
+            method: "POST",
+            data: data,
+            url: url,
+            success: function(data){
+                console.log(url)
+                window.location.replace('articles/')
+            }
+        })
     })
 });

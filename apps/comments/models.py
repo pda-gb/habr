@@ -58,5 +58,5 @@ class Comment(models.Model):
 
     @staticmethod
     def get_comments(article_pk):
-        comments = Comment.objects.filter(article__pk=article_pk, reply=None).order_by('date')
+        comments = Comment.objects.filter(article__pk=article_pk).order_by('date')
         return comments

@@ -1,12 +1,13 @@
 {% load static %}
 {% load comments_tree %}
 {% block content %}
+
 <div class="comment-row">
     <h2 class="mb-4">{{ comments.count }}Комментарии</h2>
     <hr/>
     {% include 'comments/includes/comment.html' %}
     <div class="container-fluid mt-2">
-        <form method="POST" class="comment-form" action="">
+        <form method="POST" class="comment-form" action="{% url 'articles:comment_create' pk=article.id %}">
             {% csrf_token %}
             {{ form_comment.as_p }}
             {% if request.user.is_authenticated %}

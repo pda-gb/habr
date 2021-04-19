@@ -10,7 +10,10 @@ from django.views import View
 from django.template.context_processors import csrf
 from django.contrib import auth
 from django.template.loader import render_to_string
+from django.contrib.contenttypes.models import ContentType
+from django.db import transaction
 
+from apps.authorization.models import HabrUser
 
 from .models import Article, Hub
 from apps.comments.models import Comment
@@ -39,37 +42,60 @@ def hub(request, pk=None):
     page_data = {"articles": hub_articles, "hubs_menu": hubs_menu, "last_articles": last_articles}
     return render(request, "articles/articles.html", page_data)
 
-
 def article(request, pk=None):
     last_articles = Article.get_articles()[1]
     current_article = get_object_or_404(Article, id=pk)
     hubs_menu = Hub.get_all_hubs()
     current_comments = Comment.get_comments(article_pk=pk)
-    if request.method == 'POST':
-        form_comment = CommentCreateForm(request.POST or None)
-        if form_comment.is_valid():
-            form_comment = form_comment.save(commit=False)
-            reply_id = request.POST.get('comment_id')
-            comment_qs = None
-            if reply_id:
-                comment_qs = Comment.objects.get(id=reply_id)
-            form_comment.reply = comment_qs
-            form_comment.author = request.user
-            form_comment.article = current_article
-            form_comment.save()
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    else:
-        form_comment = CommentCreateForm()
+    comments = create_comments_tree(current_comments)
+    form_comment = CommentCreateForm(request.POST or None)
     page_data = {
         "article": current_article,
         "hubs_menu": hubs_menu, 
         "last_articles": last_articles,
-        "comments":current_comments,
+        "comments":comments,
         "form_comment":form_comment,
         "media_url": settings.MEDIA_URL,
     }
-    #if request.is_ajax():
-        #html = render_to_string('articles/article.html', context=page_data)
-        #return JsonResponse({'form':html})
         
     return render(request, "articles/article.html", page_data)
+
+def create_comment(request, pk):
+    current_article = get_object_or_404(Article, id=pk)
+    form_comment = CommentCreateForm(request.POST or None)
+    if form_comment.is_valid():
+            new_comment = form_comment.save(commit=False)
+            new_comment.author = request.user
+            new_comment.article = current_article
+            new_comment.body = form_comment.cleaned_data['body']    
+            new_comment.parent = None
+            new_comment.is_child = False
+            new_comment.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@transaction.atomic
+def create_child_comment(request, pk):
+    if request.is_ajax():
+        user_name = request.user.username
+        current_id = request.POST.get('id')
+        current_article = get_object_or_404(Article, id=pk)
+        text = request.POST.get('text')
+        user = HabrUser.objects.get(username=user_name)
+        parent = Comment.objects.get(id=int(current_id))
+        is_child = False if not parent else True
+
+    Comment.objects.create(
+        article=current_article,
+        author=user,
+        body=text,
+        parent=parent,
+        is_child = is_child
+    )
+    comments_ = Comment.get_comments(pk)
+    comments_list = create_comments_tree(comments_)
+    page_data = {
+        "media_url": settings.MEDIA_URL,
+        'comments': comments_list,
+    }
+    result = render_to_string('articles/create-child-comment.html', page_data)
+    return JsonResponse({'result':result})

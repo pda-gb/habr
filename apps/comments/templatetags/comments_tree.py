@@ -7,10 +7,9 @@ register = Library()
 def comments_filter(comments_list):
     res = """
             <ul style="list-style-type:none;">
-            <div class="col-md-12 mt-2">
-            <img src="/media/img/avatar.jpg" alt=""/>
-                {}
-            </div>
+                <div class="col-md-12 mt-2">
+                    {}
+                </div>
             </ul>
           """
     i = ''
@@ -31,9 +30,9 @@ def comments_filter(comments_list):
                     <div class="comment-text">
                         <p>{text} | id={id}</p>
                     </div>
-                        <a href="#" class='reply' data-id="{id}" data-prent={parent_id}>Ответить</a>
-                        <form action="" method="POST" class="comment-form form-group" id="form-{id}" style="display:none;">
-                            <textarea type="text" class="form-control" name="comment-text"><textarea><br>
+                        <span class='reply' data-id="{id} "data-prent={parent_id}>Ответить</span>
+                        <form action="create-child-comment/52" method="POST" class="comment-form form-group" id="form-{id}" style="display:none;">
+                            <textarea type="text" class="form-control" name="comment-text"></textarea><br>
                             <input type="submit" class="btn btn-primary submit-reply" data-id="{id}" data-submit-reply="{parent_id}" value="отправить"></input>
                         </form>
                     </div>
