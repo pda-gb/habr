@@ -64,9 +64,6 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
-    def get_absolute_url(self):
-        return reverse('knowledge:article', kwargs={'section': self.habs.section_url,'article_id': self.id})
-
     @staticmethod
     def get_articles():
         """

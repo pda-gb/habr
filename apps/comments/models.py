@@ -11,12 +11,13 @@ from apps.authorization.models import HabrUser, HabrUserProfile
 # Create your models here.
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    path = ArrayField(models.IntegerField(),default=[])
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    reply = models.ForeignKey('self', null=True, related_name='replies', on_delete=models.CASCADE)
     body = models.TextField(verbose_name='Текст статьи')
+    date = models.DateTimeField(verbose_name="дата", default=timezone.now)
 
-    created = models.DateTimeField(verbose_name="создан", default=timezone.now)
-    updated = models.DateTimeField(verbose_name="обновлен", auto_now=True)
+    def __str__(self):
+        return f'{self.article.title}-{self.author.username}'
     
     class Meta:
         verbose_name = "комментарий"
@@ -49,5 +50,5 @@ class Comment(models.Model):
 
     @staticmethod
     def get_comments(article_pk):
-        comments = Comment.objects.filter(article__pk=article_pk).order_by('updated')
+        comments = Comment.objects.filter(article__pk=article_pk, reply=None).order_by('date')
         return comments
