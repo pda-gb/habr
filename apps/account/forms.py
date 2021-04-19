@@ -1,4 +1,4 @@
-from ckeditor.widgets import CKEditorWidget
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
 from django.forms import CharField
 
@@ -27,8 +27,9 @@ class HabrUserProfileEditForm(forms.ModelForm):
             field.widget.attrs["class"] = "form-control"
             field.help_text = ""
 
+
 class ArticleCreate(forms.ModelForm):
-    body = CharField(widget=CKEditorWidget(config_name="for_user"))
+    body = CharField(widget=CKEditorUploadingWidget(config_name="default"))
 
     class Meta:
         model = Article
