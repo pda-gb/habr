@@ -6,7 +6,6 @@
     <hr/>
     {% include 'comments/includes/comment.html' %}
     <div class="container-fluid mt-2">
-        <hr>
         <form method="POST" class="comment-form" action="">
             {% csrf_token %}
             {{ form_comment.as_p }}

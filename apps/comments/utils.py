@@ -8,7 +8,7 @@ def get_children(qs_child):
     for comment in qs_child:
         c = {
             'id': comment.id,
-            'text': comment.text,
+            'text': comment.body,
             'timestamp': comment.date.strftime('%Y-%m-%d %H:%m'),
             'author': comment.author,
             'is_child': comment.is_child,
@@ -25,7 +25,7 @@ def create_comments_tree(qs):
     for comment in qs:
         c = {
             'id': comment.id,
-            'text': comment.text,
+            'text': comment.body,
             'timestamp': comment.date.strftime('%Y-%m-%d %H:%m'),
             'author': comment.author,
             'is_child': comment.is_child,
