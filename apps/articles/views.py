@@ -97,4 +97,4 @@ def create_child_comment(request, pk):
         "media_url": settings.MEDIA_URL,
         'comments': comments_list,
     }
-    return render(request, 'comments/comments.html', context=page_data)
+    return render(request, 'articles/article.html', context=page_data)
