@@ -75,14 +75,13 @@ def create_comment(request, pk):
 
 @transaction.atomic
 def create_child_comment(request, pk):
-    if request.is_ajax():
-        user_name = request.user.username
-        current_id = request.POST.get('id')
-        current_article = get_object_or_404(Article, id=pk)
-        text = request.POST.get('text')
-        user = HabrUser.objects.get(username=user_name)
-        parent = Comment.objects.get(id=int(current_id))
-        is_child = False if not parent else True
+    user_name = request.user.username
+    current_id = request.POST.get('id')
+    current_article = get_object_or_404(Article, id=pk)
+    text = request.POST.get('text')
+    user = HabrUser.objects.get(username=user_name)
+    parent = Comment.objects.get(id=int(current_id))
+    is_child = False if not parent else True
 
     Comment.objects.create(
         article=current_article,
@@ -91,11 +90,11 @@ def create_child_comment(request, pk):
         parent=parent,
         is_child = is_child
     )
+    
     comments_ = Comment.get_comments(pk)
     comments_list = create_comments_tree(comments_)
     page_data = {
         "media_url": settings.MEDIA_URL,
         'comments': comments_list,
     }
-    result = render_to_string('articles/create-child-comment.html', page_data)
-    return JsonResponse({'result':result})
+    return render(request, 'comments/comments.html', context=page_data)
