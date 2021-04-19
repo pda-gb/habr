@@ -1,7 +1,8 @@
+import datetime
+
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
-import datetime
-from django.conf import settings
 
 from apps.authorization.models import HabrUser
 
@@ -65,23 +66,53 @@ class Article(models.Model):
         return self.title
 
     @staticmethod
-    def get_articles():
+    def get_last_articles(articles_current_page):
         """
-        Returns all published articles and last articles (right block)
+        last articles (right block) of current page articles
         """
-        hub_articles = Article.objects.filter(draft=False)
         len_last_articles = 3
-        last_articles_set = hub_articles.values('id', 'title', 'published')[0:len_last_articles]
+        # если статей нет
+        if not articles_current_page.exclude():
+            return None
+        last_articles_set = articles_current_page.values \
+                                ('id', 'title', 'published'
+                                 )[0:len_last_articles]
         last_articles = [{} for _ in range(len_last_articles)]
+        # если статей меньше 3, то изменить переменную количества
+        len_last_articles = articles_current_page.count()
         for i in range(len_last_articles):
             last_articles[i]['id'] = last_articles_set[i]['id']
             last_articles[i]['title'] = last_articles_set[i]['title']
+            # TODO эту логику перенести на сторону клиента
             if last_articles_set[i]['published'].date() != datetime.datetime.now().date():
                 last_articles[i]['date'] = last_articles_set[i]['published'].date()
             else:
                 last_articles[i]['date'] = 'сегодня'
             last_articles[i]['time'] = last_articles_set[i]['published'].strftime('%H:%M')
-        return hub_articles, last_articles
+        return last_articles
+
+
+    @staticmethod
+    def get_articles():
+        """
+        Returns all published articles
+        # and last articles (right block)
+        """
+        hub_articles = Article.objects.filter(draft=False)
+        # print(hub_articles.count())
+        # len_last_articles = 3
+        # last_articles_set = hub_articles.values('id', 'title', 'published')[0:len_last_articles]
+        # last_articles = [{} for _ in range(len_last_articles)]
+        # for i in range(len_last_articles):
+        #     last_articles[i]['id'] = last_articles_set[i]['id']
+        #     last_articles[i]['title'] = last_articles_set[i]['title']
+        #     if last_articles_set[i]['published'].date() != datetime.datetime.now().date():
+        #         last_articles[i]['date'] = last_articles_set[i]['published'].date()
+        #     else:
+        #         last_articles[i]['date'] = 'сегодня'
+        #     last_articles[i]['time'] = last_articles_set[i]['published'].strftime('%H:%M')
+        # return hub_articles, last_articles
+        return hub_articles
 
     @staticmethod
     def get_article(id_article):
@@ -118,14 +149,14 @@ class Article(models.Model):
         """
         Returns articles with the set tag
         """
-        return Article.get_articles()[0].filter(tags=tag)
+        return Article.get_articles()[0].filter(tags=tag, draft=False)
 
     @staticmethod
     def get_by_hub(hub_id: int):
         """
         Returns articles with the set hub
         """
-        return Article.get_articles()[0].filter(hubs=hub_id)
+        return Article.get_articles().filter(hubs=hub_id, draft=False)
 
     @staticmethod
     def get_by_author(author_pk: int, draft=None):

@@ -4,15 +4,15 @@
         <div class="mini-post-column">
             <h3 class="mb-4">Последние статьи</h3>
             <hr>
-            {% for article in last_articles %}
+            {% for itm_article in last_articles %}
                 <div class="post mb-4">
                     <div class="post-head">
-                        <a href="{% url 'articles:article' article.id %}"
-                           class="post-link mini-title">{{ article.title }}</a>
+                        <a href="{% url 'articles:article' itm_article.id %}"
+                           class="post-link mini-title">{{ itm_article.title }}</a>
                     </div>
                     <div class="post-content mt-3">
                         <div class="mini-time">
-                            <span>{{ article.date }} {{ article.time }}</span>
+                            <span>{{ itm_article.date }} {{ itm_article.time }}</span>
                         </div>
                     </div>
                 </div>
