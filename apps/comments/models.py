@@ -12,12 +12,20 @@ from apps.authorization.models import HabrUser, HabrUserProfile
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    reply = models.ForeignKey('self', null=True, related_name='replies', on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', null=True, related_name='comment_parent', on_delete=models.CASCADE)
     body = models.TextField(verbose_name='Текст статьи')
     date = models.DateTimeField(verbose_name="дата", default=timezone.now)
+    is_child = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.article.title}-{self.author.username}'
+
+    @property
+    def get_parent(self):
+        if not self.parent:
+            return ""
+        else:
+            return self.parent
     
     class Meta:
         verbose_name = "комментарий"

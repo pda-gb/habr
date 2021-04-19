@@ -18,6 +18,8 @@ from apps.comments.models import Comment
 from apps.comments.models import Comment
 from apps.comments.forms import CommentCreateForm
 
+from apps.comments.utils import create_comments_tree
+
 
 def main_page(request):
     """рендер главной страницы"""
