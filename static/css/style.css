@@ -182,7 +182,6 @@ a:hover {
 }
 
 .author-avatar {
-  width: 80px;
   height: 80px;
   margin: 15px;
 }
@@ -322,7 +321,7 @@ body {
 }
 
 .ava-img {
-    width: 200px;
+    height: 260px;
     display: block;
 }
 
