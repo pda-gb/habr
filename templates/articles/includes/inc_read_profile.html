@@ -1,0 +1,9 @@
+{% load my_tags %}
+<img class="ava-img" src="{{ article.author.habruserprofile.avatar|media_folder_users }}" alt="avatar"/>
+<div class="h4">Имя: {{ user.username }}</div>
+<div class="h4">Полное имя: {{ user.habruserprofile.full_name }}</div>
+<div class="h4">Место работы: {{ user.habruserprofile.place_of_work }}</div>
+<div class="h4">Дата рождения: {{ user.habruserprofile.birth_date }}</div>
+<div class="h4">Страна: {{ user.habruserprofile.country }}</div>
+<div class="h4">Регион: {{ user.habruserprofile.region }}</div>
+<div class="h4">Город: {{ user.habruserprofile.city }}</div>

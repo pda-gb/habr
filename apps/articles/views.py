@@ -33,3 +33,7 @@ def article(request, pk=None):
         "last_articles": last_articles
     }
     return render(request, "articles/article.html", page_data)
+
+
+# def author_profile(request, pk=None):
+#     author = Article.get_article(pk).author_id

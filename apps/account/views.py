@@ -16,6 +16,14 @@ from apps.authorization.models import HabrUser
 
 
 @login_required
+def read_profile(request):
+    title = "Профиль пользователя"
+    page_data = {
+        'title': title
+    }
+    return render(request, 'account/read_profile.html', page_data)
+
+@login_required
 @transaction.atomic()
 def add_article(request):
     if request.method == "POST":

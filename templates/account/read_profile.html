@@ -1,0 +1,25 @@
+{% extends 'articles/base.html' %}
+{% load my_tags %}
+{% block content %}
+    <div class="featured-menu">
+            <a class="{% if request.resolver_match.url_name == 'user_articles' %}active{% endif %}" href="{% url 'account:user_articles'%}">Все статьи</a>
+            <a class="{% if request.resolver_match.url_name == 'publications' %}active{% endif %}" href="{% url 'account:publications'%}">Опубликованные статьи</a>
+            <a class="{% if request.resolver_match.url_name == 'draft' %}active{% endif %}" href="{% url 'account:draft'%}">Черновик</a>
+
+    </div>
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="{% url 'account:user_articles' %}">Мои статьи</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Написать статью</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'account:edit_profile' %}">Редактировать профиль</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+      </li>
+    </ul>
+    {% include 'articles/includes/inc_read_profile.html' %}
+{% endblock content %}

@@ -29,7 +29,7 @@
                     {{ user.username|default:'Пользователь' }}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                  <a href="{% url 'account:edit_profile' %}"><button class="dropdown-item" type="button">Личный кабинет</button></a>
+                  <a href="{% url 'account:read_profile' %}"><button class="dropdown-item" type="button">Личный кабинет</button></a>
                   <a href="{% url 'account:user_articles' %}"><button class="dropdown-item" type="button">Мои статьи</button></a>
                   <a href="{% url 'account:add_article' %}"><button class="dropdown-item" type="button">Создать статью</button></a>
                   <div class="dropdown-divider"></div>
