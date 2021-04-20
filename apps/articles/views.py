@@ -39,6 +39,10 @@ def article(request, pk=None):
     current_comments = Comment.get_comments(pk)
     comments = create_comments_tree(current_comments)
     form_comment = CommentCreateForm(request.POST or None)
+    if request.user.is_authenticated:
+        rate = ArticleRate.create(current_article, request.user)
+        current_article.user_liked = rate.liked
+        current_article.bookmarked = rate.in_bookmarks
     page_data = {
         "article": current_article,
         # "last_articles": last_articles
