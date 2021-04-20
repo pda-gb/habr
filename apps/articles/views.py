@@ -65,6 +65,7 @@ def change_article_rate(request):
             {
                 "likes": article_rate.article.likes,
                 "dislikes": article_rate.article.dislikes,
-                "author_rating": article_rate.article.author.habruserprofile.rating
+                "author_rating": article_rate.article.author.habruserprofile.rating,
+                "liked": article_rate.liked
             }
         )

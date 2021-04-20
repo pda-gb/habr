@@ -103,6 +103,13 @@
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 {% if request.user.is_authenticated %}
   <script>
+    const likeUrl = "{% static 'svg/like.svg' %}";
+    const likeFUrl = "{% static 'svg/like(filled).svg' %}";
+    const dislikeUrl = "{% static 'svg/dislike.svg' %}";
+    const dislikeFUrl = "{% static 'svg/dislike(filled).svg' %}";
+    const bookmarkUrl = "{% static 'svg/bookmark.svg' %}";
+    const bookmarkFUrl = "{% static 'svg/bookmark(filled).svg' %}";
+
     function sendAjax(fieldName) {
       $.ajax({
           data: {field: fieldName, user: {{ request.user.pk }}, article: {{ article.pk }}},
@@ -118,51 +125,61 @@
               } if (response.author_rating === 0) {
                 $("#author_rating").attr('class', 'author-rating-num');
               }
+              if (response.liked == true) {
+                $('#like').attr('src', likeFUrl);
+                $('#dislike').attr('src', dislikeUrl);
+              } if (response.liked == false) {
+                $('#dislike').attr('src', dislikeFUrl);
+                $('#like').attr('src', likeUrl);
+              } else {
+                $('#dislike').attr('src', lidislikeUrl);
+                $('#like').attr('src', likeUrl);
+              }
           }
       });
     };
 
     $(document).ready(function(){
       {% comment %} $('#like').hover(function(){
-          $(this).attr('src', "{% static 'svg/like(filled).svg' %}");
+          $(this).attr('src', likeFUrl);
           }, function(){
-          $(this).attr('src', "{% static 'svg/like.svg' %}");
+          $(this).attr('src', likeUrl);
       });
       $('#dislike').hover(function(){
-          $(this).attr('src', "{% static 'svg/dislike(filled).svg' %}");
+          $(this).attr('src', dislikeFUrl);
           }, function(){
-          $(this).attr('src', "{% static 'svg/dislike.svg' %}");
+          $(this).attr('src', lidislikeUrl);
       });
       $('#bookmark').hover(function(){
-          $(this).attr('src', "{% static 'svg/bookmark(filled).svg' %}");
+          $(this).attr('src', bookmarkFUrl);
           }, function(){
-          $(this).attr('src', "{% static 'svg/bookmark.svg' %}");
+          $(this).attr('src', bookmarkUrl);
       }); {% endcomment %}
 
       $('#like').click(function () {
           sendAjax("like")
-          if ($(this).attr('src') == "{% static 'svg/like(filled).svg' %}") {
-            $(this).attr('src', "{% static 'svg/like.svg' %}");
+          if ($(this).attr('src') == likeFUrl) {
+            $(this).attr('src', likeUrl);
           } else {
-            $(this).attr('src', "{% static 'svg/like(filled).svg' %}");
+            $(this).attr('src', likeFUrl);
           }
       });
 
       $('#dislike').click(function () {
           sendAjax("dislike")
-          if ($(this).attr('src') == "{% static 'svg/dislike(filled).svg' %}") {
-            $(this).attr('src', "{% static 'svg/dislike.svg' %}");
+          if ($(this).attr('src') == dislikeFUrl) {
+            $(this).attr('src', lidislikeUrl);
           } else {
-            $(this).attr('src', "{% static 'svg/dislike(filled).svg' %}");
+            $(this).attr('src', dislikeFUrl);
           }
       });
 
       $('#bookmark').click(function () {
           sendAjax("bookmark")
-          if ($(this).attr('src') == "{% static 'svg/bookmark(filled).svg' %}") {
-            $(this).attr('src', "{% static 'svg/bookmark.svg' %}");
+          if ($(this).attr('src') == bookmarkFUrl) {
+            $(this).attr('src', bookmarkUrl);
           } else {
-            $(this).attr('src', "{% static 'svg/bookmark(filled).svg' %}");
+            $(this).attr('src', bookmarkFUrl);
           }
       });
     });
