@@ -8,7 +8,7 @@
                 >{{ article.title }}</a>
                 {#            загрузка главной картинки    #}
                 <img class="main-image" src="{{ article.image|media_folder_images }}" alt="main-image"/><br/>
-                <a href="#" class="post-author">
+                <a href="{% url 'articles:author_profile' article.id %}" class="post-author">
                     {#            загрузка аваттарки    #}
                     <img src="{{ article.author.habruserprofile.avatar|media_folder_users }}" alt="avatar"/>
                     {#            загрузка юзернейм     #}

@@ -1,9 +1,40 @@
 {% load my_tags %}
 <img class="ava-img" src="{{ article.author.habruserprofile.avatar|media_folder_users }}" alt="avatar"/>
-<div class="h4">Имя: {{ user.username }}</div>
-<div class="h4">Полное имя: {{ user.habruserprofile.full_name }}</div>
-<div class="h4">Место работы: {{ user.habruserprofile.place_of_work }}</div>
-<div class="h4">Дата рождения: {{ user.habruserprofile.birth_date }}</div>
-<div class="h4">Страна: {{ user.habruserprofile.country }}</div>
-<div class="h4">Регион: {{ user.habruserprofile.region }}</div>
-<div class="h4">Город: {{ user.habruserprofile.city }}</div>
+<table class="table table-striped table-light">
+    <tr>
+        <td>Логин:</td>
+        <td>{{ user.username|no_data_specified }}</td>
+    </tr>
+    <tr>
+        <td>Настоящее имя:</td>
+        <td>{{ user.habruserprofile.full_name|no_data_specified }}</td>
+    </tr>
+    <tr>
+        <td>Место работы:</td>
+        <td>{{ user.habruserprofile.place_of_work|no_data_specified }}</td>
+    </tr>
+    <tr>
+        <td>Специализация:</td>
+        <td>{{ user.habruserprofile.specialization|no_data_specified }}</td>
+    </tr>
+    <tr>
+        <td>Пол:</td>
+        <td>{{ user.habruserprofile.gender|no_data_specified }}</td>
+    </tr>
+    <tr>
+        <td>Дата рождения:</td>
+        <td>{{ user.habruserprofile.birth_date|no_data_specified }}</td>
+    </tr>
+    <tr>
+        <td>Страна:</td>
+        <td>{{ user.habruserprofile.country|no_data_specified }}</td>
+    </tr>
+    <tr>
+        <td>Регион:</td>
+        <td>{{ user.habruserprofile.region|no_data_specified }}</td>
+    </tr>
+    <tr>
+        <td>Город:</td>
+        <td>{{ user.habruserprofile.city|no_data_specified }}</td>
+    </tr>
+</table>

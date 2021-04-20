@@ -21,3 +21,10 @@ def media_folder_images(string):
     elif not string:
         string = 'img_articles/default.jpg'
     return f'{settings.MEDIA_URL}{string}'
+
+
+@register.filter(name='no_data_specified')
+def no_data_specified(string):
+    if not string:
+        string = 'не указано'
+    return string

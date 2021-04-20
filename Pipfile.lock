@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "9e850d574ec29fd8e6109b0793eb84ce9eb033ab1599f1d123dc2eff7ca6a510"
+            "sha256": "006184c2007b8e3446a52f59773e91832c18e86f797625b1ad8d0dc170385f37"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -31,6 +31,14 @@
             ],
             "index": "pypi",
             "version": "==3.2"
+        },
+        "django-forms-bootstrap": {
+            "hashes": [
+                "sha256:50d69baf6c6f262f6ae3651096b52c31552cb75d37493f0c917ce2c16d13f0d9",
+                "sha256:ffc6d2b9fba03e2366884e82f613daf1284702e9346746e0e9de299db8138d6f"
+            ],
+            "index": "pypi",
+            "version": "==3.1.0"
         },
         "mimesis": {
             "hashes": [
@@ -97,11 +105,11 @@
     "develop": {
         "flake8": {
             "hashes": [
-                "sha256:12d05ab02614b6aee8df7c36b97d1a3b2372761222b19b58621355e82acddcff",
-                "sha256:78873e372b12b093da7b5e5ed302e8ad9e988b38b063b61ad937f26ca58fc5f0"
+                "sha256:1aa8990be1e689d96c745c5682b687ea49f2e05a443aff1f8251092b0014e378",
+                "sha256:3b9f848952dddccf635be78098ca75010f073bfe14d2c6bda867154bea728d2a"
             ],
             "index": "pypi",
-            "version": "==3.9.0"
+            "version": "==3.9.1"
         },
         "mccabe": {
             "hashes": [

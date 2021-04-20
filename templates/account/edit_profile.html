@@ -1,6 +1,7 @@
 {% extends 'articles/base.html' %}
 {% load my_tags %}
 {% block content %}
+{% load bootstrap_tags %}
 
     <form class="form-horizontal" action="{% url 'account:edit_profile' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -11,7 +12,8 @@
             ?User?
         {% endif %}
         <br>
-        {{ edit_form.as_table }}
+<!--        {{ edit_form.as_table }}-->
+        {{ edit_form|as_bootstrap }}
         <br>
         <button type="submit" class="btn btn-primary">Сохранить</button>
         <button type="reset" class="btn btn-danger">Сбросить</button>

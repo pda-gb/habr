@@ -1,9 +1,10 @@
 <div class="featured">
     <div class="featured-menu">
-            <a class="{% if request.resolver_match.url_name == 'user_articles' %}active{% endif %}" href="{% url 'account:user_articles'%}">Все статьи</a>
-            <a class="{% if request.resolver_match.url_name == 'publications' %}active{% endif %}" href="{% url 'account:publications'%}">Опубликованные статьи</a>
-            <a class="{% if request.resolver_match.url_name == 'draft' %}active{% endif %}" href="{% url 'account:draft'%}">Черновик</a>
-            
+            <a class="{% if request.resolver_match.url_name == 'read_profile' %}active{% endif %}" href="{% url 'account:read_profile'%}">Мои профиль</a>
+            <a class="{% if request.resolver_match.url_name == 'user_articles' %}active{% endif %}" href="{% url 'account:user_articles'%}">Мои статьи</a>
+            <a class="{% if request.resolver_match.url_name == 'publications' %}active{% endif %}" href="{% url 'account:publications' %}">Опубликованные статьи</a>
+            <a class="{% if request.resolver_match.url_name == 'add_article' %}active{% endif %}" href="{% url 'account:add_article' %}">Написать статью</a>
+            <a class="{% if request.resolver_match.url_name == 'draft' %}active{% endif %}" href="{% url 'account:draft' %}">Черновик</a>
     </div>
 </div>
 <div class="clear-fix"></div>

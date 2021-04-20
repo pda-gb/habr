@@ -23,6 +23,7 @@ def read_profile(request):
     }
     return render(request, 'account/read_profile.html', page_data)
 
+
 @login_required
 @transaction.atomic()
 def add_article(request):
@@ -69,7 +70,7 @@ def edit_profile(request):
         )
         if profile_edit_form.is_valid():
             profile_edit_form.save()
-            return HttpResponseRedirect(reverse("account:edit_profile"))
+            return HttpResponseRedirect(reverse("account:read_profile"))
     hubs_menu = Hub.get_all_hubs()
     profile_edit_form = HabrUserProfileEditForm(instance=request.user.habruserprofile)
     page_data = {

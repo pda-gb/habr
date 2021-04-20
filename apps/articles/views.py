@@ -35,5 +35,10 @@ def article(request, pk=None):
     return render(request, "articles/article.html", page_data)
 
 
-# def author_profile(request, pk=None):
-#     author = Article.get_article(pk).author_id
+def show_author_profile(request, pk=None):
+    title = "Информация об авторе"
+    # author = Article.get_article(pk).author_id
+    page_data = {
+        "title": title,
+    }
+    return render(request, "articles/author_profile.html", page_data)
