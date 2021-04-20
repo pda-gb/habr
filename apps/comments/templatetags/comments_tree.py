@@ -15,7 +15,7 @@ def comments_filter(comments_list):
     i = ''
     for comment in comments_list:
         i += """
-             <li style="list-style-type:none;>
+             <li style="list-style-type:none;">
                 <div class="main-comment-section">
                     <div class="m-4">
                         <a href="#" class="post-author">
