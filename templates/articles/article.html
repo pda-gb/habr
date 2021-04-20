@@ -125,14 +125,14 @@
               } if (response.author_rating === 0) {
                 $("#author_rating").attr('class', 'author-rating-num');
               }
-              if (response.liked == true) {
+              if (response.liked === true) {
                 $('#like').attr('src', likeFUrl);
                 $('#dislike').attr('src', dislikeUrl);
-              } if (response.liked == false) {
+              } if (response.liked === false) {
                 $('#dislike').attr('src', dislikeFUrl);
                 $('#like').attr('src', likeUrl);
-              } else {
-                $('#dislike').attr('src', lidislikeUrl);
+              } if (response.liked === null) {
+                $('#dislike').attr('src', dislikeUrl);
                 $('#like').attr('src', likeUrl);
               }
           }

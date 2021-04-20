@@ -7,11 +7,11 @@
         <div class="post-status">
             <img src="{% static 'svg/star(white).svg' %}"/>
                 {% if article.likes > 0 %}
-                    <small class="green">{{ article.likes }}</small>
+                    <small class="green">{{ article.rating }}</small>
                 {% elif article.likes < 0 %}
-                    <small class="red">{{ article.likes }}</small>
+                    <small class="red">{{ article.rating }}</small>
                 {% else %}
-                    <small>{{ article.likes }}</small>
+                    <small>{{ article.rating }}</small>
                 {% endif %}
             <img src="{% static 'svg/bookmark.svg' %}"/><small
                 class="text-muted">{{ article.bookmarks }}</small>
