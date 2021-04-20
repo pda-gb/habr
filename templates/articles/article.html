@@ -148,7 +148,7 @@
       $('#dislike').hover(function(){
           $(this).attr('src', dislikeFUrl);
           }, function(){
-          $(this).attr('src', lidislikeUrl);
+          $(this).attr('src', dislikeUrl);
       });
       $('#bookmark').hover(function(){
           $(this).attr('src', bookmarkFUrl);
@@ -168,7 +168,7 @@
       $('#dislike').click(function () {
           sendAjax("dislike")
           if ($(this).attr('src') == dislikeFUrl) {
-            $(this).attr('src', lidislikeUrl);
+            $(this).attr('src', dislikeUrl);
           } else {
             $(this).attr('src', dislikeFUrl);
           }
@@ -181,6 +181,45 @@
           } else {
             $(this).attr('src', bookmarkFUrl);
           }
+      });
+    });
+  </script>
+{% else %}
+  <script>
+    const likeUrl = "{% static 'svg/like.svg' %}";
+    const likeFUrl = "{% static 'svg/like(filled).svg' %}";
+    const dislikeUrl = "{% static 'svg/dislike.svg' %}";
+    const dislikeFUrl = "{% static 'svg/dislike(filled).svg' %}";
+    const bookmarkUrl = "{% static 'svg/bookmark.svg' %}";
+    const bookmarkFUrl = "{% static 'svg/bookmark(filled).svg' %}";
+
+    $(document).ready(function(){
+      $('#like').hover(function(){
+          $(this).attr('src', likeFUrl);
+          }, function(){
+          $(this).attr('src', likeUrl);
+      });
+      $('#dislike').hover(function(){
+          $(this).attr('src', dislikeFUrl);
+          }, function(){
+          $(this).attr('src', dislikeUrl);
+      });
+      $('#bookmark').hover(function(){
+          $(this).attr('src', bookmarkFUrl);
+          }, function(){
+          $(this).attr('src', bookmarkUrl);
+      });
+
+      $('#like').click(function () {
+        window.location.replace('{% url 'auth:login' %}')
+      });
+
+      $('#dislike').click(function () {
+        window.location.replace('{% url 'auth:login' %}')
+      });
+
+      $('#bookmark').click(function () {
+        window.location.replace('{% url 'auth:login' %}')
       });
     });
   </script>
