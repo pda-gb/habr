@@ -36,7 +36,7 @@ def create_child_comment(request, pk):
     is_child = False if not parent else True
 
     hubs_menu = Hub.get_all_hubs()
-    last_articles = Article.get_articles()[1]
+    last_articles = Article.get_last_articles(Article.get_articles())
     form_comment = CommentCreateForm(request.POST or None)
 
     Comment.objects.create(
