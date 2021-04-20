@@ -1,7 +1,8 @@
 from django.shortcuts import render
 
 from apps.articles.models import Article, Hub
-
+from apps.authorization.models import HabrUser
+from django.shortcuts import render, get_object_or_404
 
 def main_page(request):
     """рендер главной страницы"""
@@ -10,7 +11,9 @@ def main_page(request):
     page_data = {
         "title": title,
         "articles": hub_articles,
-        "last_articles": last_articles}
+        "last_articles": last_articles,
+        "current_user": request.user
+    }
     return render(request, "articles/articles.html", page_data)
 
 
@@ -37,8 +40,9 @@ def article(request, pk=None):
 
 def show_author_profile(request, pk=None):
     title = "Информация об авторе"
-    # author = Article.get_article(pk).author_id
+    author = get_object_or_404(HabrUser, pk=pk)
     page_data = {
         "title": title,
+        "current_user": author,
     }
     return render(request, "articles/author_profile.html", page_data)
