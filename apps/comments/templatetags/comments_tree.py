@@ -17,7 +17,7 @@ def comments_filter(comments_list):
     for comment in comments_list:
         i += """
              <li style="list-style-type:none;">
-                <div class="main-comment-section">
+                <div class="main-comment-section col-md-12 mb-2 mt-2 p-0">
                     <div class="m-4">
                         <a href="#" class="post-author">
                             <img src="/media/img/avatar.jpg" alt=""/>
