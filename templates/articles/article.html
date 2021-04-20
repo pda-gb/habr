@@ -26,24 +26,20 @@
                     <div class="post-content mt-3">
                         <br/>
                         <span>{{ article.body | linebreaksbr }}</span>
-                        <div class="post-status">
-                            <img src="{% static 'svg/like.svg' %}" alt="" id="like"/>
-                            <small class="text-muted" id="likes_count">{{ article.likes }}</small>
-                            <img src="{% static 'svg/dislike.svg' %}" alt="" id="dislike"/>
-                            <small class="text-muted" id="dislikes_count">{{ article.dislikes }}</small>
-                            <img src="{% static 'svg/bookmark.svg' %}" alt="" id="bookmark"/>
-                            <small class="text-muted" id="bookmarks_count">{{ article.bookmarks }}</small>
-                            <img src="{% static 'svg/view.svg' %}" alt=""/>
-                            <small class="text-muted">{{ article.views }}</small>
-                            <img src="{% static 'svg/comment.svg' %}" alt=""/><small class="text-muted">2</small>
-                        </div>
+                        {% include 'articles/includes/post-status.html' %}
                     </div>
                 </div>
                 <div class="author-row">
                     <div class="author-block">
                         <img class="author-avatar" src="{{ article.author.habruserprofile.avatar|media_folder_users }}" alt="avatar"/>
                         <div class="author-rating">
-                            <div class="author-rating-num">{{ article.author.rating }}</div>
+                            {% if author_rate > 0 %}
+                                <div class="author-rating-num green" id="author_rating">{{ author_rate }}</div>
+                            {% elif author_rate < 0 %}
+                                <div class="author-rating-num red" id="author_rating">{{ author_rate }}</div>
+                            {% else %}
+                                <div class="author-rating-num" id="author_rating">{{ author_rate }}</div>
+                            {% endif %}
                             <div class="author-rating-text">Рейтинг автора</div>
                         </div>
                     </div>
@@ -119,6 +115,7 @@ function sendAjax(fieldName) {
         $("#likes_count").text(response.likes)
         $("#dislikes_count").text(response.dislikes)
         $("#bookmarks_count").text(response.bookmarks)
+        $("#author_rating").text(response.author_rating)
       }
   });
 };

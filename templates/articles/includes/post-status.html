@@ -1,0 +1,12 @@
+{% load static %}
+<div class="post-status">
+    <img src="{% static 'svg/like.svg' %}" alt="" id="like"/>
+    <small class="green" id="likes_count">{{ article.likes }}</small>
+    <img src="{% static 'svg/dislike.svg' %}" alt="" id="dislike"/>
+    <small class="red" id="dislikes_count">{{ article.dislikes }}</small>
+    <img src="{% static 'svg/bookmark.svg' %}" alt="" id="bookmark"/>
+    <img src="{% static 'svg/view.svg' %}" alt=""/>
+    <small class="text-muted">{{ article.views }}</small>
+{#    <img src="{% static 'svg/comment.svg' %}" alt=""/>#}
+{#    <small class="text-muted">2</small>#}
+</div>

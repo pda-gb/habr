@@ -1,16 +1,22 @@
 {% load static %}
-<div class="mini-post">
-  <a href="#">{{ article.title }}</a>
-  <div class="post-status mini-post-status">
-    <img src="{% static 'svg/star(white).svg' %}" /><small class="text-muted"
-      >{{ article.stars }}</small
-    >
-    <img src="{% static 'svg/bookmark.svg' %}" /><small class="text-muted"
-      >{{ article.bookmarks }}</small
-    >
-    <img src="{% static 'svg/view.svg' %}" /><small class="text-muted"
-      >{{ article.views }}</small
-    >
-  </div>
-  <hr />
+<div class="post-content mt-3">
+    <p>{{ article.body|truncatewords:"25" }}</p>
+    <a class="btn btn-outline-dark mt-1"
+       href="{% url 'articles:article' article.id %}">Читать далее</a>
+    {% block post-status %}
+        <div class="post-status">
+            <img src="{% static 'svg/star(white).svg' %}"/>
+                {% if article.likes > 0 %}
+                    <small class="green">{{ article.likes }}</small>
+                {% elif article.likes < 0 %}
+                    <small class="red">{{ article.likes }}</small>
+                {% else %}
+                    <small>{{ article.likes }}</small>
+                {% endif %}
+            <img src="{% static 'svg/bookmark.svg' %}"/><small
+                class="text-muted">{{ article.bookmarks }}</small>
+            <img src="{% static 'svg/view.svg' %}"/><small
+                class="text-muted">{{ article.views }}</small>
+        </div>
+    {% endblock post-status %}
 </div>
