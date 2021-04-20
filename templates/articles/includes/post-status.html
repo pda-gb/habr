@@ -1,10 +1,22 @@
 {% load static %}
 <div class="post-status">
-    <img src="{% static 'svg/like.svg' %}" alt="" id="like"/>
+    {% if article.user_liked is True %}
+        <img src="{% static 'svg/like(filled).svg' %}" alt="" id="like"/>
+    {% else  %}
+        <img src="{% static 'svg/like.svg' %}" alt="" id="like"/>
+    {% endif %}
     <small class="green" id="likes_count">{{ article.likes }}</small>
-    <img src="{% static 'svg/dislike.svg' %}" alt="" id="dislike"/>
+    {% if article.user_liked is False %}
+        <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="dislike"/>
+    {% else %}
+        <img src="{% static 'svg/dislike.svg' %}" alt="" id="dislike"/>
+    {% endif %}
     <small class="red" id="dislikes_count">{{ article.dislikes }}</small>
-    <img src="{% static 'svg/bookmark.svg' %}" alt="" id="bookmark"/>
+    {% if article.bookmarked %}
+        <img src="{% static 'svg/bookmark(filled).svg' %}" alt="" id="bookmark"/>
+    {% else %}
+        <img src="{% static 'svg/bookmark.svg' %}" alt="" id="bookmark"/>
+    {% endif %}
     <img src="{% static 'svg/view.svg' %}" alt=""/>
     <small class="text-muted">{{ article.views }}</small>
 {#    <img src="{% static 'svg/comment.svg' %}" alt=""/>#}

@@ -33,13 +33,8 @@
                     <div class="author-block">
                         <img class="author-avatar" src="{{ article.author.habruserprofile.avatar|media_folder_users }}" alt="avatar"/>
                         <div class="author-rating">
-                            {% if author_rate > 0 %}
-                                <div class="author-rating-num green" id="author_rating">{{ author_rate }}</div>
-                            {% elif author_rate < 0 %}
-                                <div class="author-rating-num red" id="author_rating">{{ author_rate }}</div>
-                            {% else %}
-                                <div class="author-rating-num" id="author_rating">{{ author_rate }}</div>
-                            {% endif %}
+                            <div class="author-rating-num {% if article.author.habruserprofile.rating > 0 %}green{% elif article.author.habruserprofile.rating < 0 %}red{% endif %}" id="author_rating">
+                            {{ article.author.habruserprofile.rating }}</div>
                             <div class="author-rating-text">Рейтинг автора</div>
                         </div>
                     </div>
@@ -106,48 +101,71 @@
     crossorigin="anonymous"
 ></script>
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-<script>
-function sendAjax(fieldName) {
-  $.ajax({
-      data: {field: fieldName, user: {{ request.user.pk }}, article: {{ article.pk }}},
-      url: "{% url 'articles:ajax_change_rate' %}",
-      success: function(response) {
-        $("#likes_count").text(response.likes)
-        $("#dislikes_count").text(response.dislikes)
-        $("#bookmarks_count").text(response.bookmarks)
-        $("#author_rating").text(response.author_rating)
-      }
-  });
-};
+{% if request.user.is_authenticated %}
+  <script>
+    function sendAjax(fieldName) {
+      $.ajax({
+          data: {field: fieldName, user: {{ request.user.pk }}, article: {{ article.pk }}},
+          url: "{% url 'articles:ajax_change_rate' %}",
+          success: function(response) {
+              $("#likes_count").text(response.likes)
+              $("#dislikes_count").text(response.dislikes)
+              $("#author_rating").text(response.author_rating)
+              if (response.author_rating > 0) {
+                $("#author_rating").attr('class', 'author-rating-num green');
+              } if (response.author_rating < 0) {
+                $("#author_rating").attr('class', 'author-rating-num red');
+              } if (response.author_rating === 0) {
+                $("#author_rating").attr('class', 'author-rating-num');
+              }
+          }
+      });
+    };
 
-$(document).ready(function(){
-  $('#like').click(function () {
-    sendAjax("like")
-  });
+    $(document).ready(function(){
+      {% comment %} $('#like').hover(function(){
+          $(this).attr('src', "{% static 'svg/like(filled).svg' %}");
+          }, function(){
+          $(this).attr('src', "{% static 'svg/like.svg' %}");
+      });
+      $('#dislike').hover(function(){
+          $(this).attr('src', "{% static 'svg/dislike(filled).svg' %}");
+          }, function(){
+          $(this).attr('src', "{% static 'svg/dislike.svg' %}");
+      });
+      $('#bookmark').hover(function(){
+          $(this).attr('src', "{% static 'svg/bookmark(filled).svg' %}");
+          }, function(){
+          $(this).attr('src', "{% static 'svg/bookmark.svg' %}");
+      }); {% endcomment %}
 
-  $('#dislike').click(function () {
-    sendAjax("dislike")
-  });
+      $('#like').click(function () {
+          sendAjax("like")
+          if ($(this).attr('src') == "{% static 'svg/like(filled).svg' %}") {
+            $(this).attr('src', "{% static 'svg/like.svg' %}");
+          } else {
+            $(this).attr('src', "{% static 'svg/like(filled).svg' %}");
+          }
+      });
 
-  $('#bookmark').click(function () {
-    sendAjax("bookmark")
-  });
+      $('#dislike').click(function () {
+          sendAjax("dislike")
+          if ($(this).attr('src') == "{% static 'svg/dislike(filled).svg' %}") {
+            $(this).attr('src', "{% static 'svg/dislike.svg' %}");
+          } else {
+            $(this).attr('src', "{% static 'svg/dislike(filled).svg' %}");
+          }
+      });
 
-  $('#like').hover(function(){
-    $(this).attr('src', "{% static 'svg/like(filled).svg' %}");
-    }, function(){
-    $(this).attr('src', "{% static 'svg/like.svg' %}");
-  });
-  $('#dislike').hover(function(){
-    $(this).attr('src', "{% static 'svg/dislike(filled).svg' %}");
-    }, function(){
-    $(this).attr('src', "{% static 'svg/dislike.svg' %}");
-  });
-  $('#bookmark').hover(function(){
-    $(this).attr('src', "{% static 'svg/bookmark(filled).svg' %}");
-    }, function(){
-    $(this).attr('src', "{% static 'svg/bookmark.svg' %}");
-  });
-});
-</script>
+      $('#bookmark').click(function () {
+          sendAjax("bookmark")
+          if ($(this).attr('src') == "{% static 'svg/bookmark(filled).svg' %}") {
+            $(this).attr('src', "{% static 'svg/bookmark.svg' %}");
+          } else {
+            $(this).attr('src', "{% static 'svg/bookmark(filled).svg' %}");
+          }
+      });
+    });
+  </script>
+{% endif %}
 {% endblock js %}
