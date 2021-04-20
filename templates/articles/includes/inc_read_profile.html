@@ -1,44 +1,56 @@
 {% load my_tags %}
-<img class="ava-img" src="{{ current_user.habruserprofile.avatar|media_folder_users }}" alt="avatar"/>
-<table class="table table-striped table-light">
-    <tr>
-        <td>Логин:</td>
-        <td>{{ current_user.username|no_data_specified }}</td>
-    </tr>
-    <tr>
-        <td>Настоящее имя:</td>
-        <td>{{ current_user.habruserprofile.full_name|no_data_specified }}</td>
-    </tr>
-    <tr>
-        <td>Место работы:</td>
-        <td>{{ current_user.habruserprofile.place_of_work|no_data_specified }}</td>
-    </tr>
-    <tr>
-        <td>Специализация:</td>
-        <td>{{ current_user.habruserprofile.specialization|no_data_specified }}</td>
-    </tr>
-    <tr>
-        <td>Пол:</td>
-        <td>{{ current_user.habruserprofile.gender|no_data_specified }}</td>
-    </tr>
-    <tr>
-        <td>Дата рождения:</td>
-        <td>{{ current_user.habruserprofile.birth_date|no_data_specified }}</td>
-    </tr>
-    <tr>
-        <td>Страна:</td>
-        <td>{{ current_user.habruserprofile.country|no_data_specified }}</td>
-    </tr>
-    <tr>
-        <td>Регион:</td>
-        <td>{{ current_user.habruserprofile.region|no_data_specified }}</td>
-    </tr>
-    <tr>
-        <td>Город:</td>
-        <td>{{ current_user.habruserprofile.city|no_data_specified }}</td>
-    </tr>
-    <tr>
-        <td>Рейтинг:</td>
-        <td>{{ current_user.habruserprofile.rating|no_data_specified }}</td>
-    </tr>
-</table>
+
+<div class="row">
+    <div class="col-3">
+        <img class="ava-img" src="{{ current_user.habruserprofile.avatar|media_folder_users }}" alt="avatar"/>
+    </div>
+    <div class="col-9">
+        <table class="table table-striped table-light">
+            <tr>
+                <td>Логин:</td>
+                <td>{{ current_user.username|no_data_specified }}</td>
+            </tr>
+            <tr>
+                <td>Электронная почта:</td>
+                <td>{{ current_user.email|no_data_specified }}</td>
+            </tr>
+            <tr>
+                <td>Настоящее имя:</td>
+                <td>{{ current_user.habruserprofile.full_name|no_data_specified }}</td>
+            </tr>
+            <tr>
+                <td>Место работы:</td>
+                <td>{{ current_user.habruserprofile.place_of_work|no_data_specified }}</td>
+            </tr>
+            <tr>
+                <td>Специализация:</td>
+                <td>{{ current_user.habruserprofile.specialization|no_data_specified }}</td>
+            </tr>
+            <tr>
+                <td>Пол:</td>
+                <td>{{ current_user.habruserprofile.gender|no_data_specified }}</td>
+            </tr>
+            <tr>
+                <td>Дата рождения:</td>
+                <td>{{ current_user.habruserprofile.birth_date|no_data_specified }}</td>
+            </tr>
+            <tr>
+                <td>Страна:</td>
+                <td>{{ current_user.habruserprofile.country|no_data_specified }}</td>
+            </tr>
+            <tr>
+                <td>Регион:</td>
+                <td>{{ current_user.habruserprofile.region|no_data_specified }}</td>
+            </tr>
+            <tr>
+                <td>Город:</td>
+                <td>{{ current_user.habruserprofile.city|no_data_specified }}</td>
+            </tr>
+            <tr>
+                <td>Рейтинг:</td>
+                <td>{{ current_user.habruserprofile.rating|no_data_specified }}</td>
+            </tr>
+        </table>
+        <a href="{% url 'account:edit_profile' %}"><button class="btn btn-primary">Редактировать профиль</button></a>
+    </div>
+</div>
