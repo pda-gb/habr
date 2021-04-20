@@ -26,6 +26,7 @@ def add_article(request):
             article_add.instance.author = request.user
             article_add.save()
             return HttpResponseRedirect(reverse("account:user_articles"))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     title = "Создание статьи"
@@ -41,7 +42,7 @@ def add_article(request):
 def del_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
     article.del_article(pk)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 @login_required
@@ -49,7 +50,7 @@ def del_article(request, pk):
 def draft_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
     article.draft_article(pk)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 @login_required
@@ -147,9 +148,9 @@ def edit_password(request):
 @login_required
 @transaction.atomic()
 def edit_article(request, pk):
-    '''
+    """
     функция отвечает за редактирование статьи
-    '''
+    """
     title = "Создание статьи"
     edit_article = get_object_or_404(Article, pk=pk)
 
@@ -166,7 +167,7 @@ def edit_article(request, pk):
     page_data = {
         "title": title,
         "update_form": edit_form,
-        "media_url": settings.MEDIA_URL
+        "media_url": settings.MEDIA_URL,
     }
 
     return render(request, "account/edit_article.html", page_data)

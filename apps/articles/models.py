@@ -1,5 +1,7 @@
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
+from django.db.models.fields import BooleanField
+from django.db.models.fields.related import ForeignKey
 from django.utils import timezone
 import datetime
 
@@ -44,12 +46,15 @@ class Tag(models.Model):
 
 class Article(models.Model):
     title = models.CharField(max_length=120, verbose_name="заголовок")
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL,
+                               on_delete=models.CASCADE)
     hubs = models.ManyToManyField(Hub, verbose_name="хабы")
     tags = models.ManyToManyField(Tag, blank=True)
     body = models.TextField()
-    image = models.ImageField(upload_to="img_articles/", blank=True, verbose_name="главная картинка")
-    link_to_original = models.URLField(blank=True, verbose_name="ссылка на оригинал")
+    image = models.ImageField(upload_to="img_articles/", blank=True,
+                              verbose_name="главная картинка")
+    link_to_original = models.URLField(blank=True,
+                                       verbose_name="ссылка на оригинал")
 
     created = models.DateTimeField(verbose_name="создана", auto_now_add=True)
     updated = models.DateTimeField(verbose_name="обновлена", auto_now=True)
@@ -59,6 +64,12 @@ class Article(models.Model):
 
     draft = models.BooleanField(verbose_name="черновик", default=False)
     is_active = models.BooleanField(verbose_name="удалена", default=True)
+
+    likes = models.PositiveIntegerField(verbose_name="лайки", default=0)
+    dislikes = models.PositiveIntegerField(verbose_name="дизлайки", default=0)
+    views = models.PositiveIntegerField(verbose_name="просмотры", default=0)
+    bookmarks = models.PositiveIntegerField(verbose_name="заметки", default=0)
+    rating = models.IntegerField(verbose_name="рейтинг", default=0)
 
     class Meta:
         verbose_name = "статья"
@@ -168,8 +179,10 @@ class Article(models.Model):
         Returns articles with the set author
         """
         if draft is None:
-            return Article.objects.filter(author_id__pk=author_pk).order_by('-updated')
-        return Article.objects.filter(author_id__pk=author_pk).filter(draft=draft).order_by('-updated')
+            return Article.objects.filter(
+                author_id__pk=author_pk).order_by('-updated')
+        return Article.objects.filter(
+            author_id__pk=author_pk).filter(draft=draft).order_by('-updated')
 
     @staticmethod
     def del_article(id):
@@ -192,6 +205,30 @@ class Article(models.Model):
             art.draft = False
         art.save()
 
+
+
+class ArticleRate(models.Model):
+    article = ForeignKey(Article, on_delete=models.CASCADE)
+    user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    liked = BooleanField(null=True, default=None)
+    watched = BooleanField(default=True)
+    in_bookmarks = BooleanField(default=False)
+
+    def save(self, rating=None, force_insert=None, using=None) -> None:
+        super().save(force_insert=force_insert, using=using)
+        if rating:
+            rating = Article.objects.filter(author=self.article.author).values_list("rating")
+            self.article.author.habruserprofile.rating = sum(rate[0] for rate in rating)
+            self.article.author.habruserprofile.save()
+
+    @staticmethod
+    def create(article, user):
+        try:
+            return ArticleRate.objects.get(article=article, user=user)
+        except Exception:
+            article.views += 1
+            article.save()
+            return ArticleRate.objects.create(article=article, user=user)
 
 
 if __name__ == "__main__":

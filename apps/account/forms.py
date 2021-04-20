@@ -1,4 +1,3 @@
-from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
 from django.forms import CharField
 
@@ -14,11 +13,11 @@ class HabrUserProfileEditForm(forms.ModelForm):
             "place_of_work",
             "specialization",
             "gender",
-            'birth_date',
+            "birth_date",
             "country",
             "region",
             "city",
-            'avatar',
+            "avatar",
         )
 
     def __init__(self, *args, **kwargs):
@@ -62,9 +61,12 @@ class ArticleCreate(forms.ModelForm):
 
 
 class ChangePasswordForm(forms.Form):
-    old_password = forms.CharField(widget=forms.PasswordInput(), label='введите старый пароль')
-    new_password = forms.CharField(widget=forms.PasswordInput(), label='введите новый пароль')
-    repeat_password = forms.CharField(widget=forms.PasswordInput(), label='повторите пароль')
+    old_password = forms.CharField(widget=forms.PasswordInput(),
+                                   label='введите старый пароль')
+    new_password = forms.CharField(widget=forms.PasswordInput(),
+                                   label='введите новый пароль')
+    repeat_password = forms.CharField(widget=forms.PasswordInput(),
+                                      label='повторите пароль')
 
     def __init__(self, *args, **kwargs):
         super(ChangePasswordForm, self).__init__(*args, **kwargs)
