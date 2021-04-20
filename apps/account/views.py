@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
@@ -6,11 +7,11 @@ from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-from django.conf import settings
 from django.utils import timezone
 
-from apps.account.forms import ChangePasswordForm, ArticleEditForm
-from apps.account.forms import HabrUserProfileEditForm, ArticleCreate
+from apps.account.forms import ChangePasswordForm, ArticleEditForm, ArticleCreate
+# from apps.account.forms import ChangePasswordForm
+from apps.account.forms import HabrUserProfileEditForm
 from apps.articles.models import Article, Hub
 from apps.authorization.models import HabrUser
 
@@ -29,16 +30,17 @@ def read_profile(request):
 @login_required
 @transaction.atomic()
 def add_article(request):
+    article_add = ArticleCreate(request.POST, request.FILES)
     if request.method == "POST":
-        article_add = ArticleCreate(request.POST, request.FILES)
         if article_add.is_valid():
             article_add.save(commit=False)
             article_add.instance.author = request.user
             article_add.save()
             return HttpResponseRedirect(reverse("account:user_articles"))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
     title = "Создание статьи"
-    article_add = ArticleCreate()
     page_data = {
         "title": title,
         "article_add": article_add
@@ -51,7 +53,7 @@ def add_article(request):
 def del_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
     article.del_article(pk)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 @login_required
@@ -59,7 +61,7 @@ def del_article(request, pk):
 def draft_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
     article.draft_article(pk)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 @login_required
@@ -153,12 +155,13 @@ def edit_password(request):
     }
     return render(request, "account/edit_password.html", page_data)
 
+
 @login_required
 @transaction.atomic()
 def edit_article(request, pk):
-    '''
+    """
     функция отвечает за редактирование статьи
-    '''
+    """
     title = "Создание статьи"
     edit_article = get_object_or_404(Article, pk=pk)
 
@@ -175,7 +178,7 @@ def edit_article(request, pk):
     page_data = {
         "title": title,
         "update_form": edit_form,
-        "media_url": settings.MEDIA_URL
+        "media_url": settings.MEDIA_URL,
     }
 
     return render(request, "account/edit_article.html", page_data)

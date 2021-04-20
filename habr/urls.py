@@ -1,6 +1,8 @@
+from ckeditor_uploader.views import upload
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.urls import path, include
 
 urlpatterns = [
@@ -8,7 +10,9 @@ urlpatterns = [
     path("account/", include("apps.account.urls", namespace="account")),
     path("auth/", include("apps.authorization.urls", namespace="auth")),
     path("admin/", admin.site.urls),
-    # path("user_articles/", include("apps.user_articles.urls", namespace='user_articles'))
+    path("comments/", include("apps.comments.urls", namespace='comments')),
+    path("ckeditor/", include("ckeditor_uploader.urls")),
+    path("upload/", login_required(upload), name="ckeditor_upload"),
 ]
 
 if settings.DEBUG:

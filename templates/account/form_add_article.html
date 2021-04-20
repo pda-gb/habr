@@ -11,10 +11,15 @@
         >
             {% csrf_token %}
             <h1>Добавить статью</h1>
-            {{ article_add.as_table }}
+            {{ article_add }}
             <br/>
             <button type="submit" class="btn btn-primary">Сохранить</button>
-            <button type="submit" class="btn btn-danger">Очистить</button>
+            <a class="btn btn-outline-primary" href="javascript:history.go(-1)">Go Back</a>
+            {#            <button type="submit" class="btn btn-danger">Очистить</button>#}
         </form>
     </div>
 {% endblock content %}
+{% block js %}
+    {{ block.super }}
+    {{ article_add.media }}
+{% endblock js %}

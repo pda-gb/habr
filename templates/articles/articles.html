@@ -11,6 +11,8 @@
             {% endfor %}
         </div>
         <div class="col-1"></div>
-        {% include 'articles/includes/right_block.html' %}
+        {% if last_articles != None %}
+            {% include 'articles/includes/right_block.html' %}
+        {% endif %}
     </div>
 {% endblock content %}

@@ -1,7 +1,9 @@
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
+from django.forms import CharField
 
-from apps.authorization.models import HabrUserProfile
 from apps.articles.models import Article
+from apps.authorization.models import HabrUserProfile
 
 
 class HabrUserProfileEditForm(forms.ModelForm):
@@ -12,11 +14,11 @@ class HabrUserProfileEditForm(forms.ModelForm):
             "place_of_work",
             "specialization",
             "gender",
-            'birth_date',
+            "birth_date",
             "country",
             "region",
             "city",
-            'avatar',
+            "avatar",
         )
 
     def __init__(self, *args, **kwargs):
@@ -27,27 +29,45 @@ class HabrUserProfileEditForm(forms.ModelForm):
 
 
 class ArticleCreate(forms.ModelForm):
+    body = CharField(widget=CKEditorUploadingWidget(config_name="for_user"))
+
     class Meta:
         model = Article
         fields = (
             "title",
             "hubs",
-            "body",
             "image",
+            "body",
             "link_to_original"
         )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs["class"] = "form-control"
-            field.help_text = ""
+
+# class ArticleCreate(forms.ModelForm):
+#
+#     class Meta:
+#         model = Article
+#         # fields = (
+#         #     "title",
+#         #     "hubs",
+#         #     "body",
+#         #     "image",
+#         #     "link_to_original"
+#         # )
+#
+# def __init__(self, *args, **kwargs):
+#     super().__init__(*args, **kwargs)
+#     for field_name, field in self.fields.items():
+#         field.widget.attrs["class"] = "form-control"
+#         field.help_text = ""
 
 
 class ChangePasswordForm(forms.Form):
-    old_password = forms.CharField(max_length=30, label='введите старый пароль')
-    new_password = forms.CharField(widget=forms.PasswordInput(), label='введите новый пароль')
-    repeat_password = forms.CharField(widget=forms.PasswordInput(), label='повторите пароль')
+    old_password = forms.CharField(widget=forms.PasswordInput(),
+                                   label='введите старый пароль')
+    new_password = forms.CharField(widget=forms.PasswordInput(),
+                                   label='введите новый пароль')
+    repeat_password = forms.CharField(widget=forms.PasswordInput(),
+                                      label='повторите пароль')
 
     def __init__(self, *args, **kwargs):
         super(ChangePasswordForm, self).__init__(*args, **kwargs)
@@ -65,6 +85,8 @@ class ChangePasswordForm(forms.Form):
 
 
 class ArticleEditForm(forms.ModelForm):
+    body = CharField(widget=CKEditorUploadingWidget(config_name="for_user"))
+
     class Meta:
         model = Article
         fields = (
@@ -75,8 +97,19 @@ class ArticleEditForm(forms.ModelForm):
             "link_to_original"
         )
 
-    def __init__(self, *args, **kwargs):
-        super(ArticleEditForm, self).__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs["class"] = "form-control"
-            field.help_text = ""
+# class ArticleEditForm(forms.ModelForm):
+#     class Meta:
+#         model = Article
+#         fields = (
+#             "title",
+#             "hubs",
+#             "body",
+#             "image",
+#             "link_to_original"
+#         )
+#
+#     def __init__(self, *args, **kwargs):
+#         super(ArticleEditForm, self).__init__(*args, **kwargs)
+#         for field_name, field in self.fields.items():
+#             field.widget.attrs["class"] = "form-control"
+#             field.help_text = ""

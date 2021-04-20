@@ -1,4 +1,4 @@
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.shortcuts import HttpResponseRedirect, render
 from django.urls import reverse
 
@@ -22,6 +22,7 @@ def login(request):
         if user and user.is_active:
             auth.login(request, user)
             return HttpResponseRedirect(reverse("articles:main_page"))
+
 
     page_data = {"title": title, "login_form": login_form}
     return render(request, "authorization/login.html", page_data)
@@ -47,6 +48,8 @@ def register(request):
         if register_form.is_valid():
             register_form.save()
             return HttpResponseRedirect(reverse("auth:login"))
+        else:
+            messages.error(request, 'ЛОГИН ИЛИ ПАРОЛЬ ВВЕДЕНЫ НЕКОРРЕКТНО!')
     register_form = HabrUserRegisterForm()
 
     page_data = {"title": title, "register_form": register_form}

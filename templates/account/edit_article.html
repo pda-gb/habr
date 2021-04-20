@@ -13,3 +13,7 @@
         </form>
     </div>
 {% endblock content %}
+{% block js %}
+    {{ block.super }}
+    {{ update_form.media }}
+{% endblock js %}

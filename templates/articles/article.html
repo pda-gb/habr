@@ -13,7 +13,6 @@
                             {#            загрузка аваттарки    #}
                             <img src="{{ article.author.habruserprofile.avatar|media_folder_users }}" alt="ava"/>
                             {#            загрузка юзернейм     #}
-
                             {% if article.author.username %}
                                 {{ article.author.username }}
                             {% else %}
@@ -25,25 +24,18 @@
                     </div>
                     <div class="post-content mt-3">
                         <br/>
-                        <span>{{ article.body | linebreaksbr }}</span>
-                        <div class="post-status">
-                            <a href="#"><img src="{% static 'svg/like.svg' %}" alt=""/></a>
-                            <small class="text-muted">{{ article.likes }}</small>
-                            <a href="#"><img src="{% static 'svg/dislike.svg' %}" alt=""/></a>
-                            <small class="text-muted">{{ article.dislikes }}</small>
-                            <a href="#"><img src="{% static 'svg/bookmark.svg' %}" alt=""/></a>
-                            <small class="text-muted">{{ article.bookmarks }}</small>
-                            <img src="{% static 'svg/view.svg' %}" alt=""/><small
-                                class="text-muted">{{ article.views }}</small>
-                            <img src="{% static 'svg/comment.svg' %}" alt=""/><small class="text-muted">2</small>
-                        </div>
+                        <span>{% autoescape off %}{{ article.body | linebreaksbr }}{% endautoescape %}</span>
+                        {% include 'articles/includes/post-status.html' %}
                     </div>
                 </div>
                 <div class="author-row">
                     <div class="author-block">
-                        <img class="author-avatar" src="{{ article.author.habruserprofile.avatar|media_folder_users }}" alt="avatar"/>
+                        <img class="author-avatar" src="{{ article.author.habruserprofile.avatar|media_folder_users }}"
+                             alt="avatar"/>
                         <div class="author-rating">
-                            <div class="author-rating-num">{{ article.author.rating }}</div>
+                            <div class="author-rating-num {% if article.author.habruserprofile.rating > 0 %}green{% elif article.author.habruserprofile.rating < 0 %}red{% endif %}"
+                                 id="author_rating">
+                                {{ article.author.habruserprofile.rating }}</div>
                             <div class="author-rating-text">Рейтинг автора</div>
                         </div>
                     </div>
@@ -53,47 +45,153 @@
                         </a>
                     </div>
                 </div>
-                <div class="comment-row">
-                    <h2 class="mb-4">Комментарии</h2>
-                    <hr/>
-                    <div class="m-4">
-                        <div>
-                            <a href="#" class="post-author">
-                                <img src="{% static 'img/avatar.jpg' %}" alt=""/>
-                                Username
-                            </a>
-                            <span>сегодня в 13:00</span>
-                            <div class="comment-rating">
-                                <a href="#"><img src="{% static 'svg/like.svg' %}" alt=""/></a>
-                                <small class="text-muted">-9</small>
-                                <a href="#"><img src="{% static 'svg/dislike(filled).svg' %}" alt=""/></a>
-                            </div>
-                        </div>
-                        <div class="comment-text">
-                            <div>Прочитал, ничего не понял, гугл переводчик тож тупит</div>
-                        </div>
-                    </div>
-                    <div class="m-4">
-                        <div>
-                            <a href="#" class="post-author">
-                                <img src="{% static 'img/avatar.jpg' %}" alt=""/>
-                                Username
-                            </a>
-                            <span>сегодня в 13:00</span>
-                            <div class="comment-rating">
-                                <a href="#"><img src="{% static 'svg/like(filled).svg' %}" alt=""/></a>
-                                <small class="text-muted">55</small>
-                                <a href="#"><img src="{% static 'svg/dislike.svg' %}" alt=""/></a>
-                            </div>
-                        </div>
-                        <div class="comment-text">
-                            <div>Отличная статья, нужно учить латынь</div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Начало блока комментариев -->
+                {% include 'comments/comments.html' %}
+                <!-- Конец блока комментариев -->
             </div>
             <div class="col-1"></div>
             {% include 'articles/includes/right_block.html' %}
         </div>
     </div>
 {% endblock content %}
+
+{% block js %}
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+            crossorigin="anonymous"
+    ></script>
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+            integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+            crossorigin="anonymous"
+    ></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    {% if request.user.is_authenticated %}
+        <script>
+            const likeUrl = "{% static 'svg/like.svg' %}";
+            const likeFUrl = "{% static 'svg/like(filled).svg' %}";
+            const dislikeUrl = "{% static 'svg/dislike.svg' %}";
+            const dislikeFUrl = "{% static 'svg/dislike(filled).svg' %}";
+            const bookmarkUrl = "{% static 'svg/bookmark.svg' %}";
+            const bookmarkFUrl = "{% static 'svg/bookmark(filled).svg' %}";
+
+            function sendAjax(fieldName) {
+                $.ajax({
+                    data: {field: fieldName, user: {{ request.user.pk }}, article: {{ article.pk }}},
+                    url: "{% url 'articles:ajax_change_rate' %}",
+                    success: function (response) {
+                        $("#likes_count").text(response.likes)
+                        $("#dislikes_count").text(response.dislikes)
+                        $("#author_rating").text(response.author_rating)
+                        if (response.author_rating > 0) {
+                            $("#author_rating").attr('class', 'author-rating-num green');
+                        }
+                        if (response.author_rating < 0) {
+                            $("#author_rating").attr('class', 'author-rating-num red');
+                        }
+                        if (response.author_rating === 0) {
+                            $("#author_rating").attr('class', 'author-rating-num');
+                        }
+                        if (response.liked === true) {
+                            $('#like').attr('src', likeFUrl);
+                            $('#dislike').attr('src', dislikeUrl);
+                        }
+                        if (response.liked === false) {
+                            $('#dislike').attr('src', dislikeFUrl);
+                            $('#like').attr('src', likeUrl);
+                        }
+                        if (response.liked === null) {
+                            $('#dislike').attr('src', dislikeUrl);
+                            $('#like').attr('src', likeUrl);
+                        }
+                    }
+                });
+            };
+
+            $(document).ready(function () {
+                {% comment %} $('#like').hover(function(){
+                    $(this).attr('src', likeFUrl);
+                    }, function(){
+                    $(this).attr('src', likeUrl);
+                });
+                $('#dislike').hover(function(){
+                    $(this).attr('src', dislikeFUrl);
+                    }, function(){
+                    $(this).attr('src', dislikeUrl);
+                });
+                $('#bookmark').hover(function(){
+                    $(this).attr('src', bookmarkFUrl);
+                    }, function(){
+                    $(this).attr('src', bookmarkUrl);
+                }); {% endcomment %}
+
+                $('#like').click(function () {
+                    sendAjax("like")
+                    if ($(this).attr('src') == likeFUrl) {
+                        $(this).attr('src', likeUrl);
+                    } else {
+                        $(this).attr('src', likeFUrl);
+                    }
+                });
+
+                $('#dislike').click(function () {
+                    sendAjax("dislike")
+                    if ($(this).attr('src') == dislikeFUrl) {
+                        $(this).attr('src', dislikeUrl);
+                    } else {
+                        $(this).attr('src', dislikeFUrl);
+                    }
+                });
+
+                $('#bookmark').click(function () {
+                    sendAjax("bookmark")
+                    if ($(this).attr('src') == bookmarkFUrl) {
+                        $(this).attr('src', bookmarkUrl);
+                    } else {
+                        $(this).attr('src', bookmarkFUrl);
+                    }
+                });
+            });
+        </script>
+    {% else %}
+        <script>
+            const likeUrl = "{% static 'svg/like.svg' %}";
+            const likeFUrl = "{% static 'svg/like(filled).svg' %}";
+            const dislikeUrl = "{% static 'svg/dislike.svg' %}";
+            const dislikeFUrl = "{% static 'svg/dislike(filled).svg' %}";
+            const bookmarkUrl = "{% static 'svg/bookmark.svg' %}";
+            const bookmarkFUrl = "{% static 'svg/bookmark(filled).svg' %}";
+
+            $(document).ready(function () {
+                $('#like').hover(function () {
+                    $(this).attr('src', likeFUrl);
+                }, function () {
+                    $(this).attr('src', likeUrl);
+                });
+                $('#dislike').hover(function () {
+                    $(this).attr('src', dislikeFUrl);
+                }, function () {
+                    $(this).attr('src', dislikeUrl);
+                });
+                $('#bookmark').hover(function () {
+                    $(this).attr('src', bookmarkFUrl);
+                }, function () {
+                    $(this).attr('src', bookmarkUrl);
+                });
+
+                $('#like').click(function () {
+                    window.location.replace('{% url 'auth:login' %}')
+                });
+
+                $('#dislike').click(function () {
+                    window.location.replace('{% url 'auth:login' %}')
+                });
+
+                $('#bookmark').click(function () {
+                    window.location.replace('{% url 'auth:login' %}')
+                });
+            });
+        </script>
+    {% endif %}
+{% endblock js %}
