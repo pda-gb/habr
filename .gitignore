@@ -572,3 +572,4 @@ cython_debug/
 .vscode/
 migrations/
 secret.json
+/media/uploads/*

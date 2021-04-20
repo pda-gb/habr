@@ -24,7 +24,8 @@ INSTALLED_APPS = [
     "apps.articles",
     "apps.account",
     "apps.comments",
-# Create your models here.
+    "ckeditor",
+    "ckeditor_uploader",
 ]
 
 MIDDLEWARE = [
@@ -95,17 +96,52 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = "/static/"
-
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-
-# используем своё приложение для аутентификации
-AUTH_USER_MODEL = "authorization.HabrUser"
+STATIC_ROOT = os.path.join(BASE_DIR, "static_dev")
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
+CKEDITOR_UPLOAD_PATH = "uploads/"
+# CKEDITOR_UPLOAD_SLUGIFY_FILENAME = False
+CKEDITOR_RESTRICT_BY_USER = False
+CKEDITOR_ALLOW_NONIMAGE_FILES = False
+CKEDITOR_IMAGE_BACKEND = "pillow"
+
+CKEDITOR_CONFIGS = {
+    "for_user": {
+        'toolbar': [
+            [
+                'Undo', 'Redo',
+                '-', 'Format',
+                '-', 'FontSize',
+                '-', 'Blockquote',
+                '-', 'Bold', 'Italic', 'Underline',
+                '-', 'HorizontalRule',
+                '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',
+                '-', 'NumberedList', 'BulletedList',
+                '-', 'Image',
+                '-', 'Source'
+            ]
+        ],
+        'height': 500,
+        'width': '100%',
+        'toolbarCanCollapse': False,
+        'forcePasteAsPlainText': True
+    },
+    "default": {
+        "toolbar": "full",
+        "height": 800,
+        "width": 800,
+    },
+}
+
+# используем своё приложение для аутентификации
+AUTH_USER_MODEL = "authorization.HabrUser"
+
 # нововведение в джанго 3.2
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 
 # Set login path:
 #   https://docs.djangoproject.com/en/2.2/ref/settings/#login-url

@@ -25,7 +25,7 @@
                     </div>
                     <div class="post-content mt-3">
                         <br/>
-                        <span>{{ article.body | linebreaksbr }}</span>
+                        <span>{% autoescape off %}{{ article.body | linebreaksbr }}{% endautoescape %}</span>
                         <div class="post-status">
                             <a href="#"><img src="{% static 'svg/like.svg' %}" alt=""/></a>
                             <small class="text-muted">{{ article.likes }}</small>
