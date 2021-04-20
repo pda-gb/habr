@@ -64,6 +64,7 @@ class Article(models.Model):
     dislikes = models.PositiveIntegerField(verbose_name="дизлайки", default=0)
     views = models.PositiveIntegerField(verbose_name="просмотры", default=0)
     bookmarks = models.PositiveIntegerField(verbose_name="заметки", default=0)
+    rating = models.IntegerField(verbose_name="рейтинг", default=0)
 
     class Meta:
         verbose_name = "статья"
@@ -214,6 +215,13 @@ class ArticleRate(models.Model):
     liked = BooleanField(null=True, default=None)
     watched = BooleanField(default=True)
     in_bookmarks = BooleanField(default=False)
+
+    def save(self, rating=None, force_insert=None, using=None) -> None:
+        super().save(force_insert=force_insert, using=using)
+        if rating:
+            rating = Article.objects.filter(author=self.article.author).values_list("rating")
+            self.article.author.habruserprofile.rating = sum(rate[0] for rate in rating)
+            self.article.author.habruserprofile.save()
 
     @staticmethod
     def create(article, user):

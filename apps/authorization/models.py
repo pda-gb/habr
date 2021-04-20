@@ -3,7 +3,6 @@ from django.db import models
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.conf import settings
 
 
 class HabrUser(AbstractUser):
@@ -42,6 +41,7 @@ class HabrUserProfile(models.Model):
     country = models.CharField(verbose_name="страна", max_length=64, blank=True)
     region = models.CharField(verbose_name="регион", max_length=64, blank=True)
     city = models.CharField(verbose_name="город", max_length=64, blank=True)
+    rating = models.IntegerField(verbose_name="рейтинг", default=0)
 
     def __str__(self) -> str:
         return self.user.username

@@ -29,19 +29,7 @@
             </div>
         {% endblock post-head %}
         {% block post-content %}
-            <div class="post-content mt-3">
-                <p>{{ article.body|truncatewords:"25" }}</p>
-                <a class="btn btn-outline-dark mt-1" href="{% url 'articles:article' article.id %}">Читать далее</a>
-                {% block post-status %}
-                    <div class="post-status">
-                        <img src="{% static 'svg/star(white).svg' %}"/><small
-                            class="text-muted">{{ article.stars }}</small>
-                        <img src="{% static 'svg/bookmark.svg' %}"/><small
-                            class="text-muted">{{ article.bookmarks }}</small>
-                        <img src="{% static 'svg/view.svg' %}"/><small class="text-muted">{{ article.views }}</small>
-                    </div>
-                {% endblock post-status %}
-            </div>
+            {% include 'articles/includes/mini-post.html' %}
         {% endblock post-content %}
     </div>
     <hr>

@@ -26,24 +26,15 @@
                     <div class="post-content mt-3">
                         <br/>
                         <span>{{ article.body | linebreaksbr }}</span>
-                        <div class="post-status">
-                            <img src="{% static 'svg/like.svg' %}" alt="" id="like"/>
-                            <small class="text-muted" id="likes_count">{{ article.likes }}</small>
-                            <img src="{% static 'svg/dislike.svg' %}" alt="" id="dislike"/>
-                            <small class="text-muted" id="dislikes_count">{{ article.dislikes }}</small>
-                            <img src="{% static 'svg/bookmark.svg' %}" alt="" id="bookmark"/>
-                            <small class="text-muted" id="bookmarks_count">{{ article.bookmarks }}</small>
-                            <img src="{% static 'svg/view.svg' %}" alt=""/>
-                            <small class="text-muted">{{ article.views }}</small>
-                            <img src="{% static 'svg/comment.svg' %}" alt=""/><small class="text-muted">2</small>
-                        </div>
+                        {% include 'articles/includes/post-status.html' %}
                     </div>
                 </div>
                 <div class="author-row">
                     <div class="author-block">
                         <img class="author-avatar" src="{{ article.author.habruserprofile.avatar|media_folder_users }}" alt="avatar"/>
                         <div class="author-rating">
-                            <div class="author-rating-num">{{ article.author.rating }}</div>
+                            <div class="author-rating-num {% if article.author.habruserprofile.rating > 0 %}green{% elif article.author.habruserprofile.rating < 0 %}red{% endif %}" id="author_rating">
+                            {{ article.author.habruserprofile.rating }}</div>
                             <div class="author-rating-text">Рейтинг автора</div>
                         </div>
                     </div>
@@ -110,47 +101,88 @@
     crossorigin="anonymous"
 ></script>
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-<script>
-function sendAjax(fieldName) {
-  $.ajax({
-      data: {field: fieldName, user: {{ request.user.pk }}, article: {{ article.pk }}},
-      url: "{% url 'articles:ajax_change_rate' %}",
-      success: function(response) {
-        $("#likes_count").text(response.likes)
-        $("#dislikes_count").text(response.dislikes)
-        $("#bookmarks_count").text(response.bookmarks)
-      }
-  });
-};
+{% if request.user.is_authenticated %}
+  <script>
+    const likeUrl = "{% static 'svg/like.svg' %}";
+    const likeFUrl = "{% static 'svg/like(filled).svg' %}";
+    const dislikeUrl = "{% static 'svg/dislike.svg' %}";
+    const dislikeFUrl = "{% static 'svg/dislike(filled).svg' %}";
+    const bookmarkUrl = "{% static 'svg/bookmark.svg' %}";
+    const bookmarkFUrl = "{% static 'svg/bookmark(filled).svg' %}";
 
-$(document).ready(function(){
-  $('#like').click(function () {
-    sendAjax("like")
-  });
+    function sendAjax(fieldName) {
+      $.ajax({
+          data: {field: fieldName, user: {{ request.user.pk }}, article: {{ article.pk }}},
+          url: "{% url 'articles:ajax_change_rate' %}",
+          success: function(response) {
+              $("#likes_count").text(response.likes)
+              $("#dislikes_count").text(response.dislikes)
+              $("#author_rating").text(response.author_rating)
+              if (response.author_rating > 0) {
+                $("#author_rating").attr('class', 'author-rating-num green');
+              } if (response.author_rating < 0) {
+                $("#author_rating").attr('class', 'author-rating-num red');
+              } if (response.author_rating === 0) {
+                $("#author_rating").attr('class', 'author-rating-num');
+              }
+              if (response.liked === true) {
+                $('#like').attr('src', likeFUrl);
+                $('#dislike').attr('src', dislikeUrl);
+              } if (response.liked === false) {
+                $('#dislike').attr('src', dislikeFUrl);
+                $('#like').attr('src', likeUrl);
+              } if (response.liked === null) {
+                $('#dislike').attr('src', dislikeUrl);
+                $('#like').attr('src', likeUrl);
+              }
+          }
+      });
+    };
 
-  $('#dislike').click(function () {
-    sendAjax("dislike")
-  });
+    $(document).ready(function(){
+      {% comment %} $('#like').hover(function(){
+          $(this).attr('src', likeFUrl);
+          }, function(){
+          $(this).attr('src', likeUrl);
+      });
+      $('#dislike').hover(function(){
+          $(this).attr('src', dislikeFUrl);
+          }, function(){
+          $(this).attr('src', lidislikeUrl);
+      });
+      $('#bookmark').hover(function(){
+          $(this).attr('src', bookmarkFUrl);
+          }, function(){
+          $(this).attr('src', bookmarkUrl);
+      }); {% endcomment %}
 
-  $('#bookmark').click(function () {
-    sendAjax("bookmark")
-  });
+      $('#like').click(function () {
+          sendAjax("like")
+          if ($(this).attr('src') == likeFUrl) {
+            $(this).attr('src', likeUrl);
+          } else {
+            $(this).attr('src', likeFUrl);
+          }
+      });
 
-  $('#like').hover(function(){
-    $(this).attr('src', "{% static 'svg/like(filled).svg' %}");
-    }, function(){
-    $(this).attr('src', "{% static 'svg/like.svg' %}");
-  });
-  $('#dislike').hover(function(){
-    $(this).attr('src', "{% static 'svg/dislike(filled).svg' %}");
-    }, function(){
-    $(this).attr('src', "{% static 'svg/dislike.svg' %}");
-  });
-  $('#bookmark').hover(function(){
-    $(this).attr('src', "{% static 'svg/bookmark(filled).svg' %}");
-    }, function(){
-    $(this).attr('src', "{% static 'svg/bookmark.svg' %}");
-  });
-});
-</script>
+      $('#dislike').click(function () {
+          sendAjax("dislike")
+          if ($(this).attr('src') == dislikeFUrl) {
+            $(this).attr('src', lidislikeUrl);
+          } else {
+            $(this).attr('src', dislikeFUrl);
+          }
+      });
+
+      $('#bookmark').click(function () {
+          sendAjax("bookmark")
+          if ($(this).attr('src') == bookmarkFUrl) {
+            $(this).attr('src', bookmarkUrl);
+          } else {
+            $(this).attr('src', bookmarkFUrl);
+          }
+      });
+    });
+  </script>
+{% endif %}
 {% endblock js %}
