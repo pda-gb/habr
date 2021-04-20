@@ -58,6 +58,7 @@ def change_article_rate(request):
         article_objects = ArticleRate.objects.filter(article=article)
         article_rate.article.likes = article_objects.filter(liked=True).count()
         article_rate.article.dislikes = article_objects.filter(liked=False).count()
+        article_rate.article.bookmarks = article_objects.filter(in_bookmarks=True).count()
         article_rate.article.rating = article_rate.article.likes - article_rate.article.dislikes
         article_rate.article.save()
         article_rate.save(True)
