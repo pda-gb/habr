@@ -77,12 +77,13 @@ class Article(models.Model):
         # если статей нет
         if not articles_current_page.exclude():
             return None
+        # если статей меньше 3, то изменить переменную количества
+        elif articles_current_page.count() < 3:
+            len_last_articles = articles_current_page.count()
         last_articles_set = articles_current_page.values \
                                 ('id', 'title', 'published'
                                  )[0:len_last_articles]
         last_articles = [{} for _ in range(len_last_articles)]
-        # если статей меньше 3, то изменить переменную количества
-        len_last_articles = articles_current_page.count()
         for i in range(len_last_articles):
             last_articles[i]['id'] = last_articles_set[i]['id']
             last_articles[i]['title'] = last_articles_set[i]['title']
