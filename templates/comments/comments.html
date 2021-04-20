@@ -7,7 +7,7 @@
     <hr/>
     {{ comments|comments_filter }}
     <div class="container-fluid mt-2">
-        <form method="POST" class="comment-form" action="{% url 'articles:comment_create' pk=article.id %}">
+        <form method="POST" class="comment-form" action="{% url 'comments:comment_create' pk=article.id %}">
             {% csrf_token %}
             {{ form_comment.as_p }}
             {% if request.user.is_authenticated %}
@@ -34,7 +34,7 @@
             var id = $(this).attr('data-id')
             var text = $('#form-'+id).find('textarea[name="comment-text"]').val();
             let pk = target.baseURI.split('/').slice(-1)[0]
-            var url = "{% url 'articles:comment_child_create' pk=article.id %}"
+            var url = "{% url 'comments:comment_child_create' pk=article.id %}"
     
             function getCookie(name) {
                 let cookieValue = null;
@@ -64,7 +64,7 @@
                 data: data,
                 url: url,
                 success: function(data){
-                    window.location.replace('articles/')
+                    window.location.replace(pk)
                 }
             })
         })

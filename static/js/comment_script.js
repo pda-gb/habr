@@ -1,4 +1,4 @@
-
+/*
 $(document).ready(function(){
     $(".reply").on('click', function(){
         var parentId = $(this).attr('data-id')
@@ -46,3 +46,4 @@ $(document).ready(function(){
         })
     })
 });
+*/

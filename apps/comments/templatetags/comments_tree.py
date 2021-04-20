@@ -15,7 +15,7 @@ def comments_filter(comments_list):
     i = ''
     for comment in comments_list:
         i += """
-             <li>
+             <li style="list-style-type:none;>
                 <div class="main-comment-section">
                     <div class="m-4">
                         <a href="#" class="post-author">
@@ -31,7 +31,7 @@ def comments_filter(comments_list):
                         <p>{text} | id={id}</p>
                     </div>
                         <span class='reply' data-id="{id} "data-prent={parent_id}>Ответить</span>
-                        <form action="create-child-comment/52" method="POST" class="comment-form form-group" id="form-{id}" style="display:none;">
+                        <form action="#" method="POST" class="comment-form form-group" id="form-{id}" style="display:none;">
                             <textarea type="text" class="form-control" name="comment-text"></textarea><br>
                             <input type="submit" class="btn btn-primary submit-reply" data-id="{id}" data-submit-reply="{parent_id}" value="отправить"></input>
                         </form>
