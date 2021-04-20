@@ -9,10 +9,11 @@
                     <div class="post-head">
                         {#            загрузка заглавной картинки    #}
                         <img class="main-image" src="{{ article.image|media_folder_images }}" alt="main-image"/><br/>
-                        <a href="#" class="post-author">
+                        <a href="{% url 'articles:author_profile' article.author_id %}" class="post-author">
                             {#            загрузка аваттарки    #}
-                            <img src="{{ article.author.habruserprofile.avatar|media_folder_users }}" alt=""/>
+                            <img src="{{ article.author.habruserprofile.avatar|media_folder_users }}" alt="ava"/>
                             {#            загрузка юзернейм     #}
+
                             {% if article.author.username %}
                                 {{ article.author.username }}
                             {% else %}
@@ -21,7 +22,6 @@
                         </a>
                         <span>{{ article.published }}</span>
                         <h1>{{ article.title }}</h1>
-{#                        <a href="#" class="post-link">{{ article.title }}</a>#}
                     </div>
                     <div class="post-content mt-3">
                         <br/>
@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     <div class="author-block">
-                        <a href="{% url '' %}">
+                        <a href="{% url 'articles:author_profile' article.author_id %}">
                             <div class="author-username">{{ article.author.username }}</div>
                         </a>
                     </div>

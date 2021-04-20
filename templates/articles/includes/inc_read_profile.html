@@ -1,5 +1,5 @@
 {% load my_tags %}
-<img class="ava-img" src="{{ article.author.habruserprofile.avatar|media_folder_users }}" alt="avatar"/>
+<img class="ava-img" src="{{ current_user.habruserprofile.avatar|media_folder_users }}" alt="avatar"/>
 <table class="table table-striped table-light">
     <tr>
         <td>Логин:</td>
@@ -39,6 +39,6 @@
     </tr>
     <tr>
         <td>Рейтинг:</td>
-        <td>{{ current_user.habruserprofile.city|no_data_specified }}</td>
+        <td>{{ current_user.habruserprofile.rating|no_data_specified }}</td>
     </tr>
 </table>
