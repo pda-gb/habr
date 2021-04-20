@@ -38,7 +38,6 @@ def add_article(request):
             article_add.save()
             return HttpResponseRedirect(reverse("account:user_articles"))
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     title = "Создание статьи"
     page_data = {

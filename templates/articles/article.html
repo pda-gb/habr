@@ -56,142 +56,138 @@
 {% endblock content %}
 
 {% block js %}
-    <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
-            crossorigin="anonymous"
-    ></script>
-    <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
-            integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
-            crossorigin="anonymous"
-    ></script>
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    {% if request.user.is_authenticated %}
-        <script>
-            const likeUrl = "{% static 'svg/like.svg' %}";
-            const likeFUrl = "{% static 'svg/like(filled).svg' %}";
-            const dislikeUrl = "{% static 'svg/dislike.svg' %}";
-            const dislikeFUrl = "{% static 'svg/dislike(filled).svg' %}";
-            const bookmarkUrl = "{% static 'svg/bookmark.svg' %}";
-            const bookmarkFUrl = "{% static 'svg/bookmark(filled).svg' %}";
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+    crossorigin="anonymous"
+></script>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous"
+></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+{% if request.user.is_authenticated %}
+  <script>
+    const likeUrl = "{% static 'svg/like.svg' %}";
+    const likeFUrl = "{% static 'svg/like(filled).svg' %}";
+    const dislikeUrl = "{% static 'svg/dislike.svg' %}";
+    const dislikeFUrl = "{% static 'svg/dislike(filled).svg' %}";
+    const bookmarkUrl = "{% static 'svg/bookmark.svg' %}";
+    const bookmarkFUrl = "{% static 'svg/bookmark(filled).svg' %}";
 
-            function sendAjax(fieldName) {
-                $.ajax({
-                    data: {field: fieldName, user: {{ request.user.pk }}, article: {{ article.pk }}},
-                    url: "{% url 'articles:ajax_change_rate' %}",
-                    success: function (response) {
-                        $("#likes_count").text(response.likes)
-                        $("#dislikes_count").text(response.dislikes)
-                        $("#author_rating").text(response.author_rating)
-                        if (response.author_rating > 0) {
-                            $("#author_rating").attr('class', 'author-rating-num green');
-                        }
-                        if (response.author_rating < 0) {
-                            $("#author_rating").attr('class', 'author-rating-num red');
-                        }
-                        if (response.author_rating === 0) {
-                            $("#author_rating").attr('class', 'author-rating-num');
-                        }
-                        if (response.liked === true) {
-                            $('#like').attr('src', likeFUrl);
-                            $('#dislike').attr('src', dislikeUrl);
-                        }
-                        if (response.liked === false) {
-                            $('#dislike').attr('src', dislikeFUrl);
-                            $('#like').attr('src', likeUrl);
-                        }
-                        if (response.liked === null) {
-                            $('#dislike').attr('src', dislikeUrl);
-                            $('#like').attr('src', likeUrl);
-                        }
-                    }
-                });
-            };
+    function sendAjax(fieldName) {
+      $.ajax({
+          data: {field: fieldName, user: {{ request.user.pk }}, article: {{ article.pk }}},
+          url: "{% url 'articles:ajax_change_rate' %}",
+          success: function(response) {
+              $("#likes_count").text(response.likes)
+              $("#dislikes_count").text(response.dislikes)
+              $("#author_rating").text(response.author_rating)
+              if (response.author_rating > 0) {
+                $("#author_rating").attr('class', 'author-rating-num green');
+              } if (response.author_rating < 0) {
+                $("#author_rating").attr('class', 'author-rating-num red');
+              } if (response.author_rating === 0) {
+                $("#author_rating").attr('class', 'author-rating-num');
+              }
+              if (response.liked === true) {
+                $('#like').attr('src', likeFUrl);
+                $('#dislike').attr('src', dislikeUrl);
+              } if (response.liked === false) {
+                $('#dislike').attr('src', dislikeFUrl);
+                $('#like').attr('src', likeUrl);
+              } if (response.liked === null) {
+                $('#dislike').attr('src', dislikeUrl);
+                $('#like').attr('src', likeUrl);
+              }
+          }
+      });
+    };
 
-            $(document).ready(function () {
-                {% comment %} $('#like').hover(function(){
-                    $(this).attr('src', likeFUrl);
-                    }, function(){
-                    $(this).attr('src', likeUrl);
-                });
-                $('#dislike').hover(function(){
-                    $(this).attr('src', dislikeFUrl);
-                    }, function(){
-                    $(this).attr('src', dislikeUrl);
-                });
-                $('#bookmark').hover(function(){
-                    $(this).attr('src', bookmarkFUrl);
-                    }, function(){
-                    $(this).attr('src', bookmarkUrl);
-                }); {% endcomment %}
+    $(document).ready(function(){
+      {% comment %} $('#like').hover(function(){
+          $(this).attr('src', likeFUrl);
+          }, function(){
+          $(this).attr('src', likeUrl);
+      });
+      $('#dislike').hover(function(){
+          $(this).attr('src', dislikeFUrl);
+          }, function(){
+          $(this).attr('src', dislikeUrl);
+      });
+      $('#bookmark').hover(function(){
+          $(this).attr('src', bookmarkFUrl);
+          }, function(){
+          $(this).attr('src', bookmarkUrl);
+      }); {% endcomment %}
 
-                $('#like').click(function () {
-                    sendAjax("like")
-                    if ($(this).attr('src') == likeFUrl) {
-                        $(this).attr('src', likeUrl);
-                    } else {
-                        $(this).attr('src', likeFUrl);
-                    }
-                });
+      $('#like').click(function () {
+          sendAjax("like")
+          if ($(this).attr('src') == likeFUrl) {
+            $(this).attr('src', likeUrl);
+          } else {
+            $(this).attr('src', likeFUrl);
+          }
+      });
 
-                $('#dislike').click(function () {
-                    sendAjax("dislike")
-                    if ($(this).attr('src') == dislikeFUrl) {
-                        $(this).attr('src', dislikeUrl);
-                    } else {
-                        $(this).attr('src', dislikeFUrl);
-                    }
-                });
+      $('#dislike').click(function () {
+          sendAjax("dislike")
+          if ($(this).attr('src') == dislikeFUrl) {
+            $(this).attr('src', dislikeUrl);
+          } else {
+            $(this).attr('src', dislikeFUrl);
+          }
+      });
 
-                $('#bookmark').click(function () {
-                    sendAjax("bookmark")
-                    if ($(this).attr('src') == bookmarkFUrl) {
-                        $(this).attr('src', bookmarkUrl);
-                    } else {
-                        $(this).attr('src', bookmarkFUrl);
-                    }
-                });
-            });
-        </script>
-    {% else %}
-        <script>
-            const likeUrl = "{% static 'svg/like.svg' %}";
-            const likeFUrl = "{% static 'svg/like(filled).svg' %}";
-            const dislikeUrl = "{% static 'svg/dislike.svg' %}";
-            const dislikeFUrl = "{% static 'svg/dislike(filled).svg' %}";
-            const bookmarkUrl = "{% static 'svg/bookmark.svg' %}";
-            const bookmarkFUrl = "{% static 'svg/bookmark(filled).svg' %}";
+      $('#bookmark').click(function () {
+          sendAjax("bookmark")
+          if ($(this).attr('src') == bookmarkFUrl) {
+            $(this).attr('src', bookmarkUrl);
+          } else {
+            $(this).attr('src', bookmarkFUrl);
+          }
+      });
+    });
+  </script>
+{% else %}
+  <script>
+    const likeUrl = "{% static 'svg/like.svg' %}";
+    const likeFUrl = "{% static 'svg/like(filled).svg' %}";
+    const dislikeUrl = "{% static 'svg/dislike.svg' %}";
+    const dislikeFUrl = "{% static 'svg/dislike(filled).svg' %}";
+    const bookmarkUrl = "{% static 'svg/bookmark.svg' %}";
+    const bookmarkFUrl = "{% static 'svg/bookmark(filled).svg' %}";
 
-            $(document).ready(function () {
-                $('#like').hover(function () {
-                    $(this).attr('src', likeFUrl);
-                }, function () {
-                    $(this).attr('src', likeUrl);
-                });
-                $('#dislike').hover(function () {
-                    $(this).attr('src', dislikeFUrl);
-                }, function () {
-                    $(this).attr('src', dislikeUrl);
-                });
-                $('#bookmark').hover(function () {
-                    $(this).attr('src', bookmarkFUrl);
-                }, function () {
-                    $(this).attr('src', bookmarkUrl);
-                });
+    $(document).ready(function(){
+      $('#like').hover(function(){
+          $(this).attr('src', likeFUrl);
+          }, function(){
+          $(this).attr('src', likeUrl);
+      });
+      $('#dislike').hover(function(){
+          $(this).attr('src', dislikeFUrl);
+          }, function(){
+          $(this).attr('src', dislikeUrl);
+      });
+      $('#bookmark').hover(function(){
+          $(this).attr('src', bookmarkFUrl);
+          }, function(){
+          $(this).attr('src', bookmarkUrl);
+      });
 
-                $('#like').click(function () {
-                    window.location.replace('{% url 'auth:login' %}')
-                });
+      $('#like').click(function () {
+        window.location.replace('{% url 'auth:login' %}')
+      });
 
-                $('#dislike').click(function () {
-                    window.location.replace('{% url 'auth:login' %}')
-                });
+      $('#dislike').click(function () {
+        window.location.replace('{% url 'auth:login' %}')
+      });
 
-                $('#bookmark').click(function () {
-                    window.location.replace('{% url 'auth:login' %}')
-                });
-            });
-        </script>
-    {% endif %}
+      $('#bookmark').click(function () {
+        window.location.replace('{% url 'auth:login' %}')
+      });
+    });
+  </script>
+{% endif %}
 {% endblock js %}
