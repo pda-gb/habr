@@ -22,7 +22,7 @@ def create_comments_tree(qs):
         c = {
             'id': comment.id,
             'text': comment.body,
-            # 'timestamp': comment.date.strftime('%Y-%m-%d %H:%m'),
+            'timestamp': comment.date.strftime('%Y-%m-%d %H:%m'),
             'author': comment.author,
             'is_child': comment.is_child,
             'parent_id': comment.get_parent,

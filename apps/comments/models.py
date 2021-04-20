@@ -1,3 +1,4 @@
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -10,7 +11,7 @@ class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     parent = models.ForeignKey('self', null=True, related_name='comment_parent', on_delete=models.CASCADE)
-    body = models.TextField(verbose_name='Текст статьи')
+    body = RichTextUploadingField()
     date = models.DateTimeField(verbose_name="дата", default=timezone.now)
     is_child = models.BooleanField(default=False)
 

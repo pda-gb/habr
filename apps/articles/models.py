@@ -50,7 +50,7 @@ class Article(models.Model):
                                on_delete=models.CASCADE)
     hubs = models.ManyToManyField(Hub, verbose_name="хабы")
     tags = models.ManyToManyField(Tag, blank=True)
-    body = models.TextField()
+    body = RichTextUploadingField()
     image = models.ImageField(upload_to="img_articles/", blank=True,
                               verbose_name="главная картинка")
     link_to_original = models.URLField(blank=True,
