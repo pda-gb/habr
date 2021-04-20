@@ -53,47 +53,13 @@
                         </a>
                     </div>
                 </div>
-                <div class="comment-row">
-                    <h2 class="mb-4">Комментарии</h2>
-                    <hr/>
-                    <div class="m-4">
-                        <div>
-                            <a href="#" class="post-author">
-                                <img src="{% static 'img/avatar.jpg' %}" alt=""/>
-                                Username
-                            </a>
-                            <span>сегодня в 13:00</span>
-                            <div class="comment-rating">
-                                <a href="#"><img src="{% static 'svg/like.svg' %}" alt=""/></a>
-                                <small class="text-muted">-9</small>
-                                <a href="#"><img src="{% static 'svg/dislike(filled).svg' %}" alt=""/></a>
-                            </div>
-                        </div>
-                        <div class="comment-text">
-                            <div>Прочитал, ничего не понял, гугл переводчик тож тупит</div>
-                        </div>
-                    </div>
-                    <div class="m-4">
-                        <div>
-                            <a href="#" class="post-author">
-                                <img src="{% static 'img/avatar.jpg' %}" alt=""/>
-                                Username
-                            </a>
-                            <span>сегодня в 13:00</span>
-                            <div class="comment-rating">
-                                <a href="#"><img src="{% static 'svg/like(filled).svg' %}" alt=""/></a>
-                                <small class="text-muted">55</small>
-                                <a href="#"><img src="{% static 'svg/dislike.svg' %}" alt=""/></a>
-                            </div>
-                        </div>
-                        <div class="comment-text">
-                            <div>Отличная статья, нужно учить латынь</div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Начало блока комментариев -->
+                {% include 'comments/comments.html' %}
+                <!-- Конец блока комментариев -->
             </div>
-            <div class="col-1"></div>
+            <div class="col-1">
             {% include 'articles/includes/right_block.html' %}
+            </div>
         </div>
     </div>
 {% endblock content %}
