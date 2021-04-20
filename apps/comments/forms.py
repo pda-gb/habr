@@ -10,11 +10,10 @@ from apps.comments.models import Comment
 #         model = Comment
 #         fields = ("body", )
 
+
 class CommentCreateForm(forms.ModelForm):
     body = CharField(widget=CKEditorUploadingWidget(config_name="for_user"))
 
     class Meta:
         model = Comment
-        fields = (
-            "body",
-        )
+        fields = ("body",)

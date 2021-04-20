@@ -18,19 +18,19 @@ def create_comment(request, pk):
         new_comment = form_comment.save(commit=False)
         new_comment.author = request.user
         new_comment.article = current_article
-        new_comment.body = form_comment.cleaned_data['body']
+        new_comment.body = form_comment.cleaned_data["body"]
         new_comment.parent = None
         new_comment.is_child = False
         new_comment.save()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 @transaction.atomic
 def create_child_comment(request, pk):
     user_name = request.user.username
-    current_id = request.POST.get('id')
+    current_id = request.POST.get("id")
     current_article = get_object_or_404(Article, id=pk)
-    text = request.POST.get('text')
+    text = request.POST.get("text")
     user = HabrUser.objects.get(username=user_name)
     parent = Comment.objects.get(id=int(current_id))
     is_child = False if not parent else True
@@ -44,7 +44,7 @@ def create_child_comment(request, pk):
         author=user,
         body=text,
         parent=parent,
-        is_child=is_child
+        is_child=is_child,
     )
 
     comments_ = Comment.get_comments(pk)
@@ -55,7 +55,7 @@ def create_child_comment(request, pk):
         "form_comment": form_comment,
         "last_articles": last_articles,
         "media_url": settings.MEDIA_URL,
-        'comments': comments_list,
+        "comments": comments_list,
     }
     result = render_to_string("comments/comments.html", page_data)
     return JsonResponse({"result": result})

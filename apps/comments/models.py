@@ -4,19 +4,21 @@ from django.db import models
 from django.utils import timezone
 
 from apps.articles.models import Article
-from apps.authorization.models import HabrUser, HabrUserProfile
+from apps.authorization.models import HabrUser
 
 
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    parent = models.ForeignKey('self', null=True, related_name='comment_parent', on_delete=models.CASCADE)
+    parent = models.ForeignKey(
+        "self", null=True, related_name="comment_parent", on_delete=models.CASCADE
+    )
     body = RichTextUploadingField()
     date = models.DateTimeField(verbose_name="дата", default=timezone.now)
     is_child = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.article.title}-{self.author.username}'
+        return f"{self.article.title}-{self.author.username}"
 
     @property
     def get_parent(self):
@@ -56,5 +58,5 @@ class Comment(models.Model):
 
     @staticmethod
     def get_comments(article_pk):
-        comments = Comment.objects.filter(article__pk=article_pk).order_by('date')
+        comments = Comment.objects.filter(article__pk=article_pk).order_by("date")
         return comments

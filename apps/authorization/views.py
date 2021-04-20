@@ -22,8 +22,6 @@ def login(request):
         if user and user.is_active:
             auth.login(request, user)
             return HttpResponseRedirect(reverse("articles:main_page"))
-
-
     page_data = {"title": title, "login_form": login_form}
     return render(request, "authorization/login.html", page_data)
 
@@ -49,7 +47,7 @@ def register(request):
             register_form.save()
             return HttpResponseRedirect(reverse("auth:login"))
         else:
-            messages.error(request, 'ЛОГИН ИЛИ ПАРОЛЬ ВВЕДЕНЫ НЕКОРРЕКТНО!')
+            messages.error(request, "ЛОГИН ИЛИ ПАРОЛЬ ВВЕДЕНЫ НЕКОРРЕКТНО!")
     register_form = HabrUserRegisterForm()
 
     page_data = {"title": title, "register_form": register_form}

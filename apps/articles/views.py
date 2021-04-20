@@ -18,7 +18,7 @@ def main_page(request):
         "title": title,
         "articles": hub_articles,
         "last_articles": last_articles,
-        "current_user": request.user
+        "current_user": request.user,
     }
     return render(request, "articles/articles.html", page_data)
 
@@ -28,10 +28,7 @@ def hub(request, pk=None):
     last_articles = Article.get_last_articles(hub_articles)
     if pk != 1:
         hub_articles = Article.get_by_hub(pk)
-    page_data = {
-        "articles": hub_articles,
-        "last_articles": last_articles
-    }
+    page_data = {"articles": hub_articles, "last_articles": last_articles}
     return render(request, "articles/articles.html", page_data)
 
 
@@ -76,8 +73,12 @@ def change_article_rate(request):
         article_objects = ArticleRate.objects.filter(article=article)
         article_rate.article.likes = article_objects.filter(liked=True).count()
         article_rate.article.dislikes = article_objects.filter(liked=False).count()
-        article_rate.article.bookmarks = article_objects.filter(in_bookmarks=True).count()
-        article_rate.article.rating = article_rate.article.likes - article_rate.article.dislikes
+        article_rate.article.bookmarks = article_objects.filter(
+            in_bookmarks=True
+        ).count()
+        article_rate.article.rating = (
+            article_rate.article.likes - article_rate.article.dislikes
+        )
         article_rate.article.save()
         article_rate.save(True)
         return JsonResponse(
@@ -85,7 +86,7 @@ def change_article_rate(request):
                 "likes": article_rate.article.likes,
                 "dislikes": article_rate.article.dislikes,
                 "author_rating": article_rate.article.author.habruserprofile.rating,
-                "liked": article_rate.liked
+                "liked": article_rate.liked,
             }
         )
 

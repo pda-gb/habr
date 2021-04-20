@@ -11,8 +11,7 @@ class Command(BaseCommand):
     )
 
     def add_arguments(self, parser):
-        parser.add_argument("number", type=int, help="Количество создаваемых "
-                                                     "статей")
+        parser.add_argument("number", type=int, help="Количество создаваемых " "статей")
 
     def handle(self, *args, **options):
         """
@@ -30,8 +29,9 @@ class Command(BaseCommand):
                 password=person.password(length=8, hashed=False),
             )
             user.save()
-            self.stdout.write(self.style.SUCCESS(f'Successfully created user '
-                                                 f'{user.username}'))
+            self.stdout.write(
+                self.style.SUCCESS(f"Successfully created user " f"{user.username}")
+            )
 
             profile = HabrUserProfile.objects.get(user=user)
             profile.avatar = person.avatar(size=256)
@@ -46,6 +46,8 @@ class Command(BaseCommand):
 
             profile.save()
 
-            self.stdout.write(self.style.SUCCESS(f'Successfully created '
-                                                 f'profile '
-                                                 f'{profile.full_name}'))
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"Successfully created " f"profile " f"{profile.full_name}"
+                )
+            )

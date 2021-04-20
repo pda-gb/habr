@@ -1,15 +1,11 @@
+import datetime
+
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.conf import settings
 from django.db import models
 from django.db.models.fields import BooleanField
 from django.db.models.fields.related import ForeignKey
 from django.utils import timezone
-import datetime
-
-from django.conf import settings
-from django.db import models
-from django.utils import timezone
-
-from apps.authorization.models import HabrUser
 
 
 class Hub(models.Model):
@@ -46,15 +42,14 @@ class Tag(models.Model):
 
 class Article(models.Model):
     title = models.CharField(max_length=120, verbose_name="заголовок")
-    author = models.ForeignKey(settings.AUTH_USER_MODEL,
-                               on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     hubs = models.ManyToManyField(Hub, verbose_name="хабы")
     tags = models.ManyToManyField(Tag, blank=True)
     body = RichTextUploadingField()
-    image = models.ImageField(upload_to="img_articles/", blank=True,
-                              verbose_name="главная картинка")
-    link_to_original = models.URLField(blank=True,
-                                       verbose_name="ссылка на оригинал")
+    image = models.ImageField(
+        upload_to="img_articles/", blank=True, verbose_name="главная картинка"
+    )
+    link_to_original = models.URLField(blank=True, verbose_name="ссылка на оригинал")
 
     created = models.DateTimeField(verbose_name="создана", auto_now_add=True)
     updated = models.DateTimeField(verbose_name="обновлена", auto_now=True)
@@ -91,21 +86,25 @@ class Article(models.Model):
         # если статей меньше 3, то изменить переменную количества
         elif articles_current_page.count() < 3:
             len_last_articles = articles_current_page.count()
-        last_articles_set = articles_current_page.values \
-                                ('id', 'title', 'published'
-                                 )[0:len_last_articles]
+        last_articles_set = articles_current_page.values("id", "title", "published")[
+            0:len_last_articles
+        ]
         last_articles = [{} for _ in range(len_last_articles)]
         for i in range(len_last_articles):
-            last_articles[i]['id'] = last_articles_set[i]['id']
-            last_articles[i]['title'] = last_articles_set[i]['title']
+            last_articles[i]["id"] = last_articles_set[i]["id"]
+            last_articles[i]["title"] = last_articles_set[i]["title"]
             # TODO эту логику перенести на сторону клиента
-            if last_articles_set[i]['published'].date() != datetime.datetime.now().date():
-                last_articles[i]['date'] = last_articles_set[i]['published'].date()
+            if (
+                last_articles_set[i]["published"].date()
+                != datetime.datetime.now().date()
+            ):
+                last_articles[i]["date"] = last_articles_set[i]["published"].date()
             else:
-                last_articles[i]['date'] = 'сегодня'
-            last_articles[i]['time'] = last_articles_set[i]['published'].strftime('%H:%M')
+                last_articles[i]["date"] = "сегодня"
+            last_articles[i]["time"] = last_articles_set[i]["published"].strftime(
+                "%H:%M"
+            )
         return last_articles
-
 
     @staticmethod
     def get_articles():
@@ -179,10 +178,12 @@ class Article(models.Model):
         Returns articles with the set author
         """
         if draft is None:
-            return Article.objects.filter(
-                author_id__pk=author_pk).order_by('-updated')
-        return Article.objects.filter(
-            author_id__pk=author_pk).filter(draft=draft).order_by('-updated')
+            return Article.objects.filter(author_id__pk=author_pk).order_by("-updated")
+        return (
+            Article.objects.filter(author_id__pk=author_pk)
+            .filter(draft=draft)
+            .order_by("-updated")
+        )
 
     @staticmethod
     def del_article(id):
@@ -206,7 +207,6 @@ class Article(models.Model):
         art.save()
 
 
-
 class ArticleRate(models.Model):
     article = ForeignKey(Article, on_delete=models.CASCADE)
     user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -217,7 +217,9 @@ class ArticleRate(models.Model):
     def save(self, rating=None, force_insert=None, using=None) -> None:
         super().save(force_insert=force_insert, using=using)
         if rating:
-            rating = Article.objects.filter(author=self.article.author).values_list("rating")
+            rating = Article.objects.filter(author=self.article.author).values_list(
+                "rating"
+            )
             self.article.author.habruserprofile.rating = sum(rate[0] for rate in rating)
             self.article.author.habruserprofile.save()
 

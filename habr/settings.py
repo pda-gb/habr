@@ -140,7 +140,7 @@ CKEDITOR_CONFIGS = {
 AUTH_USER_MODEL = "authorization.HabrUser"
 
 # нововведение в джанго 3.2
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 
 # Set login path:

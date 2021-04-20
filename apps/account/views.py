@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from apps.account.forms import ChangePasswordForm, ArticleEditForm, ArticleCreate
+
 # from apps.account.forms import ChangePasswordForm
 from apps.account.forms import HabrUserProfileEditForm
 from apps.articles.models import Article, Hub
@@ -20,11 +21,8 @@ from apps.authorization.models import HabrUser
 def read_profile(request):
     title = "Профиль пользователя"
     current_user = request.user
-    page_data = {
-        'title': title,
-        'current_user': current_user
-    }
-    return render(request, 'account/read_profile.html', page_data)
+    page_data = {"title": title, "current_user": current_user}
+    return render(request, "account/read_profile.html", page_data)
 
 
 @login_required
@@ -40,10 +38,7 @@ def add_article(request):
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
     title = "Создание статьи"
-    page_data = {
-        "title": title,
-        "article_add": article_add
-    }
+    page_data = {"title": title, "article_add": article_add}
     return render(request, "account/form_add_article.html", page_data)
 
 
@@ -89,13 +84,13 @@ def user_articles(request):
     """
     функция отвечает за Мои статьи
     """
-    title = 'Мои статьи'
+    title = "Мои статьи"
     articles = Article.get_by_author(author_pk=request.user.id)
     page_data = {
-        'title': title,
-        'articles': articles,
+        "title": title,
+        "articles": articles,
     }
-    return render(request, 'account/user_articles.html', page_data)
+    return render(request, "account/user_articles.html", page_data)
 
 
 @login_required
@@ -103,13 +98,13 @@ def publications(request):
     """
     функция отвечает за мои публикации
     """
-    title = 'Мои публикации'
+    title = "Мои публикации"
     articles = Article.get_by_author(author_pk=request.user.id, draft=0)
     page_data = {
-        'title': title,
-        'articles': articles,
+        "title": title,
+        "articles": articles,
     }
-    return render(request, 'account/user_articles.html', page_data)
+    return render(request, "account/user_articles.html", page_data)
 
 
 @login_required
@@ -117,13 +112,13 @@ def draft(request):
     """
     функция отвечает за Черновик
     """
-    title = 'Черновик'
+    title = "Черновик"
     articles = Article.get_by_author(author_pk=request.user.id, draft=1)
     page_data = {
-        'title': title,
-        'articles': articles,
+        "title": title,
+        "articles": articles,
     }
-    return render(request, 'account/user_articles.html', page_data)
+    return render(request, "account/user_articles.html", page_data)
 
 
 @login_required
@@ -132,7 +127,7 @@ def edit_password(request):
     title = "Изменить пароль"
     user = HabrUser.objects.get(username=request.user)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ChangePasswordForm(request.POST)
         if form.is_valid():
             old_password = request.POST.get("old_password")
@@ -144,7 +139,7 @@ def edit_password(request):
                 update_session_auth_hash(request, user)
                 return HttpResponseRedirect(reverse("account:user_articles"))
             else:
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
     form = ChangePasswordForm()
 

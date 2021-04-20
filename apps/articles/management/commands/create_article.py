@@ -9,8 +9,10 @@ from apps.comments.models import Comment
 
 
 class Command(BaseCommand):
-    help = 'Created random article data. Format python manage.py ' \
-           'create_article number_article'
+    help = (
+        "Created random article data. Format python manage.py "
+        "create_article number_article"
+    )
 
     # def add_arguments(self, parser):
     #     parser.add_argument('number', type=int, help=u'Количество создаваемых статей')
@@ -22,45 +24,57 @@ class Command(BaseCommand):
         """
         Creates a randoms instance of the model
         """
-        pks = my_model.objects.values_list('pk', flat=True).order_by('id')
+        pks = my_model.objects.values_list("pk", flat=True).order_by("id")
         if pks:
             random_pk = choice(pks)
             return my_model.objects.get(pk=random_pk)
         else:
-            print(f'Таблицы {my_model} нет в базе данных')
+            print(f"Таблицы {my_model} нет в базе данных")
             pass
 
     @staticmethod
     def get_list_models(my_model):
-        return list(my_model.objects.values_list('pk', flat=True) \
-                    .order_by('?').distinct()[:randint(1, 5)])
+        return list(
+            my_model.objects.values_list("pk", flat=True)
+            .order_by("?")
+            .distinct()[: randint(1, 5)]
+        )
 
     def handle(self, *args, **options):
         """
         Creates random data for an article
         """
         # Экземпляры данных из библиотеки mimesis
-        text = Text('ru')
-        hubs = ["Все потоки", "Разработка", "Дизайн",
-                "Маркетинг", "Мобильная разработка"]
-        internet = Internet('ru')
+        text = Text("ru")
+        hubs = [
+            "Все потоки",
+            "Разработка",
+            "Дизайн",
+            "Маркетинг",
+            "Мобильная разработка",
+        ]
+        internet = Internet("ru")
         # Количество создаваемых статей
-        number = options['number']
+        number = options["number"]
         # number = 100
         # Создаем хабы
-        if Hub.objects.values_list('hub', flat=True).count() < 10:
+        if Hub.objects.values_list("hub", flat=True).count() < 10:
             for hub_item in hubs:
-                if hub_item in Hub.objects.values_list('hub', flat=True).distinct():
-                    self.stdout.write(self.style.SUCCESS(f'This hub exist {hub_item}'))
+                if hub_item in Hub.objects.values_list("hub", flat=True).distinct():
+                    self.stdout.write(self.style.SUCCESS(f"This hub exist {hub_item}"))
                 else:
                     hub_object = Hub(hub=hub_item)
                     hub_object.save()
-                    self.stdout.write(self.style.SUCCESS(f'Successfully created hub {hub_object.hub}'))
+                    self.stdout.write(
+                        self.style.SUCCESS(f"Successfully created hub {hub_object.hub}")
+                    )
         # Создаем теги в количестве, равном половине статей.
         for i in range(number // 2):
             tag_object = Tag(tag=internet.hashtags(quantity=1))
-            if tag_object.tag in Tag.objects.values_list('tag', flat=True).distinct():
-                self.stdout.write(self.style.SUCCESS(f'This tag exist {tag_object.tag}'))
+            if tag_object.tag in Tag.objects.values_list("tag", flat=True).distinct():
+                self.stdout.write(
+                    self.style.SUCCESS(f"This tag exist {tag_object.tag}")
+                )
             else:
                 tag_object.save()
                 self.stdout.write(

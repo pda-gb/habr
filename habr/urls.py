@@ -10,7 +10,7 @@ urlpatterns = [
     path("account/", include("apps.account.urls", namespace="account")),
     path("auth/", include("apps.authorization.urls", namespace="auth")),
     path("admin/", admin.site.urls),
-    path("comments/", include("apps.comments.urls", namespace='comments')),
+    path("comments/", include("apps.comments.urls", namespace="comments")),
     path("ckeditor/", include("ckeditor_uploader.urls")),
     path("upload/", login_required(upload), name="ckeditor_upload"),
 ]
