@@ -18,8 +18,10 @@ from apps.authorization.models import HabrUser
 @login_required
 def read_profile(request):
     title = "Профиль пользователя"
+    current_user = request.user
     page_data = {
-        'title': title
+        'title': title,
+        'current_user': current_user
     }
     return render(request, 'account/read_profile.html', page_data)
 

@@ -23,7 +23,6 @@ INSTALLED_APPS = [
     "apps.authorization",
     "apps.articles",
     "apps.account",
-    "django_forms_bootstrap",
 ]
 
 MIDDLEWARE = [
