@@ -1,14 +1,11 @@
-
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
-import datetime
-from django.conf import settings
-from django.contrib.postgres.fields import ArrayField
 
 from apps.articles.models import Article
 from apps.authorization.models import HabrUser, HabrUserProfile
 
-# Create your models here.
+
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -26,7 +23,7 @@ class Comment(models.Model):
             return ""
         else:
             return self.parent
-    
+
     class Meta:
         verbose_name = "комментарий"
         verbose_name_plural = "комментарии"
@@ -36,7 +33,7 @@ class Comment(models.Model):
         if level > 5:
             level = 5
         return level
-    
+
     def get_col(self):
         level = len(self.path) - 1
         if level > 5:
