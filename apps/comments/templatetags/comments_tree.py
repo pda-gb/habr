@@ -3,6 +3,7 @@ from django.utils.html import mark_safe
 
 register = Library()
 
+
 @register.filter
 def comments_filter(comments_list):
     res = """
@@ -38,11 +39,14 @@ def comments_filter(comments_list):
                     </div>
                 </div>    
              </li>
-             """.format(id=comment['id'], author=comment['author'], timestamp=comment['timestamp'], text=comment['text'], parent_id=comment['parent_id'] )
+             """.format(id=comment['id'],
+                        author=comment['author'],
+                        timestamp=comment['timestamp'],
+                        text=comment['text'],
+                        parent_id=comment['parent_id']
+                        )
 
         if comment.get('children'):
             i += comments_filter(comment['children'])
 
     return mark_safe(res.format(i))
-
-

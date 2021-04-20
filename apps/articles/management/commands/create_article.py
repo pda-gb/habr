@@ -15,8 +15,10 @@ class Command(BaseCommand):
     # def add_arguments(self, parser):
     #     parser.add_argument('number', type=int, help=u'Количество создаваемых статей')
 
-    @staticmethod
-    def get_random_query_set_item(my_model):
+    def add_arguments(self, parser):
+        parser.add_argument("number", type=int, help="Количество создаваемых статей")
+
+    def get_random_query_set_item(self, my_model):
         """
         Creates a randoms instance of the model
         """
@@ -26,7 +28,7 @@ class Command(BaseCommand):
             return my_model.objects.get(pk=random_pk)
         else:
             print(f'Таблицы {my_model} нет в базе данных')
-            return None
+            pass
 
     @staticmethod
     def get_list_models(my_model):
@@ -104,7 +106,7 @@ class Command(BaseCommand):
             for _ in range(randint(0, 5)):
                 comment = Comment(
                     author=self.get_random_query_set_item(HabrUser),
-                    comment_to=None,
+                    # comment_to=None,
                     article=article,
                     body=text.text(quantity=randint(1, 10)),
                 )
@@ -116,19 +118,19 @@ class Command(BaseCommand):
                     )
                 )
 
-            # Создаем комментарии к комментариям
-            if Comment.objects.all().count():
-                for _ in range(randint(0, 5)):
-                    comment_to_comment = Comment(
-                        author=self.get_random_query_set_item(HabrUser),
-                        article=article,
-                        comment_to=self.get_random_query_set_item(Comment),
-                        body=text.text(quantity=randint(1, 10)),
-                    )
-                    comment_to_comment.save()
-                    self.stdout.write(
-                        self.style.SUCCESS(
-                            f"Successfully created comment to comment "
-                            f"{comment_to_comment.comment_to.author}"
-                        )
-                    )
+            # # Создаем комментарии к комментариям
+            # if Comment.objects.all().count():
+            #     for _ in range(randint(0, 5)):
+            #         comment_to_comment = Comment(
+            #             author=self.get_random_query_set_item(HabrUser),
+            #             article=article,
+            #             comment_to=self.get_random_query_set_item(Comment),
+            #             body=text.text(quantity=randint(1, 10)),
+            #         )
+            #         comment_to_comment.save()
+            #         self.stdout.write(
+            #             self.style.SUCCESS(
+            #                 f"Successfully created comment to comment "
+            #                 f"{comment_to_comment.comment_to.author}"
+            #             )
+            #         )

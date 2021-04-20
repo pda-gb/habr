@@ -1,6 +1,6 @@
 {% load static %}
 <div class="post-content mt-3">
-    <p>{{ article.body|truncatewords:"25" }}</p>
+    <p>{% autoescape off %}{{ article.body|truncatewords:"25" }}{% endautoescape %}</p>
     <a class="btn btn-outline-dark mt-1"
        href="{% url 'articles:article' article.id %}">Читать далее</a>
     {% block post-status %}
