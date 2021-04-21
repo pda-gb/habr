@@ -33,8 +33,8 @@ def hub(request, pk=None):
 
 
 def article(request, pk=None):
-    # TODO какие последние 3 статьи должны выводиться в ЛК ?
-    # last_articles = Article.get_last_articles(current_article)
+    hub_articles = Article.get_articles()
+    last_articles = Article.get_last_articles(hub_articles)
     current_article = get_object_or_404(Article, id=pk)
     current_comments = Comment.get_comments(pk)
     comments = create_comments_tree(current_comments)
@@ -45,7 +45,7 @@ def article(request, pk=None):
         current_article.bookmarked = rate.in_bookmarks
     page_data = {
         "article": current_article,
-        # "last_articles": last_articles
+        "last_articles": last_articles,
         "comments": comments,
         "form_comment": form_comment,
         "media_url": settings.MEDIA_URL,

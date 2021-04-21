@@ -17,9 +17,11 @@
                     <button class="btn btn-outline-success"><a href="{% url 'auth:login' %}">Отправить</a></button>
                 {% endif %}
         </div>
-
-        <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
-        <script src="{% static 'js/jquery-3.3.1.slim.min.js' %}"></script>
+    </div>
+        {% block css %}
+        <link href="{% static 'css/comments.css' %}" rel="stylesheet" />
+        {% endblock css %}
+        {% block js %}
         <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
         <script>
             $(document).ready(function () {
@@ -72,5 +74,5 @@
             });
 
         </script>
-    </div>
+{% endblock js %}
 {% endblock content %}
