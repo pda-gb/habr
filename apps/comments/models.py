@@ -12,7 +12,7 @@ class Comment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     parent = models.ForeignKey('self', null=True, related_name='comment_parent', on_delete=models.CASCADE)
     body = RichTextUploadingField()
-    date = models.DateTimeField(verbose_name="дата", default=timezone.now)
+    date = models.DateTimeField(verbose_name="дата", auto_now_add=True)
     is_child = models.BooleanField(default=False)
 
     def __str__(self):
