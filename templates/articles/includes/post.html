@@ -5,7 +5,7 @@
         {% block post-head %}
             <div class="post-head">
                 <a href="{% url 'articles:article' article.id %}" class="post-link mb-3"
-                >{{ article.title }}</a>
+                >{{ article.title|truncatewords:10  }}</a>
                 {#            загрузка главной картинки    #}
                 <img class="main-image" src="{{ article.image|media_folder_images }}" alt="main-image"/><br/>
                 <a href="{% url 'articles:author_profile' article.author_id %}" class="post-author">
