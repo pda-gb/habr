@@ -3,6 +3,7 @@ from django.db import transaction
 from django.http.response import JsonResponse
 from django.shortcuts import HttpResponseRedirect, get_object_or_404
 from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
 
 from apps.articles.models import Article, Hub
 from apps.authorization.models import HabrUser
@@ -10,7 +11,7 @@ from .forms import CommentCreateForm
 from .models import Comment
 from .utils import create_comments_tree
 
-
+@login_required
 def create_comment(request, pk):
     current_article = get_object_or_404(Article, id=pk)
     form_comment = CommentCreateForm(request.POST or None)
@@ -24,7 +25,7 @@ def create_comment(request, pk):
         new_comment.save()
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
-
+@login_required
 @transaction.atomic
 def create_child_comment(request, pk):
     user_name = request.user.username
@@ -36,7 +37,7 @@ def create_child_comment(request, pk):
     is_child = False if not parent else True
 
     hubs_menu = Hub.get_all_hubs()
-    last_articles = Article.get_articles()[1]
+    last_articles = Article.get_last_articles(Article.get_articles())
     form_comment = CommentCreateForm(request.POST or None)
 
     Comment.objects.create(
