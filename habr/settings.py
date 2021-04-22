@@ -110,6 +110,8 @@ CKEDITOR_IMAGE_BACKEND = "pillow"
 
 CKEDITOR_CONFIGS = {
     "for_user": {
+        'skin': 'moono-lisa',
+        # 'contentsCss': ['/static/css/style.min.css'],
         'toolbar': [
             [
                 'Undo', 'Redo',

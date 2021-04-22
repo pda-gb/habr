@@ -29,11 +29,22 @@ class HabrUserProfileEditForm(forms.ModelForm):
 
 
 class ArticleCreate(forms.ModelForm):
-    body = CharField(widget=CKEditorUploadingWidget(config_name="for_user"))
+    body = CharField(label='Текст статьи',
+                     widget=CKEditorUploadingWidget(config_name="for_user"),
+                     )
+
 
     class Meta:
         model = Article
-        fields = ("title", "hubs", "image", "body", "link_to_original")
+        fields = ("title", "hubs", "image", "link_to_original", "body")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            print(f'{field=}')
+            field.widget.attrs["class"] = "form-control"
+            field.help_text = ""
+            field.required = ""
 
 
 # class ArticleCreate(forms.ModelForm):
@@ -71,6 +82,7 @@ class ChangePasswordForm(forms.Form):
         for field_name, field in self.fields.items():
             field.widget.attrs["class"] = "form-control"
             field.help_text = ""
+            field.required = ""
 
     def clean(self):
         super().clean()
@@ -86,8 +98,13 @@ class ArticleEditForm(forms.ModelForm):
 
     class Meta:
         model = Article
-        fields = ("title", "hubs", "body", "image", "link_to_original")
+        fields = ("title", "hubs", "image", "link_to_original", "body")
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs["class"] = "form-control"
+            field.help_text = ""
 
 # class ArticleEditForm(forms.ModelForm):
 #     class Meta:
