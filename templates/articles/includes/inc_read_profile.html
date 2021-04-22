@@ -51,6 +51,11 @@
                 <td>{{ current_user.habruserprofile.rating|no_data_specified }}</td>
             </tr>
         </table>
-        <a href="{% url 'account:edit_profile' %}"><button class="btn btn-primary">Редактировать профиль</button></a>
+
+        {% if user == current_user %}
+            <a href="{% url 'account:edit_profile' %}">
+                <button class="btn btn-primary">Редактировать профиль</button>
+            </a>
+        {% endif %}
     </div>
 </div>
