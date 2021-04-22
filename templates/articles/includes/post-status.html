@@ -13,9 +13,9 @@
     {% endif %}
     <small class="red" id="dislikes_count">{{ article.dislikes }}</small>
     {% if article.bookmarked %}
-        <img src="{% static 'svg/bookmark(filled).svg' %}" alt="" id="bookmark"/>
-    {% else %}
-        <img src="{% static 'svg/bookmark.svg' %}" alt="" id="bookmark"/>
+{#        <img src="{% static 'svg/bookmark(filled).svg' %}" alt="" id="bookmark"/>#}
+{#    {% else %}#}
+{#        <img src="{% static 'svg/bookmark.svg' %}" alt="" id="bookmark"/>#}
     {% endif %}
     <img src="{% static 'svg/view.svg' %}" alt=""/>
     <small class="text-muted">{{ article.views }}</small>
