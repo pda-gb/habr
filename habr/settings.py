@@ -148,3 +148,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 # Set login path:
 #   https://docs.djangoproject.com/en/2.2/ref/settings/#login-url
 LOGIN_URL = "apps.authorization:login"
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = secret_value["EMAIL_HOST_USER"]
+EMAIL_HOST_PASSWORD = secret_value["EMAIL_HOST_PASSWORD"]
+EMAIL_USE_SSL = True

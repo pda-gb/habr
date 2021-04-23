@@ -7,6 +7,8 @@ from apps.authorization.forms import (
     HabrUserRegisterForm,
 )
 
+def verify(request)
+
 
 def login(request):
     """
