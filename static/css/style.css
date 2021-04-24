@@ -389,3 +389,21 @@ body {
     color: #990000;
 }
 
+div.scrollup {
+  position: fixed;
+  color: gray;
+  background-color: white;
+  left: 40px;
+  bottom: 65px;
+  padding: 10px;
+  font-size: 28px;
+  border-radius: 50px;
+  cursor: pointer;
+  display: none;
+  text-align: center;
+  border: 1px gray;
+}
+
+div.scrollup:hover {
+  background-color: lightgrey;
+}
