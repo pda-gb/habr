@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "apps.comments",
     "ckeditor",
     "ckeditor_uploader",
+    "social_django",
 ]
 
 MIDDLEWARE = [
@@ -149,8 +150,36 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 #   https://docs.djangoproject.com/en/2.2/ref/settings/#login-url
 LOGIN_URL = "apps.authorization:login"
 
+
+if DEBUG:
+    DOMAIN_NAME = 'http://localhost:8000'
+
+# Настройки для вывода сообщений о подтверждении регистрации в лог-файл
+# EMAIL_HOST = 'localhost'
+# EMAIL_PORT = 25
+# EMAIL_HOST_USER = 'django@sputnik.local'
+# EMAIL_HOST_PASSWORD = 'sputnik'
+# EMAIL_USE_SSL = False
+#
+# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# EMAIL_FILE_PATH = 'tmp/email-messages/'
+
+
+DEFAULT_FROM_EMAIL = secret_value["EMAIL_HOST_USER"]
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = secret_value["EMAIL_HOST_USER"]
 EMAIL_HOST_PASSWORD = secret_value["EMAIL_HOST_PASSWORD"]
 EMAIL_USE_SSL = True
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.vk.VKOAuth2',
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+]
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = secret_value['SOCIAL_AUTH_VK_OAUTH2_KEY']
+SOCIAL_AUTH_VK_OAUTH2_SECRET = secret_value['SOCIAL_AUTH_VK_OAUTH2_SECRET']
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'

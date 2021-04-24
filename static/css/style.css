@@ -263,7 +263,6 @@ body {
 }
 
 .form-control {
-    width: 25%;
     margin-top: 1em;
     margin-bottom: 1em;
 }
@@ -349,4 +348,22 @@ body {
 .red {
     color: red;
     font-weight: bold;
+}
+
+.text-muted {
+    margin-top: 13px;
+}
+
+.auth-form {
+    margin: 0 auto;
+    width: 300px;
+}
+
+.social-auth {
+    text-align: center;
+}
+
+.auth-form button {
+    width: 100%;
+    margin-top: .5rem;
 }

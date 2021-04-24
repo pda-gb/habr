@@ -8,6 +8,7 @@ django = "*"
 pillow = "*"
 mimesis = "*"
 django-ckeditor = "*"
+social-auth-app-django = "*"
 
 [dev-packages]
 flake8 = "*"

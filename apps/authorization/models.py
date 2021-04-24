@@ -1,13 +1,24 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from datetime import timedelta
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.timezone import now
 
 
 class HabrUser(AbstractUser):
     first_name = None
     last_name = None
+
+    activation_key = models.CharField(max_length=128, blank=True)
+    activation_key_expires = models.DateTimeField(default=(now() + timedelta(hours=24)))
+
+    def is_activation_key_expired(self):
+        if now() <= self.activation_key_expires:
+            return False
+        else:
+            return True
 
 
 class HabrUserProfile(models.Model):

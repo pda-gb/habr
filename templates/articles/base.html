@@ -11,9 +11,11 @@
       integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-social.css' %}" />
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/png">
     {% block css %}
       <link href="{% static 'css/style.css' %}" rel="stylesheet" />
-      <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/png">
+      <script src="https://kit.fontawesome.com/a92ddd463b.js" crossorigin="anonymous"></script>
     {% endblock css %}
     <title>{% block title %}{{ title|title }}{% endblock title %}</title>
   </head>

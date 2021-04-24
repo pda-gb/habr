@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-
+from random import random
+import hashlib
 from .models import HabrUser
 
 
@@ -32,3 +33,11 @@ class HabrUserRegisterForm(UserCreationForm):
     class Meta:
         model = HabrUser
         fields = ("email", "username", "password1", "password2")
+
+    def save(self, **kwargs):
+        user = super().save()
+        user.is_active = False
+        salt = hashlib.sha256(str(random()).encode('utf-8')).hexdigest()[:6]
+        user.activation_key = hashlib.sha256((user.email + salt).encode('utf-8')).hexdigest()
+        user.save()
+        return user
