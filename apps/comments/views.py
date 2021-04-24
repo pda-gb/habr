@@ -11,6 +11,7 @@ from .forms import CommentCreateForm
 from .models import Comment
 from .utils import create_comments_tree
 
+
 @login_required
 def create_comment(request, pk):
     current_article = get_object_or_404(Article, id=pk)
@@ -24,6 +25,7 @@ def create_comment(request, pk):
         new_comment.is_child = False
         new_comment.save()
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
 
 @login_required
 @transaction.atomic

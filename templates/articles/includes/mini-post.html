@@ -17,9 +17,9 @@
                     <small>{{ article.rating }}</small>
                 {% endif %}
             <img src="{% static 'svg/bookmark.svg' %}"/><small
-                class="text-muted">{{ article.bookmarks }}</small>
+                class="text-muted">{{ article.bookmarks.count }}</small>
             <img src="{% static 'svg/view.svg' %}"/><small
-                class="text-muted">{{ article.views }}</small>
+                class="text-muted">{{ article.views.count }}</small>
         </div>
     {% endblock post-status %}
 </div>

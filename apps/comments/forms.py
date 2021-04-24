@@ -12,7 +12,9 @@ from apps.comments.models import Comment
 
 
 class CommentCreateForm(forms.ModelForm):
-    body = CharField(label='Комментарий', widget=CKEditorUploadingWidget(config_name="for_user"))
+    body = CharField(
+        label="Комментарий", widget=CKEditorUploadingWidget(config_name="for_user")
+    )
 
     class Meta:
         model = Comment

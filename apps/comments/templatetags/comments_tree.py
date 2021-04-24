@@ -13,7 +13,7 @@ def comments_filter(comments_list):
             </div>
         </ul>
           """
-    i = ''
+    i = ""
     for comment in comments_list:
         i += """
         <li class="li-reply-comment">
@@ -35,13 +35,14 @@ def comments_filter(comments_list):
                     </form>
             </div>        
         </li>
-             """.format(id=comment['id'],
-                        author=comment['author'],
-                        timestamp=comment['timestamp'],
-                        text=comment['text'],
-                        parent_id=comment['parent_id']
-                        )
+             """.format(
+            id=comment["id"],
+            author=comment["author"],
+            timestamp=comment["timestamp"],
+            text=comment["text"],
+            parent_id=comment["parent_id"],
+        )
 
-        if comment.get('children'):
-            i += comments_filter(comment['children'])
+        if comment.get("children"):
+            i += comments_filter(comment["children"])
     return mark_safe(res.format(i))

@@ -5,7 +5,7 @@ from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
-from apps.articles.models import Article, ArticleRate
+from apps.articles.models import Article
 from apps.authorization.models import HabrUser
 
 
@@ -35,14 +35,21 @@ def hub(request, pk=None):
 def article(request, pk=None):
     hub_articles = Article.get_articles()
     last_articles = Article.get_last_articles(hub_articles)
-    current_article = get_object_or_404(Article, id=pk)
+    current_article: Article = get_object_or_404(Article, id=pk)
     current_comments = Comment.get_comments(pk)
     comments = create_comments_tree(current_comments)
     form_comment = CommentCreateForm(request.POST or None)
     if request.user.is_authenticated:
-        rate = ArticleRate.create(current_article, request.user)
-        current_article.user_liked = rate.liked
-        current_article.bookmarked = rate.in_bookmarks
+        current_article.views.add(request.user)
+        current_article.liked = current_article.likes.filter(
+            pk=request.user.pk
+        ).exists()
+        current_article.disliked = current_article.dislikes.filter(
+            pk=request.user.pk
+        ).exists()
+        current_article.bookmarked = current_article.bookmarks.filter(
+            pk=request.user.pk
+        ).exists()
     page_data = {
         "article": current_article,
         "last_articles": last_articles,
@@ -55,42 +62,29 @@ def article(request, pk=None):
 
 def change_article_rate(request):
     if request.is_ajax():
-        user = request.GET.get("user")
         article = request.GET.get("article")
         field = request.GET.get("field")
-        article_rate = ArticleRate.objects.get(user=user, article=article)
+        article = Article.objects.get(pk=article)
         if field == "like":
-            article_rate.liked = (
-                True
-                if article_rate.liked is None or article_rate.liked is False
-                else None
-            )
+            article.likes.add(request.user)
+            article.dislikes.remove(request.user)
         elif field == "dislike":
-            article_rate.liked = (
-                False
-                if article_rate.liked is None or article_rate.liked is True
-                else None
-            )
+            article.likes.remove(request.user)
+            article.dislikes.add(request.user)
         else:
-            article_rate.in_bookmarks = not article_rate.in_bookmarks
-        article_rate.save()
-        article_objects = ArticleRate.objects.filter(article=article)
-        article_rate.article.likes = article_objects.filter(liked=True).count()
-        article_rate.article.dislikes = article_objects.filter(liked=False).count()
-        article_rate.article.bookmarks = article_objects.filter(
-            in_bookmarks=True
-        ).count()
-        article_rate.article.rating = (
-            article_rate.article.likes - article_rate.article.dislikes
-        )
-        article_rate.article.save()
-        article_rate.save(True)
+            if article.bookmarks.filter(pk=request.user.pk).exists():
+                article.bookmarks.remove(request.user)
+            else:
+                article.bookmarks.add(request.user)
+        article.rating = article.likes.count() - article.dislikes.count()
+        article.save()
         return JsonResponse(
             {
-                "likes": article_rate.article.likes,
-                "dislikes": article_rate.article.dislikes,
-                "author_rating": article_rate.article.author.habruserprofile.rating,
-                "liked": article_rate.liked,
+                "likes": article.likes.count(),
+                "dislikes": article.dislikes.count(),
+                "author_rating": article.author.habruserprofile.rating,
+                "like": article.likes.filter(pk=request.user.pk).exists(),
+                "dislike": article.dislikes.filter(pk=request.user.pk).exists(),
             }
         )
 

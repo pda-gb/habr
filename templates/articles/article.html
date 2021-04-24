@@ -55,13 +55,13 @@
                                 Оцени автора
                             </div>
                             <div class="choose-carma post-status">
-                                {% if article.user_liked is True %}
+                                {% if article.liked is True %}
                                     <img src="{% static 'svg/like(filled).svg' %}" alt="" id="carma_like"/>
                                 {% else  %}
                                     <img src="{% static 'svg/like.svg' %}" alt="" id="carma_like"/>
                                 {% endif %}
                                 <div class="separator"></div>
-                                {% if article.user_liked is False %}
+                                {% if article.disliked is True %}
                                     <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="carma_dislike"/>
                                 {% else %}
                                     <img src="{% static 'svg/dislike.svg' %}" alt="" id="carma_dislike"/>
@@ -108,7 +108,7 @@
 
     function sendAjax(fieldName) {
       $.ajax({
-          data: {field: fieldName, user: {{ request.user.pk }}, article: {{ article.pk }}},
+          data: {field: fieldName, article: {{ article.pk }}},
           url: "{% url 'articles:ajax_change_rate' %}",
           success: function(response) {
               $("#likes_count").text(response.likes)
@@ -121,15 +121,15 @@
               } if (response.author_rating === 0) {
                 $("#author_rating").attr('class', 'author-rating-num');
               }
-              if (response.liked === true) {
+              if (response.like === true) {
                 $('#like').attr('src', likeFUrl);
-                $('#dislike').attr('src', dislikeUrl);
-              } if (response.liked === false) {
+              } else {
+                $('#like').attr('src', likeUrl);
+              }
+              if (response.dislike === true) {
                 $('#dislike').attr('src', dislikeFUrl);
-                $('#like').attr('src', likeUrl);
-              } if (response.liked === null) {
+              } else {
                 $('#dislike').attr('src', dislikeUrl);
-                $('#like').attr('src', likeUrl);
               }
           }
       });
