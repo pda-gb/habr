@@ -1,7 +1,5 @@
-from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
 from django.db import models
-from django.utils import timezone
 
 from apps.articles.models import Article
 from apps.authorization.models import HabrUser
@@ -13,12 +11,16 @@ class Comment(models.Model):
     parent = models.ForeignKey(
         "self", null=True, related_name="comment_parent", on_delete=models.CASCADE
     )
-    body = RichTextUploadingField()
+    body = models.TextField(verbose_name="текст комментария")
     date = models.DateTimeField(verbose_name="дата", auto_now_add=True)
     is_child = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.article.title}-{self.author.username}"
+
+    class Meta:
+        verbose_name = "комментарий"
+        verbose_name_plural = "комментарии"
 
     @property
     def get_parent(self):
@@ -27,9 +29,6 @@ class Comment(models.Model):
         else:
             return self.parent
 
-    class Meta:
-        verbose_name = "комментарий"
-        verbose_name_plural = "комментарии"
 
     def get_offset(self):
         level = len(self.path) - 1
