@@ -37,7 +37,7 @@
             {% endif %}   
             {% if pag_articles.has_next %}
             <li class="page-item">
-                <a href="{% url 'articles:articles_page' pag_articles.paginator.count %}" class="page-link" aria-label="Next">
+                <a href="{% url 'articles:articles_page' pag_articles.paginator.num_pages %}" class="page-link" aria-label="Next">
                 <i class="fas fa-chevron-circle-right"></i></a>
             </li>    
             {% endif %}
