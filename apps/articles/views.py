@@ -5,14 +5,12 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 
-from apps.articles.models import Article, LikesViewed, DislikesViewed
 from apps.authorization.models import HabrUser, KarmaPositiveViewed,\
-    KarmaNegativeViewed
-from apps.authorization.models import HabrUserProfile
-from apps.comments.forms import CommentCreateForm
+    KarmaNegativeViewed, HabrUserProfile
 from apps.comments.models import Comment, Sorted
-from apps.comments.utils import create_comments_tree
 from apps.moderator.models import BannedUser
+from apps.articles.models import Article, LikesViewed, DislikesViewed
+from apps.comments.forms import CommentCreateForm
 
 
 def main_page(request, pk=None, page=1):
@@ -82,13 +80,18 @@ def article(request, pk=None):
     hub_articles = Article.get_articles()
     last_articles = Article.get_last_articles(hub_articles)
     current_article = get_object_or_404(Article, id=pk)
-    current_comments = Comment.get_comments(pk)
+    comments = Comment.get_comments(pk)
     notifications = notification(request)
-    comments = create_comments_tree(
-        current_comments, request.user if request.user.is_authenticated else None
-    )
     form_comment = CommentCreateForm(request.POST or None)
+    comments_is_liked = None
+    comments_is_disliked = None
     if request.user.is_authenticated:
+        comments_is_liked = Comment.get_liked_comments_by_user(pk,
+                                                               request.user.id)
+        comments_is_disliked = Comment.get_disliked_comments_by_user(
+            pk,
+            request.user.id
+        )
         current_article.views.add(request.user)
         current_article.liked = current_article.likes.filter(
             pk=request.user.pk
@@ -116,6 +119,8 @@ def article(request, pk=None):
         "form_comment": form_comment,
         "media_url": settings.MEDIA_URL,
         "notifications": notifications
+        "comments_is_liked": comments_is_liked,
+        "comments_is_disliked": comments_is_disliked,
     }
     return render(request, "articles/article.html", page_data)
 
@@ -172,6 +177,7 @@ def change_article_rate(request):
 def like_dislike_author_ajax(request):
     if request.is_ajax() and request.user.is_authenticated:
         user = request.GET.get("user")
+        # article = request.GET.get("article")
         field = request.GET.get("field")
         if request.user.pk != int(user):
             user = HabrUserProfile.objects.get(pk=user)
@@ -395,3 +401,39 @@ def target_mark_as_viewed(request, target, pk):
     elif target == 'dislike_karma':
         KarmaNegativeViewed.objects.filter(id=pk).update(viewed=True)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def like_dislike_author_ajax(request):
+    if request.is_ajax() and request.user.is_authenticated:
+        user = request.GET.get("user")
+        field = request.GET.get("field")
+        if request.user.pk != int(user):
+            user = HabrUserProfile.objects.get(pk=user)
+            if field == "like":
+                if user.karma_positive.filter(pk=request.user.pk).exists():
+                    user.karma_positive.remove(request.user)
+                elif user.karma_negative.filter(pk=request.user.pk).exists():
+                    user.karma_positive.add(request.user)
+                    user.karma_negative.remove(request.user)
+                else:
+                    user.karma_positive.add(request.user)
+            elif field == "dislike":
+                if user.karma_negative.filter(pk=request.user.pk).exists():
+                    user.karma_negative.remove(request.user)
+                elif user.karma_positive.filter(pk=request.user.pk).exists():
+                    user.karma_negative.add(request.user)
+                    user.karma_positive.remove(request.user)
+                else:
+                    user.karma_negative.add(request.user)
+        user.save()
+        return JsonResponse(
+            {
+                "karma": user.karma,
+                "liked": user.karma_positive.filter(
+                    pk=request.user.pk
+                ).exists(),
+                "disliked": user.karma_negative.filter(
+                    pk=request.user.pk
+                ).exists(),
+            }
+        )

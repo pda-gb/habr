@@ -21,4 +21,5 @@ urlpatterns = [
     path("sorted_articles_search/<int:page>/", main_page.post_list_search, name='sorted_articles_search'),
     path("notifications/viewed/all/", main_page.mark_all_as_viewed, name='all_viewed'),
     path("notifications/viewed/<str:target>/<int:pk>/", main_page.target_mark_as_viewed, name='target_viewed'),
+    path("ajax/rate_author/", main_page.like_dislike_author_ajax, name="ajax_rate_author"),
 ]

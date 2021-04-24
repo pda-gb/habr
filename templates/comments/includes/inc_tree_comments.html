@@ -1,0 +1,50 @@
+{% load static %}
+{% load my_tags %}
+{% if comment.child_comments.all %}
+    {% for child_comment in comment.child_comments.all %}
+        <ul style="list-style-type:none;">
+            <div class="col-md-12 mt-2">
+                <li class="li-reply-comment">
+                    <div class="main-comment-section col-md-12" id='CommentId-{{ child_comment.id }}'>
+                        <div>
+                            <a href="{% url 'articles:author_profile' child_comment.author.id %}"
+                               class="post-author comment-author">
+                                <img src="{{ child_comment.author.habruserprofile.avatar|media_folder_users }}"
+                                     alt=""/>
+                                <small>{{ child_comment.author }}</small>
+                            </a>
+                            <span>{{ child_comment.date }}</span>
+                        </div>
+                        <div class="comment-text">
+                            <div>{{ child_comment.body }}</div>
+                        </div>
+                        <span class='reply reply-comment' data-id="{{ child_comment.id }}">Ответить</span>
+                            <form method="POST" class="comment-form" id="createChildCommentForm-{{ child_comment.id }}"
+                            data-url="{% url 'comments:comment_child_create' pk=article.id id_parent_comment=child_comment.id %}" style="display:none;">
+                                {% csrf_token %}
+                                {{ form_comment.as_p }}
+                                <button type="button" data-id="{{ child_comment.id }}" class="btn btn-outline-success createCommentChildBtn">Отправить</button>
+                            </form>
+                            <div class="post-status">
+                                {% if liked is True %}
+                                    <img src="{% static 'svg/like(filled).svg' %}" alt="" id="like-{{child_comment.id}}" class="comment_like"/>
+                                {% else  %}
+                                    <img src="{% static 'svg/like.svg' %}" alt="" id="like-{{child_comment.id}}" class="comment_like"/>
+                                {% endif %}
+                                <small class="green" id="likes{{ child_comment.id }}">{{ child_comment.likes.count }}</small>
+                                {% if disliked is True %}
+                                    <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="dislike-{{child_comment.id}}" class="comment_dislike"/>
+                                {% else %}
+                                    <img src="{% static 'svg/dislike.svg' %}" alt="" id="dislike-{{child_comment.id}}" class="comment_dislike"/>
+                                {% endif %}
+                                <small class="red" id="dislikes{{child_comment.id}}">{{ child_comment.dislikes.count }}</small>
+                            </div>        
+                        {% with comment=child_comment template_name='comments/includes/inc_tree_comments.html' %}
+                            {% include template_name %}
+                        {% endwith %}
+                    </div>
+                </li>
+            </div>
+        </ul>
+    {% endfor %}
+{% endif %}
