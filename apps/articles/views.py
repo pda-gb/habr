@@ -4,21 +4,33 @@ from apps.comments.utils import create_comments_tree
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.views.generic import ListView
 
 from apps.articles.models import Article, ArticleRate
 from apps.authorization.models import HabrUser
 
 
-def main_page(request):
+
+def main_page(request, page=1):
     """рендер главной страницы"""
     title = "главная страница"
     hub_articles = Article.get_articles()
     last_articles = Article.get_last_articles(hub_articles)
+    
+    paginator = Paginator(hub_articles, 5)
+    try:
+        articles_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        articles_paginator = paginator.page(1)
+    except EmptyPage:
+        articles_paginator = paginator.page(paginator.num_pages)
     page_data = {
         "title": title,
         "articles": hub_articles,
         "last_articles": last_articles,
         "current_user": request.user,
+        "pag_articles": articles_paginator,
     }
     return render(request, "articles/articles.html", page_data)
 

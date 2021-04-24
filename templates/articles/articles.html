@@ -4,11 +4,14 @@
 {% block content %}
     <div class="row">
         <div class="col-8">
-            {% for article in articles %}
+            {% for article in pag_articles %}
                 {% include 'articles/includes/post.html' %}
             {% empty %}
                 <p>Тут пока нет статей.</p>
             {% endfor %}
+            <!-- Начало блока пагинации -->
+            {% include 'articles/includes/paggination.html' %}
+            <!-- Конец блока пагинации -->
         </div>
         <div class="col-1"></div>
         {% if last_articles != None %}
