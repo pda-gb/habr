@@ -33,10 +33,40 @@
                         <img class="author-avatar" src="{{ article.author.habruserprofile.avatar|media_folder_users }}"
                              alt="avatar"/>
                         <div class="author-rating">
-                            <div class="author-rating-num {% if article.author.habruserprofile.rating > 0 %}green{% elif article.author.habruserprofile.rating < 0 %}red{% endif %}"
+                            <div class="author-rating-num
+                                {% if article.author.habruserprofile.rating > 0 %}green
+                                {% elif article.author.habruserprofile.rating < 0 %}red{% endif %}"
                                  id="author_rating">
                                 {{ article.author.habruserprofile.rating }}</div>
-                            <div class="author-rating-text">Рейтинг автора</div>
+                            <div class="author-rating-text"
+                                 title="Рейтинг автора на основании лайков и дизлайков его статей и комментариев">Рейтинг</div>
+                        </div>
+                        <div class="author-rating carma">
+                            <div class="author-carma-num
+                                {% if article.author.habruserprofile.rating > 0 %}pink
+                                {% elif article.author.habruserprofile.carma < 0 %}dark{% endif %}"
+                                 id="author_carma">
+                                {{ article.author.habruserprofile.carma }}+5</div>
+                            <div class="author-carma-text"
+                                 title="Рейтинг автора на основании его оценки другими авторами">Карма</div>
+                        </div>
+                        <div class="author-rating">
+                            <div class="mt-1">
+                                Оцени автора
+                            </div>
+                            <div class="choose-carma post-status">
+                                {% if article.user_liked is True %}
+                                    <img src="{% static 'svg/like(filled).svg' %}" alt="" id="carma_like"/>
+                                {% else  %}
+                                    <img src="{% static 'svg/like.svg' %}" alt="" id="carma_like"/>
+                                {% endif %}
+                                <div class="separator"></div>
+                                {% if article.user_liked is False %}
+                                    <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="carma_dislike"/>
+                                {% else %}
+                                    <img src="{% static 'svg/dislike.svg' %}" alt="" id="carma_dislike"/>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     <div class="author-block">

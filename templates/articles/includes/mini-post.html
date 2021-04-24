@@ -4,8 +4,11 @@
     <a class="btn btn-outline-dark mt-1"
        href="{% url 'articles:article' article.id %}">Читать далее</a>
     {% block post-status %}
-        <div class="post-status">
-            <img src="{% static 'svg/star(white).svg' %}"/>
+        <div class="post-status"
+             title="Рейтинг статьи (лайки минус дизлайки)
+Закладки (сколько пользователей положило в закладки)
+Просмотров (сколько зарегистрированных пользователей просмотрело статью">
+            <img src="{% static 'svg/star(white).svg' %}" />
                 {% if article.rating > 0 %}
                     <small class="green">{{ article.rating }}</small>
                 {% elif article.rating < 0 %}

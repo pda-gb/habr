@@ -199,6 +199,37 @@ a:hover {
     font-size: 24px;
 }
 
+.author-carma-num {
+    margin: 5px;
+    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: 24px;
+    font-style: italic;
+}
+
+.author-carma-text {
+    margin: 7px;
+    font-size: 18px;
+    font-style: italic;
+    color: gray;
+}
+
+.author-carma-num{
+    margin-right: 10px;
+}
+
+.choose-carma {
+    display: flex;
+    flex-direction: row;
+}
+
+.separator {
+    min-width: 35px;
+}
+
+.carma {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
+}
+
 .author-rating-text {
     margin: 5px;
     font-size: 18px;
@@ -349,3 +380,12 @@ body {
     color: red;
     font-weight: bold;
 }
+
+.pink {
+    color: #FF6699;
+}
+
+.dark {
+    color: #990000;
+}
+

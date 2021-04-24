@@ -50,6 +50,11 @@
                 <td>Рейтинг:</td>
                 <td>{{ current_user.habruserprofile.rating|no_data_specified }}</td>
             </tr>
+            <tr>
+                <td>Карма:</td>
+                <td>
+                    {{ current_user.habruserprofile.carma|no_data_specified }}</td>
+            </tr>
         </table>
 
         {% if user == current_user %}
