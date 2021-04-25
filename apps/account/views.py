@@ -119,7 +119,7 @@ def publications(request, page=1):
         "title": title,
         "articles": articles_paginator,
     }
-    return render(request, "account/user_articles.html", page_data)
+    return render(request, "account/user_articles_publications.html", page_data)
 
 
 @login_required
@@ -140,7 +140,7 @@ def draft(request, page=1):
         "title": title,
         "articles": articles_paginator,
     }
-    return render(request, "account/user_articles.html", page_data)
+    return render(request, "account/user_articles_draft.html", page_data)
 
 
 @login_required
