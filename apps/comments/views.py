@@ -5,10 +5,9 @@ from django.shortcuts import HttpResponseRedirect, get_object_or_404
 from apps.articles.models import Article
 from .forms import CommentCreateForm
 from .models import Comment
-from ..authorization.models import HabrUser
 
 
-# @login_required
+@login_required
 @transaction.atomic
 def comment_create(request, pk):
     current_article = get_object_or_404(Article, id=pk)
@@ -24,10 +23,9 @@ def comment_create(request, pk):
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
-# @transaction.atomic
+@transaction.atomic
 def child_comment_create(request, pk, id_parent_comment):
     user_name = request.user
     text = request.POST.get("body")
     Comment.create_comment(int(pk), int(id_parent_comment), user_name, text)
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
-
