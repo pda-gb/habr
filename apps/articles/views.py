@@ -18,7 +18,7 @@ def main_page(request, page=1):
     hub_articles = Article.get_articles()
     last_articles = Article.get_last_articles(hub_articles)
     
-    paginator = Paginator(hub_articles, 5)
+    paginator = Paginator(hub_articles, 1)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:
@@ -27,21 +27,33 @@ def main_page(request, page=1):
         articles_paginator = paginator.page(paginator.num_pages)
     page_data = {
         "title": title,
-        "articles": hub_articles,
+        "articles": articles_paginator,
         "last_articles": last_articles,
         "current_user": request.user,
-        "pag_articles": articles_paginator,
     }
     return render(request, "articles/articles.html", page_data)
 
 
-def hub(request, pk=None):
+def hub(request, pk=None, page=1):
     hub_articles = Article.get_articles()
     last_articles = Article.get_last_articles(hub_articles)
     if pk != 1:
         hub_articles = Article.get_by_hub(pk)
-    page_data = {"articles": hub_articles, "last_articles": last_articles}
-    return render(request, "articles/articles.html", page_data)
+
+    paginator = Paginator(hub_articles, 1)
+    try:
+        articles_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        articles_paginator = paginator.page(1)
+    except EmptyPage:
+        articles_paginator = paginator.page(paginator.num_pages)
+
+    page_data = {
+        "pk": pk,
+        "articles": articles_paginator, 
+        "last_articles": last_articles,
+    }
+    return render(request, "articles/articles_hub.html", page_data)
 
 
 def article(request, pk=None):

@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from apps.account.forms import ChangePasswordForm, ArticleEditForm, ArticleCreate
 
@@ -80,43 +81,64 @@ def edit_profile(request):
 
 
 @login_required
-def user_articles(request):
+def user_articles(request, page=1):
     """
     функция отвечает за Мои статьи
     """
     title = "Мои статьи"
     articles = Article.get_by_author(author_pk=request.user.id)
+    paginator = Paginator(articles, 1)
+    try:
+        articles_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        articles_paginator = paginator.page(1)
+    except EmptyPage:
+        articles_paginator = paginator.page(paginator.num_pages)
     page_data = {
         "title": title,
-        "articles": articles,
+        "articles": articles_paginator,
     }
     return render(request, "account/user_articles.html", page_data)
 
 
 @login_required
-def publications(request):
+def publications(request, page=1):
     """
     функция отвечает за мои публикации
     """
     title = "Мои публикации"
     articles = Article.get_by_author(author_pk=request.user.id, draft=0)
+    paginator = Paginator(articles, 1)
+    try:
+        articles_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        articles_paginator = paginator.page(1)
+    except EmptyPage:
+        articles_paginator = paginator.page(paginator.num_pages)
     page_data = {
         "title": title,
-        "articles": articles,
+        "articles": articles_paginator,
     }
     return render(request, "account/user_articles.html", page_data)
 
 
 @login_required
-def draft(request):
+def draft(request, page=1):
     """
     функция отвечает за Черновик
     """
     title = "Черновик"
     articles = Article.get_by_author(author_pk=request.user.id, draft=1)
+    paginator = Paginator(articles, 1)
+    try:
+        articles_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        articles_paginator = paginator.page(1)
+    except EmptyPage:
+        articles_paginator = paginator.page(paginator.num_pages)
     page_data = {
         "title": title,
-        "articles": articles,
+        "articles": articles_paginator,
     }
     return render(request, "account/user_articles.html", page_data)
 

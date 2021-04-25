@@ -9,6 +9,7 @@ urlpatterns = [
     path("<int:page>/", main_page.main_page, name="articles_page"),
     path("article/<int:pk>", main_page.article, name="article"),
     path("hub/<int:pk>", main_page.hub, name="hub"),
+    path("hub/<int:pk>/<int:page>", main_page.hub, name="articles_hub_pag"),
     path("ajax/change_rate", main_page.change_article_rate, name="ajax_change_rate"),
     path("author/<int:pk>", main_page.show_author_profile, name="author_profile"),
     path('search/<int:page>', main_page.search_articles, name='search_articles')
