@@ -30,9 +30,9 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 icon">
                 <li class="icon-item nav-item">
                 <div class="form-search">
-                    <form class="">
-                        <input class="form-control input-search" type="search" placeholder="Search" aria-label="Search">
-                        <a type="submit" href="#"><img src="{% static 'svg/magnifier.svg'%}" class="magnifier magnifier-in-input" alt=""></a>
+                    <form class="search" role="search" id="search" method="GET" action="{% url 'articles:search_articles' pag_articles.number %}">
+                        <input class="form-control input-search" type="search" placeholder="Search" aria-label="Search" name="search">
+                        <img src="{% static 'svg/magnifier.svg'%}" class="magnifier magnifier-in-input" alt="" onclick="search.submit()">
                     </form>
                 </div>    
                     <a id="main-magnifier" href="#"><img src="{% static 'svg/magnifier.svg'%}" class="magnifier" alt=""></a>

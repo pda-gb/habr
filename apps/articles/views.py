@@ -117,6 +117,29 @@ def show_author_profile(request, pk=None):
     return render(request, "articles/author_profile.html", page_data)
 
 
-class SearchArticlesView(ListView):
-    model = Article
-    template_name = 'search_articles.html'
+def search_articles(request, page=1):
+    """рендер главной страницы после поиска"""
+    title = "главная страница"
+    
+    search_query = request.GET.get('search','')
+    if search_query:
+        hub_articles = Article.get_search_articles(search_query)
+    else:
+        hub_articles = Article.get_articles()
+
+    last_articles = Article.get_last_articles(hub_articles)
+    paginator = Paginator(hub_articles, 5)
+    try:
+        articles_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        articles_paginator = paginator.page(1)
+    except EmptyPage:
+        articles_paginator = paginator.page(paginator.num_pages)
+    page_data = {
+        "title": title,
+        "articles": hub_articles,
+        "last_articles": last_articles,
+        "current_user": request.user,
+        "pag_articles": articles_paginator,
+    }
+    return render(request, "articles/includes/search_aricles.html", page_data)

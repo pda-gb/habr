@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models.fields import BooleanField
 from django.db.models.fields.related import ForeignKey
 from django.utils import timezone
+from django.db.models import Q
 
 
 class Hub(models.Model):
@@ -127,6 +128,11 @@ class Article(models.Model):
         #     last_articles[i]['time'] = last_articles_set[i]['published'].strftime('%H:%M')
         # return hub_articles, last_articles
         return hub_articles
+
+    @staticmethod
+    def get_search_articles(search_query):
+        articles = Article.objects.filter(draft=False).filter(Q(title__icontains=search_query) | Q(body__icontains=search_query))
+        return articles
 
     @staticmethod
     def get_article(id_article):
