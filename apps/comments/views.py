@@ -62,3 +62,25 @@ def create_child_comment(request, pk):
     }
     result = render_to_string("comments/comments.html", page_data)
     return JsonResponse({"result": result})
+
+
+def like_dislike_ajax(request):
+    if request.is_ajax():
+        field = request.GET.get("field")
+        comment = request.GET.get("comment").split("-")[1]
+        comment = Comment.objects.get(pk=comment)
+        if field == "like":
+            comment.likes.add(request.user)
+            comment.dislikes.remove(request.user)
+        elif field == "dislike":
+            comment.dislikes.add(request.user)
+            comment.likes.remove(request.user)
+        return JsonResponse(
+            {
+                "id": comment.pk,
+                "likes": comment.likes.count(),
+                "dislikes": comment.dislikes.count(),
+                "like": comment.likes.filter(pk=request.user.pk).exists(),
+                "dislike": comment.dislikes.filter(pk=request.user.pk).exists(),
+            }
+        )

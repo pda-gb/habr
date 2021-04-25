@@ -1,7 +1,6 @@
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
 from django.db import models
-from django.utils import timezone
 
 from apps.articles.models import Article
 from apps.authorization.models import HabrUser
@@ -11,11 +10,27 @@ class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     parent = models.ForeignKey(
-        "self", null=True, related_name="comment_parent", on_delete=models.CASCADE
+        "self",
+        null=True,
+        blank=True,
+        related_name="comment_parent",
+        on_delete=models.CASCADE,
     )
     body = RichTextUploadingField()
     date = models.DateTimeField(verbose_name="дата", auto_now_add=True)
     is_child = models.BooleanField(default=False)
+    likes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        verbose_name="лайки",
+        related_name="comment_likes",
+        blank=True,
+    )
+    dislikes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        verbose_name="дизлайки",
+        related_name="comment_dislikes",
+        blank=True,
+    )
 
     def __str__(self):
         return f"{self.article.title}-{self.author.username}"

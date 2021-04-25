@@ -37,7 +37,9 @@ def article(request, pk=None):
     last_articles = Article.get_last_articles(hub_articles)
     current_article: Article = get_object_or_404(Article, id=pk)
     current_comments = Comment.get_comments(pk)
-    comments = create_comments_tree(current_comments)
+    comments = create_comments_tree(
+        current_comments, request.user if request.user.is_authenticated else None
+    )
     form_comment = CommentCreateForm(request.POST or None)
     if request.user.is_authenticated:
         current_article.views.add(request.user)
@@ -66,17 +68,25 @@ def change_article_rate(request):
         field = request.GET.get("field")
         article = Article.objects.get(pk=article)
         if field == "like":
-            article.likes.add(request.user)
-            article.dislikes.remove(request.user)
+            if article.likes.filter(pk=request.user.pk).exists():
+                article.likes.remove(request.user)
+            else:
+                article.likes.add(request.user)
+                article.dislikes.remove(request.user)
         elif field == "dislike":
-            article.likes.remove(request.user)
-            article.dislikes.add(request.user)
+            if article.dislikes.filter(pk=request.user.pk).exists():
+                article.dislikes.remove(request.user)
+            else:
+                article.dislikes.add(request.user)
+                article.likes.remove(request.user)
         else:
             if article.bookmarks.filter(pk=request.user.pk).exists():
                 article.bookmarks.remove(request.user)
             else:
                 article.bookmarks.add(request.user)
         article.rating = article.likes.count() - article.dislikes.count()
+        article.author.habruserprofile.rating = article.rating
+        article.author.save()
         article.save()
         return JsonResponse(
             {
