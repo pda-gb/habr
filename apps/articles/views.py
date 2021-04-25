@@ -18,7 +18,7 @@ def main_page(request, page=1):
     hub_articles = Article.get_articles()
     last_articles = Article.get_last_articles(hub_articles)
     
-    paginator = Paginator(hub_articles, 1)
+    paginator = Paginator(hub_articles, 5)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:
@@ -40,7 +40,7 @@ def hub(request, pk=None, page=1):
     if pk != 1:
         hub_articles = Article.get_by_hub(pk)
 
-    paginator = Paginator(hub_articles, 1)
+    paginator = Paginator(hub_articles, 5)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:

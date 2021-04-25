@@ -87,7 +87,7 @@ def user_articles(request, page=1):
     """
     title = "Мои статьи"
     articles = Article.get_by_author(author_pk=request.user.id)
-    paginator = Paginator(articles, 1)
+    paginator = Paginator(articles, 5)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:
@@ -108,7 +108,7 @@ def publications(request, page=1):
     """
     title = "Мои публикации"
     articles = Article.get_by_author(author_pk=request.user.id, draft=0)
-    paginator = Paginator(articles, 1)
+    paginator = Paginator(articles, 5)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:
@@ -129,7 +129,7 @@ def draft(request, page=1):
     """
     title = "Черновик"
     articles = Article.get_by_author(author_pk=request.user.id, draft=1)
-    paginator = Paginator(articles, 1)
+    paginator = Paginator(articles, 5)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:
