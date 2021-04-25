@@ -11,4 +11,5 @@ urlpatterns = [
     path("hub/<int:pk>", main_page.hub, name="hub"),
     path("ajax/change_rate", main_page.change_article_rate, name="ajax_change_rate"),
     path("author/<int:pk>", main_page.show_author_profile, name="author_profile"),
+    path('search/', main_page.SearchArticlesView.as_view(), name='search_articles')
 ]

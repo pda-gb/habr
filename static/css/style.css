@@ -263,7 +263,6 @@ body {
 }
 
 .form-control {
-    width: 25%;
     margin-top: 1em;
     margin-bottom: 1em;
 }
@@ -357,3 +356,36 @@ body {
 .page-link:hover {
     color: black;
 }
+
+.magnifier {
+    height: 36px;
+    width: 55px;
+}
+
+.icon-item {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+}
+
+.element-search-list {
+    float: left;
+}
+
+.input-search {
+    margin: 0 auto;
+}
+
+.form-search {
+    display: none;
+}
+
+.form-search form{
+    display: flex;
+}
+
+.magnifier-in-input {
+    position: relative;
+    right: 51px;
+}
+

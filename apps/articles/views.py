@@ -115,3 +115,8 @@ def show_author_profile(request, pk=None):
         "current_user": author,
     }
     return render(request, "articles/author_profile.html", page_data)
+
+
+class SearchArticlesView(ListView):
+    model = Article
+    template_name = 'search_articles.html'

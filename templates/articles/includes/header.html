@@ -1,3 +1,5 @@
+{% load static %}
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
     <div class="container">
         <a class="logo" href="{% url 'articles:main_page' %}">Sputnik</a>
@@ -24,6 +26,19 @@
                 {% endfor %}
 
             </ul>
+            <!-- Начало блока поиска --->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 icon">
+                <li class="icon-item nav-item">
+                <div class="form-search">
+                    <form class="">
+                        <input class="form-control input-search" type="search" placeholder="Search" aria-label="Search">
+                        <a type="submit" href="#"><img src="{% static 'svg/magnifier.svg'%}" class="magnifier magnifier-in-input" alt=""></a>
+                    </form>
+                </div>    
+                    <a id="main-magnifier" href="#"><img src="{% static 'svg/magnifier.svg'%}" class="magnifier" alt=""></a>
+                </li>
+            </ul>
+             <!-- Конец блока поиска --->
             {% if user.is_authenticated %}
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2"
