@@ -7,6 +7,6 @@ from .apps import CommentsConfig
 app_name = CommentsConfig.name
 
 urlpatterns = [
-    path("create/<int:pk>", comments.create_comment, name="comment_create"),
-    path("create-child/<int:pk>", comments.create_child_comment, name="comment_child_create",),
+    path("create/<int:pk>", comments.comment_create, name="comment_create"),
+    path("create-child/<int:pk>/<int:id_parent_comment>", comments.child_comment_create, name="comment_child_create", ),
 ]

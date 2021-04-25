@@ -35,6 +35,8 @@ def article(request, pk=None):
     last_articles = Article.get_last_articles(hub_articles)
     current_article = get_object_or_404(Article, id=pk)
     comments = Comment.get_comments(pk)
+    # for comment in comments:
+    #     print(f'{comment.child_comments.values() =}')
     form_comment = CommentCreateForm(request.POST or None)
     if request.user.is_authenticated:
         rate = ArticleRate.create(current_article, request.user)

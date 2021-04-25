@@ -1,0 +1,58 @@
+{% load static %}
+{% load my_tags %}
+{% if comment.child_comments.all %}
+    {% for child_comment in comment.child_comments.all %}
+        <ul style=" tree list-style-type:none;">
+            <div class="col-md-12 mt-2">
+                <li class="li-reply-comment">
+                    <div class="main-comment-section col-md-12">
+                        <div>
+                            <a href="{% url 'articles:author_profile' child_comment.author.id %}"
+                               class="post-author comment-author">
+                                <img src="{{ child_comment.author.habruserprofile.avatar|media_folder_users }}"
+                                     alt=""/>
+                                <small>{{ child_comment.author }}</small>
+                            </a>
+                            <span>{{ child_comment.date }}</span>
+                        </div>
+                        <div class="comment-text">
+                            <div>{{ child_comment.body }}</div>
+                        </div>
+                        {#                        <span class='reply reply-comment' data-id="{id} " data-prent={parent_id}>Ответить</span>#}
+                        <div class="container-fluid mt-2">
+                            <form method="POST" class="comment-form"
+                                  action="{% url 'comments:comment_child_create' pk=article.id id_parent_comment=child_comment.id %}">
+                                {% csrf_token %}
+                                {{ form_comment.as_p }}
+                                {% if request.user.is_authenticated %}
+                                    <input type="submit" value="Отправить" class="btn btn-outline-success">
+                                    </form>
+                                {% else %}
+                                    <button class="btn btn-outline-success"><a
+                                            href="{% url 'auth:login' %}">Отправить</a></button>
+                                    </form>
+                                {% endif %}
+                        </div>
+
+                        {% with comment=child_comment template_name='comments/includes/inc_tree_comments.html' %}
+                            {% include template_name %}
+                        {% endwith %}
+                    </div>
+                </li>
+            </div>
+        </ul>
+        <div class="container-fluid mt-2">
+            <form method="POST" class="comment-form"
+                  action="{% url 'comments:comment_child_create' pk=article.id id_parent_comment=comment.id %}">
+                {% csrf_token %}
+                {{ form_comment.as_p }}
+                {% if request.user.is_authenticated %}
+                    <input type="submit" value="Отправить" class="btn btn-outline-success">
+                    </form>
+                {% else %}
+                    <button class="btn btn-outline-success"><a href="{% url 'auth:login' %}">Отправить</a></button>
+                    </form>
+                {% endif %}
+        </div>
+    {% endfor %}
+{% endif %}
