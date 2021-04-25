@@ -131,18 +131,18 @@ class Article(models.Model):
 
     @staticmethod
     def get_search_articles(search_query):
-        result = Article.objects.filter(draft=False).filter(Q(title__icontains=search_query) | Q(body__icontains=search_query))
+        result = Article.get_articles().filter(Q(title__icontains=search_query) | Q(body__icontains=search_query))
         if not result:
-            result = Article.objects.filter(draft=False).filter(Q(title__iexact=search_query) | Q(body__iexact=search_query))
+            result = Article.get_articles().filter(Q(title__iexact=search_query) | Q(body__iexact=search_query))
         if not result:
-            result = Article.objects.filter(draft=False)
+            result = Article.get_articles()
             search_query = search_query.lower()
-            articles = Article.objects.filter(draft=False).values()
+            articles = Article.get_articles().values()
             for el in articles:
-                if el['title'].lower() == search_query or search_query in el['body'].lower():
+                if search_query in el['title'].lower() or search_query in el['body'].lower():
                     pass
                 else:
-                    result = Article.objects.filter(draft=False).exclude
+                    result = result.exclude(pk=el['id'])
         return result
 
     @staticmethod
