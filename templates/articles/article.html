@@ -41,30 +41,30 @@
                             <div class="author-rating-text"
                                  title="Рейтинг автора на основании лайков и дизлайков его статей и комментариев">Рейтинг</div>
                         </div>
-                        <div class="author-rating carma">
-                            <div class="author-carma-num
+                        <div class="author-rating karma">
+                            <div class="author-karma-num
                                 {% if article.author.habruserprofile.rating > 0 %}pink
-                                {% elif article.author.habruserprofile.carma < 0 %}dark{% endif %}"
-                                 id="author_carma">
-                                {{ article.author.habruserprofile.carma }}+5</div>
-                            <div class="author-carma-text"
+                                {% elif article.author.habruserprofile.karma < 0 %}dark{% endif %}"
+                                 id="author_karma">
+                                {{ article.author.habruserprofile.karma }}</div>
+                            <div class="author-karma-text"
                                  title="Рейтинг автора на основании его оценки другими авторами">Карма</div>
                         </div>
                         <div class="author-rating">
                             <div class="mt-1">
                                 Оцени автора
                             </div>
-                            <div class="choose-carma post-status">
+                            <div class="choose-karma post-status">
                                 {% if article.liked is True %}
-                                    <img src="{% static 'svg/like(filled).svg' %}" alt="" id="carma_like"/>
+                                    <img src="{% static 'svg/like(filled).svg' %}" alt="" id="karma_like"/>
                                 {% else  %}
-                                    <img src="{% static 'svg/like.svg' %}" alt="" id="carma_like"/>
+                                    <img src="{% static 'svg/like.svg' %}" alt="" id="karma_like"/>
                                 {% endif %}
                                 <div class="separator"></div>
                                 {% if article.disliked is True %}
-                                    <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="carma_dislike"/>
+                                    <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="karma_dislike"/>
                                 {% else %}
-                                    <img src="{% static 'svg/dislike.svg' %}" alt="" id="carma_dislike"/>
+                                    <img src="{% static 'svg/dislike.svg' %}" alt="" id="karma_dislike"/>
                                 {% endif %}
                             </div>
                         </div>

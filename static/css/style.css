@@ -199,25 +199,25 @@ a:hover {
     font-size: 24px;
 }
 
-.author-carma-num {
+.author-karma-num {
     margin: 5px;
     font-family: "Arial Black", Gadget, sans-serif;
     font-size: 24px;
     font-style: italic;
 }
 
-.author-carma-text {
+.author-karma-text {
     margin: 7px;
     font-size: 18px;
     font-style: italic;
     color: gray;
 }
 
-.author-carma-num{
+.author-karma-num{
     margin-right: 10px;
 }
 
-.choose-carma {
+.choose-karma {
     display: flex;
     flex-direction: row;
 }
@@ -226,9 +226,9 @@ a:hover {
     min-width: 35px;
 }
 
-.carma {
+/* .karma {
     box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
-}
+} */
 
 .author-rating-text {
     margin: 5px;
