@@ -13,7 +13,7 @@ urlpatterns = [
     path("comments/", include("apps.comments.urls", namespace="comments")),
     path("ckeditor/", include("ckeditor_uploader.urls")),
     path("upload/", login_required(upload), name="ckeditor_upload"),
-    path('', include('social_django.urls', namespace='social')),
+    path('oauth/', include('social_django.urls', namespace='social')),
 ]
 
 if settings.DEBUG:

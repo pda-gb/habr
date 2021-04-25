@@ -6,3 +6,5 @@ pytz==2021.1
 sqlparse==0.4.1; python_version >= '3.5'
 social-auth-app-django==4.0.0
 social-auth-core==3.3.3
+django-bootstrap3==15.0.0
+requests==2.24.0

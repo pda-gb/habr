@@ -9,6 +9,7 @@ pillow = "*"
 mimesis = "*"
 django-ckeditor = "*"
 social-auth-app-django = "*"
+requests = "*"
 
 [dev-packages]
 flake8 = "*"
