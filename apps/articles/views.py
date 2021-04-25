@@ -1,12 +1,10 @@
-from apps.comments.forms import CommentCreateForm
-from apps.comments.models import Comment
-from apps.comments.utils import create_comments_tree
-from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
 from apps.articles.models import Article, ArticleRate
 from apps.authorization.models import HabrUser
+from apps.comments.forms import CommentCreateForm
+from apps.comments.models import Comment
 
 
 def main_page(request):
@@ -36,8 +34,7 @@ def article(request, pk=None):
     hub_articles = Article.get_articles()
     last_articles = Article.get_last_articles(hub_articles)
     current_article = get_object_or_404(Article, id=pk)
-    current_comments = Comment.get_comments(pk)
-    comments = create_comments_tree(current_comments)
+    comments = Comment.get_comments(pk)
     form_comment = CommentCreateForm(request.POST or None)
     if request.user.is_authenticated:
         rate = ArticleRate.create(current_article, request.user)
@@ -48,7 +45,6 @@ def article(request, pk=None):
         "last_articles": last_articles,
         "comments": comments,
         "form_comment": form_comment,
-        "media_url": settings.MEDIA_URL,
     }
     return render(request, "articles/article.html", page_data)
 
@@ -76,12 +72,13 @@ def change_article_rate(request):
         article_rate.save()
         article_objects = ArticleRate.objects.filter(article=article)
         article_rate.article.likes = article_objects.filter(liked=True).count()
-        article_rate.article.dislikes = article_objects.filter(liked=False).count()
+        article_rate.article.dislikes = article_objects.filter(
+            liked=False).count()
         article_rate.article.bookmarks = article_objects.filter(
             in_bookmarks=True
         ).count()
         article_rate.article.rating = (
-            article_rate.article.likes - article_rate.article.dislikes
+                article_rate.article.likes - article_rate.article.dislikes
         )
         article_rate.article.save()
         article_rate.save(True)
