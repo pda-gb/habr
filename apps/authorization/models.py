@@ -54,7 +54,7 @@ class HabrUserProfile(models.Model):
         verbose_name="отрицательная карма",
         related_name="karma_negative",
     )
-    karma = models.FloatField(verbose_name="карма", default=0)
+    karma = models.IntegerField(verbose_name="карма", default=0)
 
     def __str__(self) -> str:
         return self.user.username

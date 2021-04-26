@@ -170,7 +170,7 @@
           data: {field: fieldName, user: {{ article.author.pk }}},
           url: "{% url 'articles:ajax_rate_author' %}",
           success: function(response) {
-            $("#author_karma").text(response.karma.toFixed(1).replace('.', ','))
+            $("#author_karma").text(response.karma)
             if (response.karma > 0) {
               $("#author_karma").attr('class', 'author-karma-num pink');
             } if (response.karma < 0) {
