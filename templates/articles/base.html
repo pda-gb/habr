@@ -13,11 +13,14 @@
     />
     {% block css %}
       <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
       <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/png">
     {% endblock css %}
     <title>{% block title %}{{ title|title }}{% endblock title %}</title>
   </head>
   <body>
+    <div class="scrollup"><i class="fas fa-angle-double-up"></i></div>
+    <div class="scrolldown"><i class="fas fa-angle-double-down"></i></div>
     {% block header %}{% include 'articles/includes/header.html' %}{% endblock header %}
     <div class="container mt-4">{% block content %}{% endblock content %}</div>
     {% block footer %}{% include 'articles/includes/footer.html' %}{% endblock footer %}
@@ -37,5 +40,33 @@
     ></script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     {% endblock js %}
+    <script>
+      $(document).ready(function () {
+        let content_position = 0
+        $(function() {
+          $('.scrollup').click(function() {
+            content_position = $(window).scrollTop()
+            $("html, body").animate({scrollTop:0},100);
+          })
+        })
+        $(function() {
+          $('.scrolldown').click(function() {
+            $("html, body").animate({scrollTop:content_position},100);
+          })
+        })
+        $(window).scroll(function() {
+          if ($(this).scrollTop() > 500) {
+            $('.scrollup').fadeIn();
+            $('.scrolldown').fadeOut();
+          }
+          else {
+            $('.scrollup').fadeOut();
+            if (content_position > 0) {
+                $('.scrolldown').fadeIn();
+            }
+          }
+        });
+      });
+    </script>
   </body>
 </html>

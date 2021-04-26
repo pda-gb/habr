@@ -350,3 +350,22 @@ body {
     color: red;
     font-weight: bold;
 }
+
+.scrollup, .scrolldown {
+  position: fixed;
+  color: gray;
+  background-color: white;
+  left: 40px;
+  bottom: 65px;
+  padding: 10px;
+  font-size: 28px;
+  border-radius: 50px;
+  cursor: pointer;
+  display: none;
+  text-align: center;
+  border: 1px gray;
+}
+
+.scrollup:hover, .scrolldown:hover {
+  background-color: lightgrey;
+}
