@@ -59,9 +59,10 @@ class HabrUserProfile(models.Model):
     def __str__(self) -> str:
         return self.user.username
 
-    def save(self) -> None:
-        self.karma = self.karma_positive.count() - self.karma_negative.count()
-        return super().save()
+    def save(self, *args, **kwargs) -> None:
+        if self.pk:
+            self.karma = self.karma_positive.count() - self.karma_negative.count()
+        return super().save(*args, **kwargs)
 
     @receiver(post_save, sender=HabrUser)
     def create_user_profile(sender, instance, created, **kwargs):
