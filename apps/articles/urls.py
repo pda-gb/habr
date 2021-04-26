@@ -6,8 +6,9 @@ app_name = "articles"
 
 urlpatterns = [
     path("", main_page.main_page, name="main_page"),
-    path("article/<int:pk>", main_page.article, name="article"),
-    path("hub/<int:pk>", main_page.hub, name="hub"),
-    path("ajax/change_rate", main_page.change_article_rate, name="ajax_change_rate"),
-    path("author/<int:pk>", main_page.show_author_profile, name="author_profile"),
+    path("article/<int:pk>/", main_page.article, name="article"),
+    path("hub/<int:pk>/", main_page.hub, name="hub"),
+    path("ajax/change_rate/", main_page.change_article_rate, name="ajax_change_rate"),
+    path("ajax/rate_author/", main_page.like_dislike_author_ajax, name="ajax_rate_author"),
+    path("author/<int:pk>/", main_page.show_author_profile, name="author_profile"),
 ]

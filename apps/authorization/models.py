@@ -46,17 +46,22 @@ class HabrUserProfile(models.Model):
         HabrUser,
         blank=True,
         verbose_name="положительная карма",
-        related_name="karma_positive"
+        related_name="karma_positive",
     )
     karma_negative = models.ManyToManyField(
         HabrUser,
         blank=True,
         verbose_name="отрицательная карма",
-        related_name="karma_negative"
+        related_name="karma_negative",
     )
+    karma = models.FloatField(verbose_name="карма", default=0)
 
     def __str__(self) -> str:
         return self.user.username
+
+    def save(self) -> None:
+        self.karma = self.karma_positive.count() - self.karma_negative.count()
+        return super().save()
 
     @receiver(post_save, sender=HabrUser)
     def create_user_profile(sender, instance, created, **kwargs):

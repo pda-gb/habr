@@ -1,12 +1,12 @@
+from django.conf import settings
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, render
+
+from apps.articles.models import Article
+from apps.authorization.models import HabrUser, HabrUserProfile
 from apps.comments.forms import CommentCreateForm
 from apps.comments.models import Comment
 from apps.comments.utils import create_comments_tree
-from django.conf import settings
-from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
-
-from apps.articles.models import Article
-from apps.authorization.models import HabrUser
 
 
 def main_page(request):
@@ -35,7 +35,7 @@ def hub(request, pk=None):
 def article(request, pk=None):
     hub_articles = Article.get_articles()
     last_articles = Article.get_last_articles(hub_articles)
-    current_article: Article = get_object_or_404(Article, id=pk)
+    current_article = get_object_or_404(Article, id=pk)
     current_comments = Comment.get_comments(pk)
     comments = create_comments_tree(
         current_comments, request.user if request.user.is_authenticated else None
@@ -52,6 +52,16 @@ def article(request, pk=None):
         current_article.bookmarked = current_article.bookmarks.filter(
             pk=request.user.pk
         ).exists()
+        current_article.author_liked = (
+            current_article.author.habruserprofile.karma_positive.filter(
+                pk=request.user.pk
+            ).exists()
+        )
+        current_article.author_disliked = (
+            current_article.author.habruserprofile.karma_negative.filter(
+                pk=request.user.pk
+            ).exists()
+        )
     page_data = {
         "article": current_article,
         "last_articles": last_articles,
@@ -63,31 +73,41 @@ def article(request, pk=None):
 
 
 def change_article_rate(request):
-    if request.is_ajax():
+    if request.is_ajax() and request.user.is_authenticated:
         article = request.GET.get("article")
         field = request.GET.get("field")
         article = Article.objects.get(pk=article)
-        if field == "like":
-            if article.likes.filter(pk=request.user.pk).exists():
-                article.likes.remove(request.user)
+        if request.user != article.author:
+            if field == "like":
+                if article.likes.filter(pk=request.user.pk).exists():
+                    article.likes.remove(request.user)
+                    article.author.habruserprofile.rating -= 1
+                elif article.dislikes.filter(pk=request.user.pk).exists():
+                    article.likes.add(request.user)
+                    article.dislikes.remove(request.user)
+                    article.author.habruserprofile.rating += 2
+                else:
+                    article.likes.add(request.user)
+                    article.author.habruserprofile.rating += 1
+            elif field == "dislike":
+                if article.dislikes.filter(pk=request.user.pk).exists():
+                    article.dislikes.remove(request.user)
+                    article.author.habruserprofile.rating += 1
+                elif article.likes.filter(pk=request.user.pk).exists():
+                    article.dislikes.add(request.user)
+                    article.likes.remove(request.user)
+                    article.author.habruserprofile.rating -= 2
+                else:
+                    article.dislikes.add(request.user)
+                    article.author.habruserprofile.rating -= 1
             else:
-                article.likes.add(request.user)
-                article.dislikes.remove(request.user)
-        elif field == "dislike":
-            if article.dislikes.filter(pk=request.user.pk).exists():
-                article.dislikes.remove(request.user)
-            else:
-                article.dislikes.add(request.user)
-                article.likes.remove(request.user)
-        else:
-            if article.bookmarks.filter(pk=request.user.pk).exists():
-                article.bookmarks.remove(request.user)
-            else:
-                article.bookmarks.add(request.user)
-        article.rating = article.likes.count() - article.dislikes.count()
-        article.author.habruserprofile.rating = article.rating
-        article.author.save()
-        article.save()
+                if article.bookmarks.filter(pk=request.user.pk).exists():
+                    article.bookmarks.remove(request.user)
+                else:
+                    article.bookmarks.add(request.user)
+            article.rating = article.likes.count() - article.dislikes.count()
+            article.author.habruserprofile.save()
+            article.save()
         return JsonResponse(
             {
                 "likes": article.likes.count(),
@@ -97,6 +117,32 @@ def change_article_rate(request):
                 "dislike": article.dislikes.filter(pk=request.user.pk).exists(),
             }
         )
+
+
+def like_dislike_author_ajax(request):
+    if request.is_ajax() and request.user.is_authenticated:
+        user = request.GET.get("user")
+        field = request.GET.get("field")
+        if request.user.pk != user:
+            user = HabrUserProfile.objects.get(pk=user)
+            if field == "like":
+                if user.karma_positive.filter(pk=request.user.pk).exists():
+                    user.karma_positive.remove(request.user)
+                elif user.karma_negative.filter(pk=request.user.pk).exists():
+                    user.karma_positive.add(request.user)
+                    user.karma_negative.remove(request.user)
+                else:
+                    user.karma_positive.add(request.user)
+            elif field == "dislike":
+                if user.karma_negative.filter(pk=request.user.pk).exists():
+                    user.karma_negative.remove(request.user)
+                elif user.karma_positive.filter(pk=request.user.pk).exists():
+                    user.karma_negative.add(request.user)
+                    user.karma_positive.remove(request.user)
+                else:
+                    user.karma_negative.add(request.user)
+        user.save()
+        return JsonResponse({})
 
 
 def show_author_profile(request, pk=None):

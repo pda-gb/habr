@@ -43,7 +43,7 @@
                         </div>
                         <div class="author-rating karma">
                             <div class="author-karma-num
-                                {% if article.author.habruserprofile.rating > 0 %}pink
+                                {% if article.author.habruserprofile.karma > 0 %}pink
                                 {% elif article.author.habruserprofile.karma < 0 %}dark{% endif %}"
                                  id="author_karma">
                                 {{ article.author.habruserprofile.karma }}</div>
@@ -55,13 +55,13 @@
                                 Оцени автора
                             </div>
                             <div class="choose-karma post-status">
-                                {% if article.liked is True %}
+                                {% if article.author_liked is True %}
                                     <img src="{% static 'svg/like(filled).svg' %}" alt="" id="karma_like"/>
                                 {% else  %}
                                     <img src="{% static 'svg/like.svg' %}" alt="" id="karma_like"/>
                                 {% endif %}
                                 <div class="separator"></div>
-                                {% if article.disliked is True %}
+                                {% if article.author_disliked is True %}
                                     <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="karma_dislike"/>
                                 {% else %}
                                     <img src="{% static 'svg/dislike.svg' %}" alt="" id="karma_dislike"/>
@@ -113,7 +113,7 @@
           success: function(response) {
               $("#likes_count").text(response.likes)
               $("#dislikes_count").text(response.dislikes)
-              $("#author_rating").text(response.author_rating)
+              $("#author_rating").text(response.author_rating.toFixed(1).replace('.', ','))
               if (response.author_rating > 0) {
                 $("#author_rating").attr('class', 'author-rating-num green');
               } if (response.author_rating < 0) {
@@ -160,6 +160,35 @@
             $(this).attr('src', bookmarkUrl);
           } else {
             $(this).attr('src', bookmarkFUrl);
+          }
+      });
+    });
+  </script>
+  <script>
+    function sendUserAjax(fieldName, id) {
+      $.ajax({
+          data: {field: fieldName, user: {{ article.author.pk }}},
+          url: "{% url 'articles:ajax_rate_author' %}",
+          success: function(response) {}
+      });
+    };
+
+    $(document).ready(function(){
+      $('#karma_like').click(function () {
+          sendUserAjax('like', $(this).attr('id'))
+          if ($(this).attr('src') == likeFUrl) {
+            $(this).attr('src', likeUrl);
+          } else {
+            $(this).attr('src', likeFUrl);
+          }
+      });
+
+      $('#karma_dislike').click(function () {
+          sendUserAjax('dislike', $(this).attr('id'))
+          if ($(this).attr('src') == dislikeFUrl) {
+            $(this).attr('src', dislikeUrl);
+          } else {
+            $(this).attr('src', dislikeFUrl);
           }
       });
     });

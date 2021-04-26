@@ -65,16 +65,34 @@ def create_child_comment(request, pk):
 
 
 def like_dislike_ajax(request):
-    if request.is_ajax():
+    if request.is_ajax() and request.user.is_authenticated:
         field = request.GET.get("field")
         comment = request.GET.get("comment").split("-")[1]
         comment = Comment.objects.get(pk=comment)
-        if field == "like":
-            comment.likes.add(request.user)
-            comment.dislikes.remove(request.user)
-        elif field == "dislike":
-            comment.dislikes.add(request.user)
-            comment.likes.remove(request.user)
+        if request.user != comment.author:
+            if field == "like":
+                if comment.likes.filter(pk=request.user.pk).exists():
+                    comment.likes.remove(request.user)
+                    comment.author.habruserprofile.rating -= 1 * 0.5
+                elif comment.dislikes.filter(pk=request.user.pk).exists():
+                    comment.likes.add(request.user)
+                    comment.dislikes.remove(request.user)
+                    comment.author.habruserprofile.rating += 2 * 0.5
+                else:
+                    comment.likes.add(request.user)
+                    comment.author.habruserprofile.rating += 1 * 0.5
+            elif field == "dislike":
+                if comment.dislikes.filter(pk=request.user.pk).exists():
+                    comment.dislikes.remove(request.user)
+                    comment.author.habruserprofile.rating += 1 * 0.5
+                elif comment.likes.filter(pk=request.user.pk).exists():
+                    comment.dislikes.add(request.user)
+                    comment.likes.remove(request.user)
+                    comment.author.habruserprofile.rating -= 2 * 0.5
+                else:
+                    comment.dislikes.add(request.user)
+                    comment.author.habruserprofile.rating -= 1 * 0.5
+            comment.author.habruserprofile.save()
         return JsonResponse(
             {
                 "id": comment.pk,
