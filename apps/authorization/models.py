@@ -39,6 +39,9 @@ class HabrUserProfile(models.Model):
     full_name = models.CharField(
         verbose_name="настоящее имя", max_length=64, blank=True
     )
+    last_name = models.CharField(
+        verbose_name='фамилия', max_length=64, blank=True
+    )
     place_of_work = models.CharField(
         verbose_name="место работы", max_length=256, blank=True
     )

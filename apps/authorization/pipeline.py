@@ -10,6 +10,8 @@ from apps.authorization.models import HabrUserProfile
 
 def save_user_profile(backend, user, response, *args, **kwargs):
     if backend.name == 'vk-oauth2':
+        print('*' * 15, 'RESPONSE', '*' * 15)
+        print(response)
         api_url = urlunparse(('https',
                               'api.vk.com',
                               '/method/users.get',
@@ -21,15 +23,18 @@ def save_user_profile(backend, user, response, *args, **kwargs):
                               None
                               ))
         response = requests.get(api_url)
+        print(api_url)
         if response.status_code != 200:
             return
         data = response.json()['response'][0]
-        if data.get('first_name') and data.get('last_name'):
-            user.username = data['first_name']
-            user.habruserprofile.full_name = f'{data["first_name"]} {data["last_name"]}'
+        print(data)
+        if data.get('first_name'):
+            user.habruserprofile.full_name = data["first_name"]
+        if data.get('last_name'):
+            user.habruserprofile.last_name = data["last_name"]
         if data.get('career'):
-            user.habruserprofile.place_of_work = data['career'][0]['company']
-            user.habruserprofile.specialization = data['career'][0]['position']
+            user.habruserprofile.place_of_work = data['career'][-1]['company']
+            user.habruserprofile.specialization = data['career'][-1]['position']
         if data.get('sex'):
             user.habruserprofile.gender = HabrUserProfile.MALE if data['sex'] == 2 else HabrUserProfile.FEMALE
         if data.get('bdate'):
@@ -40,6 +45,26 @@ def save_user_profile(backend, user, response, *args, **kwargs):
             user.habruserprofile.city = data['city']['title']
         if data.get('photo_max_orig'):
             urllib.request.urlretrieve(data['photo_max_orig'], f'{settings.MEDIA_ROOT}/avatars/{user.pk}.jpg')
+            user.habruserprofile.avatar = f'avatars/{user.pk}.jpg'
+        user.save()
+    elif backend.name == 'google-oauth2':
+        print('*'*15, 'RESPONSE', '*'*15)
+        print(response)
+        if response.get('given_name'):
+            user.habruserprofile.full_name = response['given_name']
+        if response.get('family_name'):
+            user.habruserprofile.last_name = response['family_name']
+        if response.get('picture'):
+            urllib.request.urlretrieve(response['picture'], f'{settings.MEDIA_ROOT}/avatars/{user.pk}.jpg')
+            user.habruserprofile.avatar = f'avatars/{user.pk}.jpg'
+        user.save()
+    elif backend.name == 'github':
+        print('*' * 15, 'RESPONSE', '*' * 15)
+        print(response)
+        if response.get('name'):
+            user.habruserprofile.full_name = response['name']
+        if response.get('avatar_url'):
+            urllib.request.urlretrieve(response['avatar_url'], f'{settings.MEDIA_ROOT}/avatars/{user.pk}.jpg')
             user.habruserprofile.avatar = f'avatars/{user.pk}.jpg'
         user.save()
     else:

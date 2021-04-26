@@ -28,7 +28,7 @@
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ user.username|default:'Пользователь' }}
+                        {{ user.habruserprofile.full_name|default:user.username }}
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         <a href="{% url 'account:read_profile' %}">
