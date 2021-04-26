@@ -117,3 +117,16 @@ def forgive(request):
         "title": title,
     }
     return render(request, "authorization/forgive.html", page_data)
+
+
+def change_username(request):
+    """
+    Функция изменяет логин пользователя
+    """
+    title = "Изменить логин"
+    page_data = {
+        'title': title,
+    }
+
+    return render(request, "authorization/change_username.html", page_data)
+

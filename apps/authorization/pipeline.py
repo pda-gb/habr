@@ -1,17 +1,19 @@
 import urllib
 from datetime import datetime
 from urllib.parse import urlunparse, urlencode
-
+from django.shortcuts import HttpResponseRedirect, render
 import requests
 from django.conf import settings
+from django.urls import reverse, reverse_lazy
 
-from apps.authorization.models import HabrUserProfile
+from apps.authorization.models import HabrUserProfile, HabrUser
 
 
 def save_user_profile(backend, user, response, *args, **kwargs):
     if backend.name == 'vk-oauth2':
         print('*' * 15, 'RESPONSE', '*' * 15)
         print(response)
+
         api_url = urlunparse(('https',
                               'api.vk.com',
                               '/method/users.get',
@@ -22,11 +24,12 @@ def save_user_profile(backend, user, response, *args, **kwargs):
                                              v='5.92')),
                               None
                               ))
-        response = requests.get(api_url)
+        response_1 = requests.get(api_url)
         print(api_url)
-        if response.status_code != 200:
+        print(type(response))
+        if response_1.status_code != 200:
             return
-        data = response.json()['response'][0]
+        data = response_1.json()['response'][0]
         print(data)
         if data.get('first_name'):
             user.habruserprofile.full_name = data["first_name"]
@@ -46,6 +49,10 @@ def save_user_profile(backend, user, response, *args, **kwargs):
         if data.get('photo_max_orig'):
             urllib.request.urlretrieve(data['photo_max_orig'], f'{settings.MEDIA_ROOT}/avatars/{user.pk}.jpg')
             user.habruserprofile.avatar = f'avatars/{user.pk}.jpg'
+        username = response.get('screen_name')
+        check_user = HabrUser.objects.filter(username=username)
+        if check_user:
+            return HttpResponseRedirect(reverse('articles:main_page'))
         user.save()
     elif backend.name == 'google-oauth2':
         print('*'*15, 'RESPONSE', '*'*15)
