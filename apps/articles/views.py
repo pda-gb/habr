@@ -142,7 +142,13 @@ def like_dislike_author_ajax(request):
                 else:
                     user.karma_negative.add(request.user)
         user.save()
-        return JsonResponse({})
+        return JsonResponse(
+            {
+                "karma": user.karma,
+                "liked": user.karma_positive.filter(pk=request.user.pk).exists(),
+                "disliked": user.karma_negative.filter(pk=request.user.pk).exists(),
+            }
+        )
 
 
 def show_author_profile(request, pk=None):
