@@ -1,21 +1,14 @@
 from django.conf import settings
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render, get_object_or_404
 
 from apps.articles.models import Article
-from apps.authorization.models import HabrUser, HabrUserProfile
+from apps.authorization.models import HabrUser
+from apps.authorization.models import HabrUserProfile
 from apps.comments.forms import CommentCreateForm
 from apps.comments.models import Comment
 from apps.comments.utils import create_comments_tree
-from django.conf import settings
-from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.views.generic import ListView
-
-from apps.articles.models import Article, ArticleRate
-from apps.authorization.models import HabrUser
-
 
 
 def main_page(request, page=1):
@@ -144,7 +137,9 @@ def change_article_rate(request):
                 "dislikes": article.dislikes.count(),
                 "author_rating": article.author.habruserprofile.rating,
                 "like": article.likes.filter(pk=request.user.pk).exists(),
-                "dislike": article.dislikes.filter(pk=request.user.pk).exists(),
+                "dislike": article.dislikes.filter(
+                    pk=request.user.pk
+                ).exists(),
             }
         )
 
@@ -175,8 +170,12 @@ def like_dislike_author_ajax(request):
         return JsonResponse(
             {
                 "karma": user.karma,
-                "liked": user.karma_positive.filter(pk=request.user.pk).exists(),
-                "disliked": user.karma_negative.filter(pk=request.user.pk).exists(),
+                "liked": user.karma_positive.filter(
+                    pk=request.user.pk
+                ).exists(),
+                "disliked": user.karma_negative.filter(
+                    pk=request.user.pk
+                ).exists(),
             }
         )
 
@@ -195,7 +194,7 @@ def search_articles(request, page=1):
     """рендер главной страницы после поиска"""
     title = "главная страница"
 
-    search_query = request.GET.get('search','')
+    search_query = request.GET.get('search', '')
     if search_query:
         hub_articles = Article.get_search_articles(search_query)
     else:
