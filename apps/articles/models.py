@@ -4,6 +4,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.db.models import Q
 
 
 class Hub(models.Model):
@@ -142,6 +143,22 @@ class Article(models.Model):
         #     last_articles[i]['time'] = last_articles_set[i]['published'].strftime('%H:%M')
         # return hub_articles, last_articles
         return hub_articles
+
+    @staticmethod
+    def get_search_articles(search_query):
+        result = Article.get_articles().filter(Q(title__icontains=search_query) | Q(body__icontains=search_query))
+        if not result:
+            result = Article.get_articles().filter(Q(title__iexact=search_query) | Q(body__iexact=search_query))
+        if not result:
+            result = Article.get_articles()
+            search_query = search_query.lower()
+            articles = Article.get_articles().values()
+            for el in articles:
+                if search_query in el['title'].lower() or search_query in el['body'].lower():
+                    pass
+                else:
+                    result = result.exclude(pk=el['id'])
+        return result
 
     @staticmethod
     def get_article(id_article):

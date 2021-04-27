@@ -407,3 +407,62 @@ div.scrollup {
 div.scrollup:hover {
   background-color: lightgrey;
 }
+
+.page-link {
+    color: black;
+}
+.page-link:hover {
+    color: black;
+}
+
+.magnifier {
+    height: 36px;
+    width: 55px;
+}
+
+.icon-item {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+}
+
+.element-search-list {
+    float: left;
+}
+
+.input-search {
+    margin: 0 auto;
+}
+
+.form-search {
+    display: none;
+}
+
+.form-search form{
+    display: flex;
+}
+
+.magnifier-in-input {
+    position: relative;
+    right: 51px;
+}
+
+
+.scrollup, .scrolldown {
+  position: fixed;
+  color: gray;
+  background-color: white;
+  left: 40px;
+  bottom: 65px;
+  padding: 10px;
+  font-size: 28px;
+  border-radius: 50px;
+  cursor: pointer;
+  display: none;
+  text-align: center;
+  border: 1px gray;
+}
+
+.scrollup:hover, .scrolldown:hover {
+  background-color: lightgrey;
+}

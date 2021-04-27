@@ -7,29 +7,59 @@ from apps.authorization.models import HabrUser, HabrUserProfile
 from apps.comments.forms import CommentCreateForm
 from apps.comments.models import Comment
 from apps.comments.utils import create_comments_tree
+from django.conf import settings
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.views.generic import ListView
+
+from apps.articles.models import Article, ArticleRate
+from apps.authorization.models import HabrUser
 
 
-def main_page(request):
+
+def main_page(request, page=1):
     """рендер главной страницы"""
     title = "главная страница"
     hub_articles = Article.get_articles()
     last_articles = Article.get_last_articles(hub_articles)
+
+    paginator = Paginator(hub_articles, 5)
+    try:
+        articles_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        articles_paginator = paginator.page(1)
+    except EmptyPage:
+        articles_paginator = paginator.page(paginator.num_pages)
     page_data = {
         "title": title,
-        "articles": hub_articles,
+        "articles": articles_paginator,
         "last_articles": last_articles,
         "current_user": request.user,
     }
     return render(request, "articles/articles.html", page_data)
 
 
-def hub(request, pk=None):
+def hub(request, pk=None, page=1):
     hub_articles = Article.get_articles()
     last_articles = Article.get_last_articles(hub_articles)
     if pk != 1:
         hub_articles = Article.get_by_hub(pk)
-    page_data = {"articles": hub_articles, "last_articles": last_articles}
-    return render(request, "articles/articles.html", page_data)
+
+    paginator = Paginator(hub_articles, 5)
+    try:
+        articles_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        articles_paginator = paginator.page(1)
+    except EmptyPage:
+        articles_paginator = paginator.page(paginator.num_pages)
+
+    page_data = {
+        "pk": pk,
+        "articles": articles_paginator,
+        "last_articles": last_articles,
+    }
+    return render(request, "articles/articles_hub.html", page_data)
 
 
 def article(request, pk=None):
@@ -159,3 +189,31 @@ def show_author_profile(request, pk=None):
         "current_user": author,
     }
     return render(request, "articles/author_profile.html", page_data)
+
+
+def search_articles(request, page=1):
+    """рендер главной страницы после поиска"""
+    title = "главная страница"
+
+    search_query = request.GET.get('search','')
+    if search_query:
+        hub_articles = Article.get_search_articles(search_query)
+    else:
+        hub_articles = Article.get_articles()
+
+    last_articles = Article.get_last_articles(hub_articles)
+    paginator = Paginator(hub_articles, 5)
+    try:
+        articles_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        articles_paginator = paginator.page(1)
+    except EmptyPage:
+        articles_paginator = paginator.page(paginator.num_pages)
+    page_data = {
+        "title": title,
+        "articles": hub_articles,
+        "last_articles": last_articles,
+        "current_user": request.user,
+        "pag_articles": articles_paginator,
+    }
+    return render(request, "articles/includes/search_aricles.html", page_data)
