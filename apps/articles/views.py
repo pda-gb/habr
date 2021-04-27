@@ -97,47 +97,47 @@ def article(request, pk=None):
 
 def change_article_rate(request):
     if request.is_ajax() and request.user.is_authenticated:
-        article = request.GET.get("article")
+        rated_article = request.GET.get("article")
         field = request.GET.get("field")
-        article = Article.objects.get(pk=article)
-        if request.user != article.author:
+        rated_article = Article.objects.get(pk=rated_article)
+        if request.user != rated_article.author:
             if field == "like":
-                if article.likes.filter(pk=request.user.pk).exists():
-                    article.likes.remove(request.user)
-                    article.author.habruserprofile.rating -= 1
-                elif article.dislikes.filter(pk=request.user.pk).exists():
-                    article.likes.add(request.user)
-                    article.dislikes.remove(request.user)
-                    article.author.habruserprofile.rating += 2
+                if rated_article.likes.filter(pk=request.user.pk).exists():
+                    rated_article.likes.remove(request.user)
+                    rated_article.author.habruserprofile.rating -= 1
+                elif rated_article.dislikes.filter(pk=request.user.pk).exists():
+                    rated_article.likes.add(request.user)
+                    rated_article.dislikes.remove(request.user)
+                    rated_article.author.habruserprofile.rating += 2
                 else:
-                    article.likes.add(request.user)
-                    article.author.habruserprofile.rating += 1
+                    rated_article.likes.add(request.user)
+                    rated_article.author.habruserprofile.rating += 1
             elif field == "dislike":
-                if article.dislikes.filter(pk=request.user.pk).exists():
-                    article.dislikes.remove(request.user)
-                    article.author.habruserprofile.rating += 1
-                elif article.likes.filter(pk=request.user.pk).exists():
-                    article.dislikes.add(request.user)
-                    article.likes.remove(request.user)
-                    article.author.habruserprofile.rating -= 2
+                if rated_article.dislikes.filter(pk=request.user.pk).exists():
+                    rated_article.dislikes.remove(request.user)
+                    rated_article.author.habruserprofile.rating += 1
+                elif rated_article.likes.filter(pk=request.user.pk).exists():
+                    rated_article.dislikes.add(request.user)
+                    rated_article.likes.remove(request.user)
+                    rated_article.author.habruserprofile.rating -= 2
                 else:
-                    article.dislikes.add(request.user)
-                    article.author.habruserprofile.rating -= 1
+                    rated_article.dislikes.add(request.user)
+                    rated_article.author.habruserprofile.rating -= 1
             else:
-                if article.bookmarks.filter(pk=request.user.pk).exists():
-                    article.bookmarks.remove(request.user)
+                if rated_article.bookmarks.filter(pk=request.user.pk).exists():
+                    rated_article.bookmarks.remove(request.user)
                 else:
-                    article.bookmarks.add(request.user)
-            article.rating = article.likes.count() - article.dislikes.count()
-            article.author.habruserprofile.save()
-            article.save()
+                    rated_article.bookmarks.add(request.user)
+            rated_article.rating = rated_article.likes.count() - rated_article.dislikes.count()
+            rated_article.author.habruserprofile.save()
+            rated_article.save()
         return JsonResponse(
             {
-                "likes": article.likes.count(),
-                "dislikes": article.dislikes.count(),
-                "author_rating": article.author.habruserprofile.rating,
-                "like": article.likes.filter(pk=request.user.pk).exists(),
-                "dislike": article.dislikes.filter(
+                "likes": rated_article.likes.count(),
+                "dislikes": rated_article.dislikes.count(),
+                "author_rating": rated_article.author.habruserprofile.rating,
+                "like": rated_article.likes.filter(pk=request.user.pk).exists(),
+                "dislike": rated_article.dislikes.filter(
                     pk=request.user.pk
                 ).exists(),
             }

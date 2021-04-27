@@ -3,8 +3,8 @@ import datetime
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
 from django.db import models
-from django.utils import timezone
 from django.db.models import Q
+from django.utils import timezone
 
 
 class Hub(models.Model):
@@ -40,15 +40,19 @@ class Tag(models.Model):
 
 
 class Article(models.Model):
-    title = models.CharField(max_length=120, verbose_name="заголовок")
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    hubs = models.ManyToManyField(Hub, verbose_name="хабы")
+    title = models.CharField(max_length=120, verbose_name="заголовок",
+                             blank=False)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL,
+                               on_delete=models.CASCADE)
+    hub = models.ForeignKey(Hub, verbose_name="хаб", default=False,
+                            on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, blank=True)
     body = RichTextUploadingField()
     image = models.ImageField(
         upload_to="img_articles/", blank=True, verbose_name="главная картинка"
     )
-    link_to_original = models.URLField(blank=True, verbose_name="ссылка на оригинал")
+    link_to_original = models.URLField(blank=True,
+                                       verbose_name="ссылка на оригинал")
 
     created = models.DateTimeField(verbose_name="создана", auto_now_add=True)
     updated = models.DateTimeField(verbose_name="обновлена", auto_now=True)
@@ -60,7 +64,8 @@ class Article(models.Model):
     is_active = models.BooleanField(verbose_name="удалена", default=True)
 
     likes = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, verbose_name="лайки", related_name="likes", blank=True
+        settings.AUTH_USER_MODEL, verbose_name="лайки", related_name="likes",
+        blank=True
     )
     dislikes = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
@@ -102,24 +107,25 @@ class Article(models.Model):
         # если статей меньше 3, то изменить переменную количества
         elif articles_current_page.count() < 3:
             len_last_articles = articles_current_page.count()
-        last_articles_set = articles_current_page.values("id", "title", "published")[
-            0:len_last_articles
-        ]
+        last_articles_set = articles_current_page.values("id",
+                                                         "title",
+                                                         "published"
+                                                         )[0:len_last_articles]
         last_articles = [{} for _ in range(len_last_articles)]
         for i in range(len_last_articles):
             last_articles[i]["id"] = last_articles_set[i]["id"]
             last_articles[i]["title"] = last_articles_set[i]["title"]
             # TODO эту логику перенести на сторону клиента
             if (
-                last_articles_set[i]["published"].date()
-                != datetime.datetime.now().date()
+                    last_articles_set[i]["published"].date()
+                    != datetime.datetime.now().date()
             ):
-                last_articles[i]["date"] = last_articles_set[i]["published"].date()
+                last_articles[i]["date"] = \
+                    last_articles_set[i]["published"].date()
             else:
                 last_articles[i]["date"] = "сегодня"
-            last_articles[i]["time"] = last_articles_set[i]["published"].strftime(
-                "%H:%M"
-            )
+            last_articles[i]["time"] = \
+                last_articles_set[i]["published"].strftime("%H:%M")
         return last_articles
 
     @staticmethod
@@ -129,32 +135,24 @@ class Article(models.Model):
         # and last articles (right block)
         """
         hub_articles = Article.objects.filter(draft=False)
-        # print(hub_articles.count())
-        # len_last_articles = 3
-        # last_articles_set = hub_articles.values('id', 'title', 'published')[0:len_last_articles]
-        # last_articles = [{} for _ in range(len_last_articles)]
-        # for i in range(len_last_articles):
-        #     last_articles[i]['id'] = last_articles_set[i]['id']
-        #     last_articles[i]['title'] = last_articles_set[i]['title']
-        #     if last_articles_set[i]['published'].date() != datetime.datetime.now().date():
-        #         last_articles[i]['date'] = last_articles_set[i]['published'].date()
-        #     else:
-        #         last_articles[i]['date'] = 'сегодня'
-        #     last_articles[i]['time'] = last_articles_set[i]['published'].strftime('%H:%M')
-        # return hub_articles, last_articles
         return hub_articles
 
     @staticmethod
     def get_search_articles(search_query):
-        result = Article.get_articles().filter(Q(title__icontains=search_query) | Q(body__icontains=search_query))
+        result = Article.get_articles().filter(
+            Q(title__icontains=search_query) | Q(body__icontains=search_query)
+        )
         if not result:
-            result = Article.get_articles().filter(Q(title__iexact=search_query) | Q(body__iexact=search_query))
+            result = Article.get_articles().filter(
+                Q(title__iexact=search_query) | Q(body__iexact=search_query)
+            )
         if not result:
             result = Article.get_articles()
             search_query = search_query.lower()
             articles = Article.get_articles().values()
             for el in articles:
-                if search_query in el['title'].lower() or search_query in el['body'].lower():
+                if search_query in el['title'].lower() or search_query in \
+                        el['body'].lower():
                     pass
                 else:
                     result = result.exclude(pk=el['id'])
@@ -202,7 +200,7 @@ class Article(models.Model):
         """
         Returns articles with the set hub
         """
-        return Article.get_articles().filter(hubs=hub_id, draft=False)
+        return Article.get_articles().filter(hub=hub_id, draft=False)
 
     @staticmethod
     def get_by_author(author_pk: int, draft=None):
@@ -210,11 +208,12 @@ class Article(models.Model):
         Returns articles with the set author
         """
         if draft is None:
-            return Article.objects.filter(author_id__pk=author_pk).order_by("-updated")
+            return Article.objects.filter(author_id__pk=author_pk
+                                          ).order_by("-updated")
         return (
             Article.objects.filter(author_id__pk=author_pk)
-            .filter(draft=draft)
-            .order_by("-updated")
+                .filter(draft=draft)
+                .order_by("-updated")
         )
 
     @staticmethod
