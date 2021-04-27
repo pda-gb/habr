@@ -76,6 +76,8 @@ a:hover {
 .post-status {
     margin-top: 1em;
     padding: 0.3em;
+    display: flex;
+    flex-direction: row;
 }
 
 .post-status img, .comment-rating img {
@@ -176,6 +178,7 @@ a:hover {
     display: flex;
     flex-direction: column;
     margin-bottom: 70px;
+    margin-top: 50px;
 }
 
 .author-block {
