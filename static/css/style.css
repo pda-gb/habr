@@ -263,6 +263,7 @@ body {
 }
 
 .form-control {
+    width: 25%;
     margin-top: 1em;
     margin-bottom: 1em;
 }
@@ -389,3 +390,22 @@ body {
     right: 51px;
 }
 
+
+.scrollup, .scrolldown {
+  position: fixed;
+  color: gray;
+  background-color: white;
+  left: 40px;
+  bottom: 65px;
+  padding: 10px;
+  font-size: 28px;
+  border-radius: 50px;
+  cursor: pointer;
+  display: none;
+  text-align: center;
+  border: 1px gray;
+}
+
+.scrollup:hover, .scrolldown:hover {
+  background-color: lightgrey;
+}
