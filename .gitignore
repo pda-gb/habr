@@ -573,3 +573,5 @@ cython_debug/
 migrations/
 secret.json
 /media/uploads/*
+/media/img_articles/*
+/media/avatars/*
