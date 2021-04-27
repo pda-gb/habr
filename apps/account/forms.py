@@ -31,10 +31,10 @@ class HabrUserProfileEditForm(forms.ModelForm):
 
 
 class ArticleCreate(forms.ModelForm):
-    body = CharField(label='Текст статьи',
-                     widget=CKEditorUploadingWidget(config_name="for_user"),
-                     )
-
+    body = CharField(
+        label="Текст статьи",
+        widget=CKEditorUploadingWidget(config_name="for_user"),
+    )
 
     class Meta:
         model = Article
@@ -43,7 +43,7 @@ class ArticleCreate(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            print(f'{field=}')
+            print(f"{field=}")
             field.widget.attrs["class"] = "form-control"
             field.help_text = ""
             field.required = ""
@@ -107,6 +107,7 @@ class ArticleEditForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs["class"] = "form-control"
             field.help_text = ""
+
 
 # class ArticleEditForm(forms.ModelForm):
 #     class Meta:

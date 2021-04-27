@@ -3,9 +3,8 @@ import datetime
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
 from django.db import models
-from django.db.models.fields import BooleanField
-from django.db.models.fields.related import ForeignKey
 from django.utils import timezone
+from django.db.models import Q
 
 
 class Hub(models.Model):
@@ -60,10 +59,27 @@ class Article(models.Model):
     draft = models.BooleanField(verbose_name="черновик", default=False)
     is_active = models.BooleanField(verbose_name="удалена", default=True)
 
-    likes = models.PositiveIntegerField(verbose_name="лайки", default=0)
-    dislikes = models.PositiveIntegerField(verbose_name="дизлайки", default=0)
-    views = models.PositiveIntegerField(verbose_name="просмотры", default=0)
-    bookmarks = models.PositiveIntegerField(verbose_name="заметки", default=0)
+    likes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, verbose_name="лайки", related_name="likes", blank=True
+    )
+    dislikes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        verbose_name="дизлайки",
+        related_name="dislikes",
+        blank=True,
+    )
+    views = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        verbose_name="просмотры",
+        related_name="views",
+        blank=True,
+    )
+    bookmarks = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        verbose_name="заметки",
+        related_name="bookmarks",
+        blank=True,
+    )
     rating = models.IntegerField(verbose_name="рейтинг", default=0)
 
     class Meta:
@@ -127,6 +143,22 @@ class Article(models.Model):
         #     last_articles[i]['time'] = last_articles_set[i]['published'].strftime('%H:%M')
         # return hub_articles, last_articles
         return hub_articles
+
+    @staticmethod
+    def get_search_articles(search_query):
+        result = Article.get_articles().filter(Q(title__icontains=search_query) | Q(body__icontains=search_query))
+        if not result:
+            result = Article.get_articles().filter(Q(title__iexact=search_query) | Q(body__iexact=search_query))
+        if not result:
+            result = Article.get_articles()
+            search_query = search_query.lower()
+            articles = Article.get_articles().values()
+            for el in articles:
+                if search_query in el['title'].lower() or search_query in el['body'].lower():
+                    pass
+                else:
+                    result = result.exclude(pk=el['id'])
+        return result
 
     @staticmethod
     def get_article(id_article):
@@ -205,32 +237,6 @@ class Article(models.Model):
         else:
             art.draft = False
         art.save()
-
-
-class ArticleRate(models.Model):
-    article = ForeignKey(Article, on_delete=models.CASCADE)
-    user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    liked = BooleanField(null=True, default=None)
-    watched = BooleanField(default=True)
-    in_bookmarks = BooleanField(default=False)
-
-    def save(self, rating=None, force_insert=None, using=None) -> None:
-        super().save(force_insert=force_insert, using=using)
-        if rating:
-            rating = Article.objects.filter(author=self.article.author).values_list(
-                "rating"
-            )
-            self.article.author.habruserprofile.rating = sum(rate[0] for rate in rating)
-            self.article.author.habruserprofile.save()
-
-    @staticmethod
-    def create(article, user):
-        try:
-            return ArticleRate.objects.get(article=article, user=user)
-        except Exception:
-            article.views += 1
-            article.save()
-            return ArticleRate.objects.create(article=article, user=user)
 
 
 if __name__ == "__main__":

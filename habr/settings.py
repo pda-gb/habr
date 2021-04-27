@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "ckeditor_uploader",
     "social_django",
 ]
+# для postgresql добавить psycopg2
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -71,8 +72,18 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
+    },
+    # "postgresql": {
+    #     "ENGINE": "django.db.backends.postgresql_psycopg2",
+    #     "NAME": secret_value["DATABASE_NAME"],
+    #     "USER": secret_value["DATABASE_USER"],
+    #     "PASSWORD": secret_value["DATABASE_PASSWORD"],
+    #     "HOST": secret_value["DATABASE_HOST"],
+    #     "PORT": secret_value["DATABASE_PORT"],
+    # },
 }
+# переключение настроек на postgresql
+# DATABASES["default"] = DATABASES["postgresql"]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -147,7 +158,6 @@ AUTH_USER_MODEL = "authorization.HabrUser"
 
 # нововведение в джанго 3.2
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-
 
 # Set login path:
 #   https://docs.djangoproject.com/en/2.2/ref/settings/#login-url

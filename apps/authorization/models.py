@@ -55,10 +55,28 @@ class HabrUserProfile(models.Model):
     country = models.CharField(verbose_name="страна", max_length=64, blank=True)
     region = models.CharField(verbose_name="регион", max_length=64, blank=True)
     city = models.CharField(verbose_name="город", max_length=64, blank=True)
-    rating = models.IntegerField(verbose_name="рейтинг", default=0)
+    rating = models.FloatField(verbose_name="рейтинг", default=0)
+    karma_positive = models.ManyToManyField(
+        HabrUser,
+        blank=True,
+        verbose_name="положительная карма",
+        related_name="karma_positive",
+    )
+    karma_negative = models.ManyToManyField(
+        HabrUser,
+        blank=True,
+        verbose_name="отрицательная карма",
+        related_name="karma_negative",
+    )
+    karma = models.IntegerField(verbose_name="карма", default=0)
 
     def __str__(self) -> str:
         return self.user.username
+
+    def save(self, *args, **kwargs) -> None:
+        if self.pk:
+            self.karma = self.karma_positive.count() - self.karma_negative.count()
+        return super().save(*args, **kwargs)
 
     @receiver(post_save, sender=HabrUser)
     def create_user_profile(sender, instance, created, **kwargs):

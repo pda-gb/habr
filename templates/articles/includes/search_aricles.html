@@ -4,7 +4,7 @@
 {% block content %}
     <div class="row">
         <div class="col-8">
-            {% for article in articles %}
+            {% for article in pag_articles %}
                 {% include 'articles/includes/post.html' %}
             {% empty %}
                 <p>Тут пока нет статей.</p>
