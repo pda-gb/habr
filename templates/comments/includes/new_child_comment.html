@@ -24,7 +24,7 @@
                                 {% csrf_token %}
                                 {{ form_comment.as_p }}
                                 {% if request.user.is_authenticated %}
-                                    <button type="button" id="createCommentChildBtn" class="btn btn-outline-success">Отправить</button>
+                                    <button type="button" id="createCommentChildBtn-{{ comment.id }}" class="btn btn-outline-success">Отправить</button>
                                     </form>
                                 {% else %}
                                     <button class="btn btn-outline-success"><a
@@ -40,24 +40,3 @@
         </ul>
     {% endfor %}
 {% endif %}
-{% block js %}
-<script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
-<script>
-    $(document).ready(function(){
-        $('#createCommentChildBtn').click(function(e) {
-            e.preventDefault()
-            let id = $(this).attr('data-id')
-            let content = $('#createChildCommentForm-' + id).serialize();
-
-            $.ajax({
-                url: $('#createChildCommentForm-' + id).data('url'),
-                data: content,
-                type: 'POST',
-                success: function(response) {
-                    $('#commentArticle').html(response.result);
-                }
-            })
-        });
-    });
-</script>
-{% endblock js %}

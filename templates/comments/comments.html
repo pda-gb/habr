@@ -8,7 +8,7 @@
                 {% for comment in comments %}
                     {% if comment.parent == Null %}
                         <li class="li-reply-comment">
-                            <div class="main-comment-section col-md-12">
+                            <div class="main-comment-section col-md-12" id='CommentId-{{ comment.id }}'>
                                 <div>
                                     <a href="{% url 'articles:author_profile' comment.author.id %}"
                                        class="post-author comment-author">
@@ -22,11 +22,11 @@
                                     <div>{{ comment.body }}</div>
                                 </div>
                                 <span class='reply reply-comment' data-id="{{ comment.id }}">Ответить</span>
-                                <form method="POST" class="comment-form" id="form-{{ comment.id }}" action="{% url 'comments:comment_child_create' pk=article.id id_parent_comment=comment.id %}" style="display:none;">
+                                <form method="POST" class="comment-form" id="createChildCommentForm-{{ comment.id }}" data-url="{% url 'comments:comment_child_create' pk=article.id id_parent_comment=comment.id %}" style="display:none;">
                                         {% csrf_token %}
                                         {{ form_comment.as_p }}
                                         {% if request.user.is_authenticated %}
-                                            <input type="submit" value="Отправить" class="btn btn-outline-success">
+                                            <button type="button" id="createCommentChildBtn" data-id="{{ comment.id }}" class="btn btn-outline-success">Отправить</button>
                                         {% else %}
                                             <button class="btn btn-outline-success"><a href="{% url 'auth:login' %}">Отправить</a>
                                             </button>
@@ -41,7 +41,6 @@
         </ul>
     </div>
     <div class="container-fluid mt-2">
-        <!--action="{% url 'comments:comment_create' pk=article.id %}"-->
         <form method="POST" class="comment-form" id="createCommentForm" data-url="{% url 'comments:comment_create' pk=article.id %}">
             {% csrf_token %}
             {{ form_comment.as_p }}
@@ -56,26 +55,25 @@
     {% block css %}
         <link href="{% static 'css/comments.css' %}" rel="stylesheet"/>
     {% endblock css %}
+    {% block js %}
         <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+        <script src="{% static 'js/comment_script.js' %}"></script>
         <script>
-            $(document).ready(function () {
-                $('.reply').click(function () {
-                    let parentId = $(this).attr('data-id')
-                    $('#form-'+parentId).fadeToggle();
-                })
-
-                $('#createCommentBtn').click(function(e) {
+            $(document).ready(function(){
+                $('#createCommentChildBtn').click(function(e) {
                     e.preventDefault()
-                    let content = $('#createCommentForm').serialize();
+                    let id = $(this).attr('data-id')
+                    let content = $('#createChildCommentForm-' + id).serialize();
 
                     $.ajax({
-                        url: $("#createCommentForm").data('url'),
+                        url: $('#createChildCommentForm-' + id).data('url'),
                         data: content,
                         type: 'POST',
                         success: function(response) {
                             $('#commentArticle').html(response.result);
                         }
                     })
-                })
-            })
+                });
+            });
         </script>
+    {% endblock js %}

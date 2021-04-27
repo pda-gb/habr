@@ -44,3 +44,9 @@ class Comment(models.Model):
         comments = Comment.objects.filter(
             article__pk=article_pk).order_by("date")
         return comments
+
+    @staticmethod
+    def get_comment(parent_id):
+        ''' получение родительского комментария '''
+        comment = Comment.objects.get(id=parent_id)
+        return comment
