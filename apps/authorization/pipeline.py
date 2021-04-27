@@ -11,9 +11,6 @@ from apps.authorization.models import HabrUserProfile, HabrUser
 
 def save_user_profile(backend, user, response, *args, **kwargs):
     if backend.name == 'vk-oauth2':
-        print('*' * 15, 'RESPONSE', '*' * 15)
-        print(response)
-
         api_url = urlunparse(('https',
                               'api.vk.com',
                               '/method/users.get',
@@ -24,15 +21,12 @@ def save_user_profile(backend, user, response, *args, **kwargs):
                                              v='5.92')),
                               None
                               ))
-        response_1 = requests.get(api_url)
-        print(api_url)
-        print(type(response))
-        if response_1.status_code != 200:
+        response = requests.get(api_url)
+        if response.status_code != 200:
             return
-        data = response_1.json()['response'][0]
-        print(data)
+        data = response.json()['response'][0]
         if data.get('first_name'):
-            user.habruserprofile.full_name = data["first_name"]
+            user.habruserprofile.first_name = data["first_name"]
         if data.get('last_name'):
             user.habruserprofile.last_name = data["last_name"]
         if data.get('career'):
@@ -49,16 +43,10 @@ def save_user_profile(backend, user, response, *args, **kwargs):
         if data.get('photo_max_orig'):
             urllib.request.urlretrieve(data['photo_max_orig'], f'{settings.MEDIA_ROOT}/avatars/{user.pk}.jpg')
             user.habruserprofile.avatar = f'avatars/{user.pk}.jpg'
-        username = response.get('screen_name')
-        check_user = HabrUser.objects.filter(username=username)
-        if check_user:
-            return HttpResponseRedirect(reverse('articles:main_page'))
         user.save()
     elif backend.name == 'google-oauth2':
-        print('*'*15, 'RESPONSE', '*'*15)
-        print(response)
         if response.get('given_name'):
-            user.habruserprofile.full_name = response['given_name']
+            user.habruserprofile.first_name = response['given_name']
         if response.get('family_name'):
             user.habruserprofile.last_name = response['family_name']
         if response.get('picture'):
@@ -66,10 +54,8 @@ def save_user_profile(backend, user, response, *args, **kwargs):
             user.habruserprofile.avatar = f'avatars/{user.pk}.jpg'
         user.save()
     elif backend.name == 'github':
-        print('*' * 15, 'RESPONSE', '*' * 15)
-        print(response)
         if response.get('name'):
-            user.habruserprofile.full_name = response['name']
+            user.habruserprofile.first_name = response['name']
         if response.get('avatar_url'):
             urllib.request.urlretrieve(response['avatar_url'], f'{settings.MEDIA_ROOT}/avatars/{user.pk}.jpg')
             user.habruserprofile.avatar = f'avatars/{user.pk}.jpg'

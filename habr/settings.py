@@ -182,10 +182,10 @@ EMAIL_USE_SSL = True
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
     'social_core.backends.vk.VKOAuth2',
     'social_core.backends.github.GithubOAuth2',
     'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 SOCIAL_AUTH_VK_OAUTH2_IGNORE_DEFAULT_SCOPE = True
 SOCIAL_AUTH_VK_OAUTH_SCOPE = ['email']

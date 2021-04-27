@@ -36,7 +36,7 @@ class HabrUserProfile(models.Model):
     user = models.OneToOneField(
         HabrUser, unique=True, null=False, db_index=True, on_delete=models.CASCADE
     )
-    full_name = models.CharField(
+    first_name = models.CharField(
         verbose_name="настоящее имя", max_length=64, blank=True
     )
     last_name = models.CharField(

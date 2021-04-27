@@ -11,7 +11,7 @@ class HabrUserProfileEditForm(forms.ModelForm):
     class Meta:
         model = HabrUserProfile
         fields = (
-            "full_name",
+            "first_name",
             "last_name",
             "place_of_work",
             "specialization",
