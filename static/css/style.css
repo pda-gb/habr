@@ -296,7 +296,7 @@ body {
 }
 
 .form-control {
-    width: 25%;
+    width: 100%;
     margin-top: 1em;
     margin-bottom: 1em;
 }
@@ -468,4 +468,22 @@ div.scrollup:hover {
 
 .scrollup:hover, .scrolldown:hover {
   background-color: lightgrey;
+}
+
+.text-muted {
+    margin-top: 13px;
+}
+
+.auth-form {
+    margin: 0 auto;
+    width: 300px;
+}
+
+.social-auth {
+    text-align: center;
+}
+
+.auth-form button {
+    width: 100%;
+    margin-top: .5rem;
 }

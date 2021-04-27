@@ -2,21 +2,22 @@
 {% load my_tags %}
 {% block content %}
 
-
-    <form class="form-horizontal" action="{% url 'account:edit_profile' %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <img class="ava-img" src="{{ user.habruserprofile.avatar|media_folder_users }}" alt="avatar">
-        {% if user.username %}
-            {{ user.username }}
-        {% else %}
-            ?User?
-        {% endif %}
+    <div class="auth-form">
+        <form class="form-horizontal" action="{% url 'account:edit_profile' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <img class="ava-img" src="{{ user.habruserprofile.avatar|media_folder_users }}" alt="avatar">
+            {% if user.username %}
+                {{ user.username }}
+            {% else %}
+                ?User?
+            {% endif %}
+            <br>
+            {{ edit_form.as_table }}
+            <br>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <button type="reset" class="btn btn-danger">Сбросить</button>
+        </form>
         <br>
-        {{ edit_form.as_table }}
-        <br>
-        <button type="submit" class="btn btn-primary">Сохранить</button>
-        <button type="reset" class="btn btn-danger">Сбросить</button>
-    </form>
-    <br><br>
-    <a href="{% url 'account:edit_password' %}"><button class="btn btn-primary">Изменить пароль</button></a>
+        <a href="{% url 'account:edit_password' %}"><button class="btn btn-primary">Изменить пароль</button></a>
+    </div>
 {% endblock content %}

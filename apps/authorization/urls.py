@@ -9,4 +9,5 @@ urlpatterns = [
     path("register/", auth.register, name="register"),
     path("logout/", auth.logout, name="logout"),
     path("forgive/", auth.forgive, name="forgive"),
+    path("verify/<email>/<activation_key>/", auth.verify, name='verify'),
 ]

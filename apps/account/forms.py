@@ -1,9 +1,10 @@
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
+from django.contrib.auth.forms import UserChangeForm
 from django.forms import CharField
 
 from apps.articles.models import Article
-from apps.authorization.models import HabrUserProfile
+from apps.authorization.models import HabrUserProfile, HabrUser
 
 
 class HabrUserProfileEditForm(forms.ModelForm):
@@ -11,6 +12,7 @@ class HabrUserProfileEditForm(forms.ModelForm):
         model = HabrUserProfile
         fields = (
             "full_name",
+            "last_name",
             "place_of_work",
             "specialization",
             "gender",
@@ -36,7 +38,7 @@ class ArticleCreate(forms.ModelForm):
 
     class Meta:
         model = Article
-        fields = ("title", "hubs", "image", "link_to_original", "body")
+        fields = ("title", "hub", "image", "link_to_original", "body")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -98,7 +100,7 @@ class ArticleEditForm(forms.ModelForm):
 
     class Meta:
         model = Article
-        fields = ("title", "hubs", "image", "link_to_original", "body")
+        fields = ("title", "hub", "image", "link_to_original", "body")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

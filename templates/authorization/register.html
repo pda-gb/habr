@@ -2,17 +2,16 @@
 {% load static %}
 
 {% block content %}
-{% for message in messages %}
+    {% for message in messages %}
         <div class="message {{ message.tags }}" style="color:red">
             {{ message }}
         </div>
-        {% endfor %}
-      <form class="auth-form" action="{% url 'auth:register' %}" method="POST">
+    {% endfor %}
+    <form class="auth-form" action="{% url 'auth:register' %}" method="POST">
         {% csrf_token %}
         <h1>Регистрация</h1>
         {{ register_form.as_p }}
         <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
-
-      </form>
-
+    </form>
+    {% include 'authorization/includes/inc_social_auth.html' %}
 {% endblock content %}

@@ -3,16 +3,14 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from apps.account.forms import ChangePasswordForm, ArticleEditForm, ArticleCreate
-
-# from apps.account.forms import ChangePasswordForm
 from apps.account.forms import HabrUserProfileEditForm
 from apps.articles.models import Article, Hub
 from apps.authorization.models import HabrUser
@@ -71,7 +69,8 @@ def edit_profile(request):
             profile_edit_form.save()
             return HttpResponseRedirect(reverse("account:read_profile"))
     hubs_menu = Hub.get_all_hubs()
-    profile_edit_form = HabrUserProfileEditForm(instance=request.user.habruserprofile)
+    profile_edit_form = HabrUserProfileEditForm(
+        instance=request.user.habruserprofile)
     page_data = {
         "title": title,
         "hubs_menu": hubs_menu,
@@ -119,7 +118,8 @@ def publications(request, page=1):
         "title": title,
         "articles": articles_paginator,
     }
-    return render(request, "account/user_articles_publications.html", page_data)
+    return render(request, "account/user_articles_publications.html",
+                  page_data)
 
 
 @login_required
@@ -182,7 +182,8 @@ def edit_article(request, pk):
     edit_article = get_object_or_404(Article, pk=pk)
 
     if request.method == "POST":
-        edit_form = ArticleEditForm(request.POST, request.FILES, instance=edit_article)
+        edit_form = ArticleEditForm(request.POST, request.FILES,
+                                    instance=edit_article)
         if edit_form.is_valid():
             edit_article.updated = timezone.now()
             edit_article.save()

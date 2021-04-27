@@ -101,5 +101,5 @@ class Command(BaseCommand):  # свой класс унаследуем от Bas
             itm_article = Article.objects.create(**dict_article)
 
             # (ManyToMany) добавляем отношения к тэгам и хабам
-            itm_article.hubs.add(Hub.objects.get(id=id_hub))
+            itm_article.hub.add(Hub.objects.get(id=id_hub))
             itm_article.tags.add(Tag.objects.get(id=id_tag))
