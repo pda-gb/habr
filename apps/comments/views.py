@@ -22,7 +22,7 @@ def comment_create(request, pk):
         new_comment.save()
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
-
+@login_required
 @transaction.atomic
 def child_comment_create(request, pk, id_parent_comment):
     user_name = request.user
