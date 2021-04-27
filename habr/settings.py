@@ -171,23 +171,25 @@ LOGOUT_REDIRECT_URL = '/'
 if DEBUG:
     DOMAIN_NAME = 'http://localhost:8000'
 
-# Настройки для вывода сообщений о подтверждении регистрации в лог-файл
-# EMAIL_HOST = 'localhost'
-# EMAIL_PORT = 25
-# EMAIL_HOST_USER = 'django@sputnik.local'
-# EMAIL_HOST_PASSWORD = 'sputnik'
-# EMAIL_USE_SSL = False
-#
+# Запуск локального smtp сервера: python3 -m smtpd -n -c DebuggingServer localhost:7725
+# Настройки для вывода сообщений о подтверждении регистрации в лог-файл\консоль
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 7725
+EMAIL_HOST_USER = None
+EMAIL_HOST_PASSWORD = None
+EMAIL_USE_SSL = False
+
+## вариант включения логгирования сообщений почты ввиде файлов
 # EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 # EMAIL_FILE_PATH = 'tmp/email-messages/'
 
-
-DEFAULT_FROM_EMAIL = secret_value["EMAIL_HOST_USER"]
-EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_PORT = 465
-EMAIL_HOST_USER = secret_value["EMAIL_HOST_USER"]
-EMAIL_HOST_PASSWORD = secret_value["EMAIL_HOST_PASSWORD"]
-EMAIL_USE_SSL = True
+## Рабочие настройки для работы через яндекс
+# DEFAULT_FROM_EMAIL = secret_value["EMAIL_HOST_USER"]
+# EMAIL_HOST = 'smtp.yandex.ru'
+# EMAIL_PORT = 465
+# EMAIL_HOST_USER = secret_value["EMAIL_HOST_USER"]
+# EMAIL_HOST_PASSWORD = secret_value["EMAIL_HOST_PASSWORD"]
+# EMAIL_USE_SSL = True
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 

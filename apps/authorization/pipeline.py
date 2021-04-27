@@ -49,10 +49,6 @@ def save_user_profile(backend, user, response, *args, **kwargs):
         if data.get('photo_max_orig'):
             urllib.request.urlretrieve(data['photo_max_orig'], f'{settings.MEDIA_ROOT}/avatars/{user.pk}.jpg')
             user.habruserprofile.avatar = f'avatars/{user.pk}.jpg'
-        username = response.get('screen_name')
-        check_user = HabrUser.objects.filter(username=username)
-        if check_user:
-            return HttpResponseRedirect(reverse('articles:main_page'))
         user.save()
     elif backend.name == 'google-oauth2':
         print('*'*15, 'RESPONSE', '*'*15)
