@@ -70,5 +70,8 @@
                 <a class="btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
             {% endif %}
         </div>
+        {% if check_verify %}
+            <div style="color: red; padding-left: 10px; width: 350px">Подтвердите свою учётную запись!</div>
+        {% endif %}
     </div>
 </nav>
