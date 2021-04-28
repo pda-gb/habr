@@ -6,4 +6,7 @@ $(document).ready(function (){
 		})
 		return false;
 	})
+	$('.magnifier-in-input').click(function(){
+		$('#search-articles-form').submit();
+	});
 })

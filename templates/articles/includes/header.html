@@ -32,12 +32,11 @@
                 <!-- Начало блока поиска --->
                 <li class="icon-item nav-item">
                     <div class="form-search">
-                        <form class="search" role="search" id="search" method="GET"
+                        <form class="search" role="search" id="search-articles-form" method="GET"
                               action="{% url 'articles:search_articles' 1 %}">
-                            <input class="form-control input-search" type="search" placeholder="Search"
+                            <input class="form-control input-search" type="text" placeholder="Search"
                                    aria-label="Search" name="search">
-                            <img src="{% static 'svg/magnifier-black.svg' %}" class="magnifier magnifier-in-input" alt=""
-                                 onclick="search.submit()">
+                            <img src="{% static 'svg/magnifier-black.svg' %}" class="magnifier magnifier-in-input" alt="">
                         </form>
                     </div>
                     <a id="main-magnifier" href="#"><img src="{% static 'svg/magnifier-white.svg' %}" class="magnifier"
