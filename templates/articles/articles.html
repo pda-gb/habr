@@ -9,9 +9,11 @@
             {% empty %}
                 <p>Тут пока нет статей.</p>
             {% endfor %}
+            {% if articles.coutn > 5 %}
             <!-- Начало блока пагинации -->
             {% include 'articles/includes/paginations/paggination.html' %}
             <!-- Конец блока пагинации -->
+            {% endif %}
         </div>
         <div class="col-1"></div>
         {% if last_articles != None %}
