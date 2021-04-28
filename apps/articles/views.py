@@ -1,6 +1,5 @@
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
-from django.conf import settings
 
 from apps.articles.models import Article, ArticleRate
 from apps.authorization.models import HabrUser
@@ -48,7 +47,6 @@ def article(request, pk=None):
         "last_articles": last_articles,
         "comments": comments,
         "form_comment": form_comment,
-        "login_url":settings.LOGIN_URL
     }
     return render(request, "articles/article.html", page_data)
 
