@@ -1,3 +1,5 @@
+{% load static %}
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
     <div class="container">
         <a class="logo" href="{% url 'articles:main_page' %}">Sputnik</a>
@@ -14,15 +16,34 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarToggler02">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 hubs">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.route == "all/" %} active {% endif %}"
+                       href="{% url 'articles:all_hubs' %}">Все хабы</a>
+                </li>
                 {% for hub in hubs_menu %}
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.kwargs.pk == hub.id %} active {% endif %}"
                            href="{% url 'articles:hub' hub.id %}">{{ hub.hub }}</a>
                     </li>
-                    {#                    {% empty %}#}
-                    {#                        <li class="nav-item"><a class="nav-link" href="#">hubs error</a></li>#}
                 {% endfor %}
 
+            </ul>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 icon">
+                <!-- Начало блока поиска --->
+                <li class="icon-item nav-item">
+                    <div class="form-search">
+                        <form class="search" role="search" id="search" method="GET"
+                              action="{% url 'articles:search_articles' 1 %}">
+                            <input class="form-control input-search" type="search" placeholder="Search"
+                                   aria-label="Search" name="search">
+                            <img src="{% static 'svg/magnifier.svg' %}" class="magnifier magnifier-in-input" alt=""
+                                 onclick="search.submit()">
+                        </form>
+                    </div>
+                    <a id="main-magnifier" href="#"><img src="{% static 'svg/magnifier.svg' %}" class="magnifier"
+                                                         alt=""></a>
+                </li>
+                <!-- Конец блока поиска --->
             </ul>
             {% if user.is_authenticated %}
                 <div class="dropdown">
@@ -34,7 +55,7 @@
                         <a href="{% url 'account:read_profile' %}">
                             <button class="dropdown-item" type="button">Личный кабинет</button>
                         </a>
-                        <!--                  <a href="{% url 'account:user_articles' %}"><button class="dropdown-item" type="button">Мои статьи</button></a>-->
+{#                        <!--                  <a href="{% url 'account:user_articles' %}"><button class="dropdown-item" type="button">Мои статьи</button></a>-->#}
                         <a href="{% url 'account:add_article' %}">
                             <button class="dropdown-item" type="button">Написать статью</button>
                         </a>

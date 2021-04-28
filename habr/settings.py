@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "ckeditor_uploader",
     "social_django",
 ]
+# для postgresql добавить psycopg2
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -71,8 +72,18 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
+    },
+    # "postgresql": {
+    #     "ENGINE": "django.db.backends.postgresql_psycopg2",
+    #     "NAME": secret_value["DATABASE_NAME"],
+    #     "USER": secret_value["DATABASE_USER"],
+    #     "PASSWORD": secret_value["DATABASE_PASSWORD"],
+    #     "HOST": secret_value["DATABASE_HOST"],
+    #     "PORT": secret_value["DATABASE_PORT"],
+    # },
 }
+# переключение настроек на postgresql
+# DATABASES["default"] = DATABASES["postgresql"]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -148,7 +159,6 @@ AUTH_USER_MODEL = "authorization.HabrUser"
 # нововведение в джанго 3.2
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
-
 # Set login path:
 #   https://docs.djangoproject.com/en/2.2/ref/settings/#login-url
 LOGIN_URL = "apps.authorization:login"
@@ -161,23 +171,25 @@ LOGOUT_REDIRECT_URL = '/'
 if DEBUG:
     DOMAIN_NAME = 'http://localhost:8000'
 
-# Настройки для вывода сообщений о подтверждении регистрации в лог-файл
-# EMAIL_HOST = 'localhost'
-# EMAIL_PORT = 25
-# EMAIL_HOST_USER = 'django@sputnik.local'
-# EMAIL_HOST_PASSWORD = 'sputnik'
-# EMAIL_USE_SSL = False
-#
+# Запуск локального smtp сервера: python3 -m smtpd -n -c DebuggingServer localhost:7725
+# Настройки для вывода сообщений о подтверждении регистрации в лог-файл\консоль
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 7725
+EMAIL_HOST_USER = None
+EMAIL_HOST_PASSWORD = None
+EMAIL_USE_SSL = False
+
+## вариант включения логгирования сообщений почты ввиде файлов
 # EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 # EMAIL_FILE_PATH = 'tmp/email-messages/'
 
-
-DEFAULT_FROM_EMAIL = secret_value["EMAIL_HOST_USER"]
-EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_PORT = 465
-EMAIL_HOST_USER = secret_value["EMAIL_HOST_USER"]
-EMAIL_HOST_PASSWORD = secret_value["EMAIL_HOST_PASSWORD"]
-EMAIL_USE_SSL = True
+## Рабочие настройки для работы через яндекс
+# DEFAULT_FROM_EMAIL = secret_value["EMAIL_HOST_USER"]
+# EMAIL_HOST = 'smtp.yandex.ru'
+# EMAIL_PORT = 465
+# EMAIL_HOST_USER = secret_value["EMAIL_HOST_USER"]
+# EMAIL_HOST_PASSWORD = secret_value["EMAIL_HOST_PASSWORD"]
+# EMAIL_USE_SSL = True
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 

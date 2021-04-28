@@ -33,10 +33,40 @@
                         <img class="author-avatar" src="{{ article.author.habruserprofile.avatar|media_folder_users }}"
                              alt="avatar"/>
                         <div class="author-rating">
-                            <div class="author-rating-num {% if article.author.habruserprofile.rating > 0 %}green{% elif article.author.habruserprofile.rating < 0 %}red{% endif %}"
+                            <div class="author-rating-num
+                                {% if article.author.habruserprofile.rating > 0 %}green
+                                {% elif article.author.habruserprofile.rating < 0 %}red{% endif %}"
                                  id="author_rating">
                                 {{ article.author.habruserprofile.rating }}</div>
-                            <div class="author-rating-text">Рейтинг автора</div>
+                            <div class="author-rating-text"
+                                 title="Рейтинг автора на основании лайков и дизлайков его статей и комментариев">Рейтинг</div>
+                        </div>
+                        <div class="author-rating karma">
+                            <div class="author-karma-num
+                                {% if article.author.habruserprofile.karma > 0 %}pink
+                                {% elif article.author.habruserprofile.karma < 0 %}dark{% endif %}"
+                                 id="author_karma">
+                                {{ article.author.habruserprofile.karma }}</div>
+                            <div class="author-karma-text"
+                                 title="Рейтинг автора на основании его оценки другими авторами">Карма</div>
+                        </div>
+                        <div class="author-rating">
+                            <div class="mt-1">
+                                Оцени автора
+                            </div>
+                            <div class="choose-karma post-status">
+                                {% if article.author_liked is True %}
+                                    <img src="{% static 'svg/like(filled).svg' %}" alt="" id="karma_like"/>
+                                {% else  %}
+                                    <img src="{% static 'svg/like.svg' %}" alt="" id="karma_like"/>
+                                {% endif %}
+                                <div class="separator"></div>
+                                {% if article.author_disliked is True %}
+                                    <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="karma_dislike"/>
+                                {% else %}
+                                    <img src="{% static 'svg/dislike.svg' %}" alt="" id="karma_dislike"/>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     <div class="author-block">
@@ -78,12 +108,12 @@
 
     function sendAjax(fieldName) {
       $.ajax({
-          data: {field: fieldName, user: {{ request.user.pk }}, article: {{ article.pk }}},
+          data: {field: fieldName, article: {{ article.pk }}},
           url: "{% url 'articles:ajax_change_rate' %}",
           success: function(response) {
               $("#likes_count").text(response.likes)
               $("#dislikes_count").text(response.dislikes)
-              $("#author_rating").text(response.author_rating)
+              $("#author_rating").text(response.author_rating.toFixed(1).replace('.', ','))
               if (response.author_rating > 0) {
                 $("#author_rating").attr('class', 'author-rating-num green');
               } if (response.author_rating < 0) {
@@ -91,37 +121,21 @@
               } if (response.author_rating === 0) {
                 $("#author_rating").attr('class', 'author-rating-num');
               }
-              if (response.liked === true) {
+              if (response.like === true) {
                 $('#like').attr('src', likeFUrl);
-                $('#dislike').attr('src', dislikeUrl);
-              } if (response.liked === false) {
+              } else {
+                $('#like').attr('src', likeUrl);
+              }
+              if (response.dislike === true) {
                 $('#dislike').attr('src', dislikeFUrl);
-                $('#like').attr('src', likeUrl);
-              } if (response.liked === null) {
+              } else {
                 $('#dislike').attr('src', dislikeUrl);
-                $('#like').attr('src', likeUrl);
               }
           }
       });
     };
 
     $(document).ready(function(){
-      {% comment %} $('#like').hover(function(){
-          $(this).attr('src', likeFUrl);
-          }, function(){
-          $(this).attr('src', likeUrl);
-      });
-      $('#dislike').hover(function(){
-          $(this).attr('src', dislikeFUrl);
-          }, function(){
-          $(this).attr('src', dislikeUrl);
-      });
-      $('#bookmark').hover(function(){
-          $(this).attr('src', bookmarkFUrl);
-          }, function(){
-          $(this).attr('src', bookmarkUrl);
-      }); {% endcomment %}
-
       $('#like').click(function () {
           sendAjax("like")
           if ($(this).attr('src') == likeFUrl) {
@@ -146,6 +160,96 @@
             $(this).attr('src', bookmarkUrl);
           } else {
             $(this).attr('src', bookmarkFUrl);
+          }
+      });
+    });
+  </script>
+  <script>
+    function sendUserAjax(fieldName, id) {
+      $.ajax({
+          data: {field: fieldName, user: {{ article.author.pk }}},
+          url: "{% url 'articles:ajax_rate_author' %}",
+          success: function(response) {
+            $("#author_karma").text(response.karma)
+            if (response.karma > 0) {
+              $("#author_karma").attr('class', 'author-karma-num pink');
+            } if (response.karma < 0) {
+              $("#author_karma").attr('class', 'author-karma-num dark');
+            } if (response.karma === 0) {
+              $("#author_karma").attr('class', 'author-karma-num');
+            }
+            if (response.liked === true) {
+              $('#karma_like').attr('src', likeFUrl);
+            } else {
+              $('#karma_like').attr('src', likeUrl);
+            }
+            if (response.disliked === true) {
+              $('#karma_dislike').attr('src', dislikeFUrl);
+            } else {
+              $('#karma_dislike').attr('src', dislikeUrl);
+            }
+          }
+      });
+    };
+
+    $(document).ready(function(){
+      $('#karma_like').click(function () {
+          sendUserAjax('like', $(this).attr('id'))
+          if ($(this).attr('src') == likeFUrl) {
+            $(this).attr('src', likeUrl);
+          } else {
+            $(this).attr('src', likeFUrl);
+          }
+      });
+
+      $('#karma_dislike').click(function () {
+          sendUserAjax('dislike', $(this).attr('id'))
+          if ($(this).attr('src') == dislikeFUrl) {
+            $(this).attr('src', dislikeUrl);
+          } else {
+            $(this).attr('src', dislikeFUrl);
+          }
+      });
+    });
+  </script>
+  <script>
+    function sendCommentAjax(fieldName, id) {
+      $.ajax({
+          data: {field: fieldName, comment: id},
+          url: "{% url 'comments:ajax_comment' %}",
+          success: function(response) {
+            $("#likes" + response.id).text(response.likes)
+            $("#dislikes" + response.id).text(response.dislikes)
+            if (response.like === true) {
+              $('#like-' + response.id).attr('src', likeFUrl);
+            } else {
+              $('#like-' + response.id).attr('src', likeUrl);
+            }
+            if (response.dislike === true) {
+              $('#dislike-' + response.id).attr('src', dislikeFUrl);
+            } else {
+              $('#dislike-' + response.id).attr('src', dislikeUrl);
+            }
+          }
+      });
+    };
+
+    $(document).ready(function(){
+      $('.comment_like').click(function () {
+          sendCommentAjax('like', $(this).attr('id'))
+          if ($(this).attr('src') == likeFUrl) {
+            $(this).attr('src', likeUrl);
+          } else {
+            $(this).attr('src', likeFUrl);
+          }
+      });
+
+      $('.comment_dislike').click(function () {
+          sendCommentAjax('dislike', $(this).attr('id'))
+          if ($(this).attr('src') == dislikeFUrl) {
+            $(this).attr('src', dislikeUrl);
+          } else {
+            $(this).attr('src', dislikeFUrl);
           }
       });
     });
