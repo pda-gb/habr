@@ -9,7 +9,7 @@
             {% empty %}
                 <p>Тут пока нет статей.</p>
             {% endfor %}
-            {% if articles.coutn > 5 %}
+            {% if articles.paginator.count > 5 %}
             <!-- Начало блока пагинации -->
             {% include 'articles/includes/paginations/paggination_hub.html' %}
             <!-- Конец блока пагинации -->

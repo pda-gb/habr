@@ -210,9 +210,8 @@ def search_articles(request, page=1):
         articles_paginator = paginator.page(paginator.num_pages)
     page_data = {
         "title": title,
-        "articles": hub_articles,
         "last_articles": last_articles,
         "current_user": request.user,
-        "pag_articles": articles_paginator,
+        "articles": articles_paginator,
     }
     return render(request, "articles/includes/search_aricles.html", page_data)
