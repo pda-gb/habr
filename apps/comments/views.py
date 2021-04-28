@@ -32,6 +32,7 @@ def comment_create(request, pk):
                     "media_url": settings.MEDIA_URL,
                     "comments": comments_list,
                 }
+                #если в js стоит функция location.reload();, то result не нужен
                 result = render_to_string("comments/includes/comments_list.html", content)
                 return JsonResponse({'result':result})
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
@@ -58,6 +59,7 @@ def child_comment_create(request, pk, id_parent_comment):
                     "media_url": settings.MEDIA_URL,
                     "comments": comments_list,
                 }
+                #если в js стоит функция location.reload();, то result не нужен
                 result = render_to_string("comments/includes/comments_list.html", content)
                 return JsonResponse({'result':result})
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
