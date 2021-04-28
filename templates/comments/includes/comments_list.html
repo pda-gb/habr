@@ -21,11 +21,11 @@
                                     <div>{{ comment.body }}</div>
                                 </div>
                                 <span class='reply reply-comment' data-id="{{ comment.id }}">Ответить</span>
-                                <form method="POST" class="comment-form" id="createChildCommentForm-{{ comment.id }}" style="display:none;">
+                                <form method="POST" class="comment-form" id="createChildCommentForm-{{ comment.id }}" data-url="{% url 'comments:comment_child_create' pk=article.id id_parent_comment=comment.id %}" style="display:none;">
                                         {% csrf_token %}
                                         {{ form_comment.as_p }}
                                         {% if request.user.is_authenticated %}
-                                        <button type="button" id="createCommentChildBtn" class="btn btn-outline-success">Отправить</button>
+                                        <button type="button" class="btn btn-outline-success createCommentChildBtn" data-id="{{ comment.id }}">Отправить</button>
                                         {% else %}
                                             <button class="btn btn-outline-success"><a href="{% url 'auth:login' %}">Отправить</a>
                                             </button>
@@ -38,5 +38,3 @@
                 {% endfor %}
             </div>
         </ul>
-        {% block js %}
-        {% endblock js %}

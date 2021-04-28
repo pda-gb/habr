@@ -26,7 +26,7 @@
                                         {% csrf_token %}
                                         {{ form_comment.as_p }}
                                         {% if request.user.is_authenticated %}
-                                            <button type="button" id="createCommentChildBtn" data-id="{{ comment.id }}" class="btn btn-outline-success">Отправить</button>
+                                            <button type="button" data-id="{{ comment.id }}" class="btn btn-outline-success createCommentChildBtn">Отправить</button>
                                         {% else %}
                                             <button class="btn btn-outline-success"><a href="{% url 'auth:login' %}">Отправить</a>
                                             </button>
@@ -57,10 +57,30 @@
     {% endblock css %}
     {% block js %}
         <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
-        <script src="{% static 'js/comment_script.js' %}"></script>
         <script>
             $(document).ready(function(){
-                $('#createCommentChildBtn').click(function(e) {
+                $(".reply").on('click', function(){
+                    var parentId = $(this).attr('data-id')
+                    $("#createChildCommentForm-"+parentId).fadeToggle();
+                });
+
+                $('#createCommentBtn').click(function(e) {
+                    e.preventDefault()
+                    let content = $('#createCommentForm').serialize();
+            
+                    $.ajax({
+                        url: $("#createCommentForm").data('url'),
+                        data: content,
+                        type: 'POST',
+                        success: function(response) {
+                            $('#commentArticle').html(response.result);
+                        }
+                    })
+                })
+
+                $('#createCommentForm')[0].reset();
+                
+                $('.createCommentChildBtn').click(function(e) {
                     e.preventDefault()
                     let id = $(this).attr('data-id')
                     let content = $('#createChildCommentForm-' + id).serialize();

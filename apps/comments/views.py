@@ -60,6 +60,5 @@ def child_comment_create(request, pk, id_parent_comment):
                     "comments": comments_list,
                 }
                 result = render_to_string("comments/includes/comments_list.html", content)
-                print(result)
                 return JsonResponse({'result':result})
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
