@@ -27,6 +27,9 @@ def verify(request, email, activation_key):
         page_data = {
             'title': 'верификация',
         }
+        check_verify = request.session.get('verify', None)
+        if check_verify:
+            del request.session['verify']
         return render(request, "authorization/verification.html", page_data)
     except Exception as e:
         messages.error(request, f'ошибка активации {e.args}')
@@ -41,7 +44,6 @@ def send_verify_email(user):
     subject = f'Активация пользователя {user.username}'
     message = f'Для подтверждения активации перейдите по ссылке:\n {settings.DOMAIN_NAME}{verify_link}'
     return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
-
 
 
 def login(request):
@@ -90,6 +92,7 @@ def register(request):
             user = register_form.save()
             if send_verify_email(user):
                 request.session['register'] = True
+                request.session['verify'] = True
             else:
                 messages.error(request, 'Ошибка отправки сообщения')
             return HttpResponseRedirect(reverse("auth:login"))
