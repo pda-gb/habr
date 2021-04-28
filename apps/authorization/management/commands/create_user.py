@@ -34,7 +34,7 @@ class Command(BaseCommand):
             )
 
             profile = HabrUserProfile.objects.get(user=user)
-            profile.avatar = person.avatar(size=256)
+            # profile.avatar = person.avatar(size=256)
             profile.full_name = person.full_name(gender=None, reverse=False)
             profile.place_of_work = business.company()
             profile.specialization = person.occupation()

@@ -172,20 +172,14 @@ LOGOUT_REDIRECT_URL = '/'
 if DEBUG:
     DOMAIN_NAME = 'http://localhost:8000'
 
-# Запуск локального smtp сервера: python3 -m smtpd -n -c DebuggingServer localhost:7725
+# Запуск локального smtp сервера: python3 -m smtpd -n -c DebuggingServer localhost:25
 # Настройки для вывода сообщений о подтверждении регистрации в лог-файл\консоль
-# EMAIL_HOST = 'localhost'
-# EMAIL_PORT = 7725
-# EMAIL_HOST_USER = None
-# EMAIL_HOST_PASSWORD = None
-# EMAIL_USE_SSL = False
-
-## вариант включения логгирования сообщений почты ввиде файлов
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 25
 EMAIL_HOST_USER = 'django@sputnik.local'
 EMAIL_HOST_PASSWORD = 'sputnik'
 EMAIL_USE_SSL = False
+# вариант включения логгирования сообщений почты ввиде файлов
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = 'tmp/email-messages/'
 

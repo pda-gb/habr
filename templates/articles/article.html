@@ -25,6 +25,12 @@
                     <div class="post-content mt-3">
                         <br/>
                         <span>{% autoescape off %}{{ article.body | linebreaksbr }}{% endautoescape %}</span>
+                        <hr>
+                        <div>
+                            <span style="font-weight: bold">Ссылка на оригинал: </span>
+                            <a class="post-author" target="_blank"
+                               href="{{ article.link_to_original }}">{{ article.link_to_original }}</a>
+                        </div>
                         {% include 'articles/includes/post-status.html' %}
                     </div>
                 </div>
@@ -39,7 +45,9 @@
                                  id="author_rating">
                                 {{ article.author.habruserprofile.rating }}</div>
                             <div class="author-rating-text"
-                                 title="Рейтинг автора на основании лайков и дизлайков его статей и комментариев">Рейтинг</div>
+                                 title="Рейтинг автора на основании лайков и дизлайков его статей и комментариев">
+                                Рейтинг
+                            </div>
                         </div>
                         <div class="author-rating karma">
                             <div class="author-karma-num
@@ -48,7 +56,8 @@
                                  id="author_karma">
                                 {{ article.author.habruserprofile.karma }}</div>
                             <div class="author-karma-text"
-                                 title="Рейтинг автора на основании его оценки другими авторами">Карма</div>
+                                 title="Рейтинг автора на основании его оценки другими авторами">Карма
+                            </div>
                         </div>
                         <div class="author-rating">
                             <div class="mt-1">
@@ -57,7 +66,7 @@
                             <div class="choose-karma post-status">
                                 {% if article.author_liked is True %}
                                     <img src="{% static 'svg/like(filled).svg' %}" alt="" id="karma_like"/>
-                                {% else  %}
+                                {% else %}
                                     <img src="{% static 'svg/like.svg' %}" alt="" id="karma_like"/>
                                 {% endif %}
                                 <div class="separator"></div>
@@ -86,212 +95,216 @@
 {% endblock content %}
 
 {% block js %}
-<script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
-    crossorigin="anonymous"
-></script>
-<script
-    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
-    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
-    crossorigin="anonymous"
-></script>
-<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-{% if request.user.is_authenticated %}
-  <script>
-    const likeUrl = "{% static 'svg/like.svg' %}";
-    const likeFUrl = "{% static 'svg/like(filled).svg' %}";
-    const dislikeUrl = "{% static 'svg/dislike.svg' %}";
-    const dislikeFUrl = "{% static 'svg/dislike(filled).svg' %}";
-    const bookmarkUrl = "{% static 'svg/bookmark.svg' %}";
-    const bookmarkFUrl = "{% static 'svg/bookmark(filled).svg' %}";
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+            crossorigin="anonymous"
+    ></script>
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+            integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+            crossorigin="anonymous"
+    ></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    {% if request.user.is_authenticated %}
+        <script>
+            const likeUrl = "{% static 'svg/like.svg' %}";
+            const likeFUrl = "{% static 'svg/like(filled).svg' %}";
+            const dislikeUrl = "{% static 'svg/dislike.svg' %}";
+            const dislikeFUrl = "{% static 'svg/dislike(filled).svg' %}";
+            const bookmarkUrl = "{% static 'svg/bookmark.svg' %}";
+            const bookmarkFUrl = "{% static 'svg/bookmark(filled).svg' %}";
 
-    function sendAjax(fieldName) {
-      $.ajax({
-          data: {field: fieldName, article: {{ article.pk }}},
-          url: "{% url 'articles:ajax_change_rate' %}",
-          success: function(response) {
-              $("#likes_count").text(response.likes)
-              $("#dislikes_count").text(response.dislikes)
-              $("#author_rating").text(response.author_rating.toFixed(1).replace('.', ','))
-              if (response.author_rating > 0) {
-                $("#author_rating").attr('class', 'author-rating-num green');
-              } if (response.author_rating < 0) {
-                $("#author_rating").attr('class', 'author-rating-num red');
-              } if (response.author_rating === 0) {
-                $("#author_rating").attr('class', 'author-rating-num');
-              }
-              if (response.like === true) {
-                $('#like').attr('src', likeFUrl);
-              } else {
-                $('#like').attr('src', likeUrl);
-              }
-              if (response.dislike === true) {
-                $('#dislike').attr('src', dislikeFUrl);
-              } else {
-                $('#dislike').attr('src', dislikeUrl);
-              }
-          }
-      });
-    };
+            function sendAjax(fieldName) {
+                $.ajax({
+                    data: {field: fieldName, article: {{ article.pk }}},
+                    url: "{% url 'articles:ajax_change_rate' %}",
+                    success: function (response) {
+                        $("#likes_count").text(response.likes)
+                        $("#dislikes_count").text(response.dislikes)
+                        $("#author_rating").text(response.author_rating.toFixed(1).replace('.', ','))
+                        if (response.author_rating > 0) {
+                            $("#author_rating").attr('class', 'author-rating-num green');
+                        }
+                        if (response.author_rating < 0) {
+                            $("#author_rating").attr('class', 'author-rating-num red');
+                        }
+                        if (response.author_rating === 0) {
+                            $("#author_rating").attr('class', 'author-rating-num');
+                        }
+                        if (response.like === true) {
+                            $('#like').attr('src', likeFUrl);
+                        } else {
+                            $('#like').attr('src', likeUrl);
+                        }
+                        if (response.dislike === true) {
+                            $('#dislike').attr('src', dislikeFUrl);
+                        } else {
+                            $('#dislike').attr('src', dislikeUrl);
+                        }
+                    }
+                });
+            };
 
-    $(document).ready(function(){
-      $('#like').click(function () {
-          sendAjax("like")
-          if ($(this).attr('src') == likeFUrl) {
-            $(this).attr('src', likeUrl);
-          } else {
-            $(this).attr('src', likeFUrl);
-          }
-      });
+            $(document).ready(function () {
+                $('#like').click(function () {
+                    sendAjax("like")
+                    if ($(this).attr('src') == likeFUrl) {
+                        $(this).attr('src', likeUrl);
+                    } else {
+                        $(this).attr('src', likeFUrl);
+                    }
+                });
 
-      $('#dislike').click(function () {
-          sendAjax("dislike")
-          if ($(this).attr('src') == dislikeFUrl) {
-            $(this).attr('src', dislikeUrl);
-          } else {
-            $(this).attr('src', dislikeFUrl);
-          }
-      });
+                $('#dislike').click(function () {
+                    sendAjax("dislike")
+                    if ($(this).attr('src') == dislikeFUrl) {
+                        $(this).attr('src', dislikeUrl);
+                    } else {
+                        $(this).attr('src', dislikeFUrl);
+                    }
+                });
 
-      $('#bookmark').click(function () {
-          sendAjax("bookmark")
-          if ($(this).attr('src') == bookmarkFUrl) {
-            $(this).attr('src', bookmarkUrl);
-          } else {
-            $(this).attr('src', bookmarkFUrl);
-          }
-      });
-    });
-  </script>
-  <script>
-    function sendUserAjax(fieldName, id) {
-      $.ajax({
-          data: {field: fieldName, user: {{ article.author.pk }}},
-          url: "{% url 'articles:ajax_rate_author' %}",
-          success: function(response) {
-            $("#author_karma").text(response.karma)
-            if (response.karma > 0) {
-              $("#author_karma").attr('class', 'author-karma-num pink');
-            } if (response.karma < 0) {
-              $("#author_karma").attr('class', 'author-karma-num dark');
-            } if (response.karma === 0) {
-              $("#author_karma").attr('class', 'author-karma-num');
-            }
-            if (response.liked === true) {
-              $('#karma_like').attr('src', likeFUrl);
-            } else {
-              $('#karma_like').attr('src', likeUrl);
-            }
-            if (response.disliked === true) {
-              $('#karma_dislike').attr('src', dislikeFUrl);
-            } else {
-              $('#karma_dislike').attr('src', dislikeUrl);
-            }
-          }
-      });
-    };
+                $('#bookmark').click(function () {
+                    sendAjax("bookmark")
+                    if ($(this).attr('src') == bookmarkFUrl) {
+                        $(this).attr('src', bookmarkUrl);
+                    } else {
+                        $(this).attr('src', bookmarkFUrl);
+                    }
+                });
+            });
+        </script>
+        <script>
+            function sendUserAjax(fieldName, id) {
+                $.ajax({
+                    data: {field: fieldName, user: {{ article.author.pk }}},
+                    url: "{% url 'articles:ajax_rate_author' %}",
+                    success: function (response) {
+                        $("#author_karma").text(response.karma)
+                        if (response.karma > 0) {
+                            $("#author_karma").attr('class', 'author-karma-num pink');
+                        }
+                        if (response.karma < 0) {
+                            $("#author_karma").attr('class', 'author-karma-num dark');
+                        }
+                        if (response.karma === 0) {
+                            $("#author_karma").attr('class', 'author-karma-num');
+                        }
+                        if (response.liked === true) {
+                            $('#karma_like').attr('src', likeFUrl);
+                        } else {
+                            $('#karma_like').attr('src', likeUrl);
+                        }
+                        if (response.disliked === true) {
+                            $('#karma_dislike').attr('src', dislikeFUrl);
+                        } else {
+                            $('#karma_dislike').attr('src', dislikeUrl);
+                        }
+                    }
+                });
+            };
 
-    $(document).ready(function(){
-      $('#karma_like').click(function () {
-          sendUserAjax('like', $(this).attr('id'))
-          if ($(this).attr('src') == likeFUrl) {
-            $(this).attr('src', likeUrl);
-          } else {
-            $(this).attr('src', likeFUrl);
-          }
-      });
+            $(document).ready(function () {
+                $('#karma_like').click(function () {
+                    sendUserAjax('like', $(this).attr('id'))
+                    if ($(this).attr('src') == likeFUrl) {
+                        $(this).attr('src', likeUrl);
+                    } else {
+                        $(this).attr('src', likeFUrl);
+                    }
+                });
 
-      $('#karma_dislike').click(function () {
-          sendUserAjax('dislike', $(this).attr('id'))
-          if ($(this).attr('src') == dislikeFUrl) {
-            $(this).attr('src', dislikeUrl);
-          } else {
-            $(this).attr('src', dislikeFUrl);
-          }
-      });
-    });
-  </script>
-  <script>
-    function sendCommentAjax(fieldName, id) {
-      $.ajax({
-          data: {field: fieldName, comment: id},
-          url: "{% url 'comments:ajax_comment' %}",
-          success: function(response) {
-            $("#likes" + response.id).text(response.likes)
-            $("#dislikes" + response.id).text(response.dislikes)
-            if (response.like === true) {
-              $('#like-' + response.id).attr('src', likeFUrl);
-            } else {
-              $('#like-' + response.id).attr('src', likeUrl);
-            }
-            if (response.dislike === true) {
-              $('#dislike-' + response.id).attr('src', dislikeFUrl);
-            } else {
-              $('#dislike-' + response.id).attr('src', dislikeUrl);
-            }
-          }
-      });
-    };
+                $('#karma_dislike').click(function () {
+                    sendUserAjax('dislike', $(this).attr('id'))
+                    if ($(this).attr('src') == dislikeFUrl) {
+                        $(this).attr('src', dislikeUrl);
+                    } else {
+                        $(this).attr('src', dislikeFUrl);
+                    }
+                });
+            });
+        </script>
+        <script>
+            function sendCommentAjax(fieldName, id) {
+                $.ajax({
+                    data: {field: fieldName, comment: id},
+                    url: "{% url 'comments:ajax_comment' %}",
+                    success: function (response) {
+                        $("#likes" + response.id).text(response.likes)
+                        $("#dislikes" + response.id).text(response.dislikes)
+                        if (response.like === true) {
+                            $('#like-' + response.id).attr('src', likeFUrl);
+                        } else {
+                            $('#like-' + response.id).attr('src', likeUrl);
+                        }
+                        if (response.dislike === true) {
+                            $('#dislike-' + response.id).attr('src', dislikeFUrl);
+                        } else {
+                            $('#dislike-' + response.id).attr('src', dislikeUrl);
+                        }
+                    }
+                });
+            };
 
-    $(document).ready(function(){
-      $('.comment_like').click(function () {
-          sendCommentAjax('like', $(this).attr('id'))
-          if ($(this).attr('src') == likeFUrl) {
-            $(this).attr('src', likeUrl);
-          } else {
-            $(this).attr('src', likeFUrl);
-          }
-      });
+            $(document).ready(function () {
+                $('.comment_like').click(function () {
+                    sendCommentAjax('like', $(this).attr('id'))
+                    if ($(this).attr('src') == likeFUrl) {
+                        $(this).attr('src', likeUrl);
+                    } else {
+                        $(this).attr('src', likeFUrl);
+                    }
+                });
 
-      $('.comment_dislike').click(function () {
-          sendCommentAjax('dislike', $(this).attr('id'))
-          if ($(this).attr('src') == dislikeFUrl) {
-            $(this).attr('src', dislikeUrl);
-          } else {
-            $(this).attr('src', dislikeFUrl);
-          }
-      });
-    });
-  </script>
-{% else %}
-  <script>
-    const likeUrl = "{% static 'svg/like.svg' %}";
-    const likeFUrl = "{% static 'svg/like(filled).svg' %}";
-    const dislikeUrl = "{% static 'svg/dislike.svg' %}";
-    const dislikeFUrl = "{% static 'svg/dislike(filled).svg' %}";
-    const bookmarkUrl = "{% static 'svg/bookmark.svg' %}";
-    const bookmarkFUrl = "{% static 'svg/bookmark(filled).svg' %}";
+                $('.comment_dislike').click(function () {
+                    sendCommentAjax('dislike', $(this).attr('id'))
+                    if ($(this).attr('src') == dislikeFUrl) {
+                        $(this).attr('src', dislikeUrl);
+                    } else {
+                        $(this).attr('src', dislikeFUrl);
+                    }
+                });
+            });
+        </script>
+    {% else %}
+        <script>
+            const likeUrl = "{% static 'svg/like.svg' %}";
+            const likeFUrl = "{% static 'svg/like(filled).svg' %}";
+            const dislikeUrl = "{% static 'svg/dislike.svg' %}";
+            const dislikeFUrl = "{% static 'svg/dislike(filled).svg' %}";
+            const bookmarkUrl = "{% static 'svg/bookmark.svg' %}";
+            const bookmarkFUrl = "{% static 'svg/bookmark(filled).svg' %}";
 
-    $(document).ready(function(){
-      $('#like').hover(function(){
-          $(this).attr('src', likeFUrl);
-          }, function(){
-          $(this).attr('src', likeUrl);
-      });
-      $('#dislike').hover(function(){
-          $(this).attr('src', dislikeFUrl);
-          }, function(){
-          $(this).attr('src', dislikeUrl);
-      });
-      $('#bookmark').hover(function(){
-          $(this).attr('src', bookmarkFUrl);
-          }, function(){
-          $(this).attr('src', bookmarkUrl);
-      });
+            $(document).ready(function () {
+                $('#like').hover(function () {
+                    $(this).attr('src', likeFUrl);
+                }, function () {
+                    $(this).attr('src', likeUrl);
+                });
+                $('#dislike').hover(function () {
+                    $(this).attr('src', dislikeFUrl);
+                }, function () {
+                    $(this).attr('src', dislikeUrl);
+                });
+                $('#bookmark').hover(function () {
+                    $(this).attr('src', bookmarkFUrl);
+                }, function () {
+                    $(this).attr('src', bookmarkUrl);
+                });
 
-      $('#like').click(function () {
-        window.location.replace('{% url 'auth:login' %}')
-      });
+                $('#like').click(function () {
+                    window.location.replace('{% url 'auth:login' %}')
+                });
 
-      $('#dislike').click(function () {
-        window.location.replace('{% url 'auth:login' %}')
-      });
+                $('#dislike').click(function () {
+                    window.location.replace('{% url 'auth:login' %}')
+                });
 
-      $('#bookmark').click(function () {
-        window.location.replace('{% url 'auth:login' %}')
-      });
-    });
-  </script>
-{% endif %}
+                $('#bookmark').click(function () {
+                    window.location.replace('{% url 'auth:login' %}')
+                });
+            });
+        </script>
+    {% endif %}
 {% endblock js %}
