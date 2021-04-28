@@ -88,7 +88,7 @@ class Command(BaseCommand):
                 image=internet.stock_image(
                     width=1920, height=1080, keywords=None, writable=False
                 ),
-                link_to_original=internet.top_level_domain(tld_type=None),
+                link_to_original=internet.home_page(tld_type=None),
                 draft=False,
                 hub=Hub.objects.get(id=id_hub)
             )
