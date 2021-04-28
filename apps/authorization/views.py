@@ -39,12 +39,9 @@ def send_verify_email(user):
     """
     verify_link = reverse('auth:verify', args=[user.email, user.activation_key])
     subject = f'Активация пользователя {user.username}'
-    # message = f'Для подтверждения активации перейдите по ссылке:\n {settings.DOMAIN_NAME}{verify_link}'
-    message = 'spam'
-    # return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False,
-    #                  html_message=f'<h5>Для подтверждения активации перейдите по ссылке:</h5><br><a>{settings.DOMAIN_NAME}{verify_link}</a>')
-    return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False,
-                     html_message=f'<h5>Для подтверждения активации перейдите по ссылке:</h5><br><a>{settings.DOMAIN_NAME}{verify_link}</a>')
+    message = f'Для подтверждения активации перейдите по ссылке:\n {settings.DOMAIN_NAME}{verify_link}'
+    return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+
 
 
 def login(request):
