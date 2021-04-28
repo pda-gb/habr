@@ -14,10 +14,10 @@
                     {% else %}
                         <small>{{ article.rating }}</small>
                     {% endif %}</div>
-            <div class="me-2" title="Сколько пользователей добавили в закладки">
-                <img src="{% static 'svg/bookmark.svg' %}"/>
-                    <small class="text-muted">{{ article.bookmarks.count }}</small>
-            </div>
+{#            <div class="me-2" title="Сколько пользователей добавили в закладки">#}
+{#                <img src="{% static 'svg/bookmark.svg' %}"/>#}
+{#                    <small class="text-muted">{{ article.bookmarks.count }}</small>#}
+{#            </div>#}
             <div title="Сколько зарегистрированных пользователей прочитали статью">
                 <img src="{% static 'svg/view.svg' %}"/>
                     <small class="text-muted">{{ article.views.count }}</small>

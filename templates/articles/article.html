@@ -38,25 +38,24 @@
                     <div class="author-block">
                         <img class="author-avatar" src="{{ article.author.habruserprofile.avatar|media_folder_users }}"
                              alt="avatar"/>
-                        <div class="author-rating">
+                        <div class="author-rating" title="Рейтинг автора на основании лайков и дизлайков его статей и комментариев">
                             <div class="author-rating-num
                                 {% if article.author.habruserprofile.rating > 0 %}green
                                 {% elif article.author.habruserprofile.rating < 0 %}red{% endif %}"
                                  id="author_rating">
                                 {{ article.author.habruserprofile.rating }}</div>
-                            <div class="author-rating-text"
-                                 title="Рейтинг автора на основании лайков и дизлайков его статей и комментариев">
+                            <div class="author-rating-text">
                                 Рейтинг
                             </div>
                         </div>
-                        <div class="author-rating karma">
+                        <div class="author-rating karma" title="Рейтинг (карма) автора на основании его оценки другими авторами">
                             <div class="author-karma-num
                                 {% if article.author.habruserprofile.karma > 0 %}pink
                                 {% elif article.author.habruserprofile.karma < 0 %}dark{% endif %}"
                                  id="author_karma">
                                 {{ article.author.habruserprofile.karma }}</div>
-                            <div class="author-karma-text"
-                                 title="Рейтинг автора на основании его оценки другими авторами">Карма
+                            <div class="author-karma-text">
+                                Карма
                             </div>
                         </div>
                         <div class="author-rating">
