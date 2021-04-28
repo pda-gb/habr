@@ -64,6 +64,8 @@
                         type: 'POST',
                         success: function(response) {
                             $('#commentArticle').html(response.result);
+                            location.reload();
+
                         }
                     })
                 })
@@ -81,6 +83,7 @@
                         type: 'POST',
                         success: function(response) {
                             $('#commentArticle').html(response.result);
+                            location.reload();
                         }
                     })
                 });
