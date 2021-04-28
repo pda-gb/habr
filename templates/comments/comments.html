@@ -23,14 +23,9 @@
                                 </div>
                                 <span class='reply reply-comment' data-id="{{ comment.id }}">Ответить</span>
                                 <form method="POST" class="comment-form" id="createChildCommentForm-{{ comment.id }}" data-url="{% url 'comments:comment_child_create' pk=article.id id_parent_comment=comment.id %}" style="display:none;">
-                                        {% csrf_token %}
-                                        {{ form_comment.as_p }}
-                                        {% if request.user.is_authenticated %}
-                                            <button type="button" data-id="{{ comment.id }}" class="btn btn-outline-success createCommentChildBtn">Отправить</button>
-                                        {% else %}
-                                            <button class="btn btn-outline-success"><a href="{% url 'auth:login' %}">Отправить</a>
-                                            </button>
-                                        {% endif %}
+                                    {% csrf_token %}
+                                    {{ form_comment.as_p }}
+                                    <button type="button" data-id="{{ comment.id }}" class="btn btn-outline-success createCommentChildBtn">Отправить</button>
                                 </form>        
                                 {% include 'comments/includes/inc_tree_comments.html' %}
                             </div>
@@ -44,13 +39,8 @@
         <form method="POST" class="comment-form" id="createCommentForm" data-url="{% url 'comments:comment_create' pk=article.id %}">
             {% csrf_token %}
             {{ form_comment.as_p }}
-            {% if request.user.is_authenticated %}
-                <button type="button" id="createCommentBtn" class="btn btn-outline-success">Отправить</button>
-                </form>
-            {% else %}
-                <button class="btn btn-outline-success"><a href="{% url 'auth:login' %}">Отправить</a></button>
-                </form>
-            {% endif %}
+            <button type="button" id="createCommentBtn" class="btn btn-outline-success">Отправить</button>
+        </form>
     </div>
     {% block css %}
         <link href="{% static 'css/comments.css' %}" rel="stylesheet"/>

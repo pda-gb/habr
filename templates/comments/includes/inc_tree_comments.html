@@ -23,14 +23,8 @@
                             data-url="{% url 'comments:comment_child_create' pk=article.id id_parent_comment=child_comment.id %}" style="display:none;">
                                 {% csrf_token %}
                                 {{ form_comment.as_p }}
-                                {% if request.user.is_authenticated %}
-                                    <button type="button" data-id="{{ child_comment.id }}" class="btn btn-outline-success createCommentChildBtn">Отправить</button>
-                                    </form>
-                                {% else %}
-                                    <button class="btn btn-outline-success"><a
-                                            href="{% url 'auth:login' %}">Отправить</a></button>
-                                    </form>
-                                {% endif %}
+                                <button type="button" data-id="{{ child_comment.id }}" class="btn btn-outline-success createCommentChildBtn">Отправить</button>
+                            </form>
                         {% with comment=child_comment template_name='comments/includes/inc_tree_comments.html' %}
                             {% include template_name %}
                         {% endwith %}

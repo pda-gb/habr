@@ -11,7 +11,6 @@ from .forms import CommentCreateForm
 from .models import Comment
 
 
-@login_required
 @transaction.atomic
 def comment_create(request, pk):
     current_article = get_object_or_404(Article, id=pk)
@@ -37,7 +36,7 @@ def comment_create(request, pk):
                 return JsonResponse({'result':result})
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
-@login_required
+
 @transaction.atomic
 def child_comment_create(request, pk, id_parent_comment):
     current_article = get_object_or_404(Article, id=pk)
