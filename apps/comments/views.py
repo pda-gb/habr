@@ -10,7 +10,7 @@ from apps.articles.models import Article, Hub
 from .forms import CommentCreateForm
 from .models import Comment
 
-
+@login_required
 @transaction.atomic
 def comment_create(request, pk):
     current_article = get_object_or_404(Article, id=pk)
@@ -24,20 +24,10 @@ def comment_create(request, pk):
             new_comment.parent = None
             new_comment.is_child = False
             new_comment.save()
-            if request.is_ajax():
-                comments_list = Comment.get_comments(pk)
-                content = {
-                    "article": current_article,
-                    "form_comment": form_comment,
-                    "media_url": settings.MEDIA_URL,
-                    "comments": comments_list,
-                }
-                #если в js стоит функция location.reload();, то result не нужен
-                result = render_to_string("comments/includes/comments_list.html", content)
-                return JsonResponse({'result':result})
-        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+            #если в js стоит функция location.reload();, то return JsonResponse не нужен
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
-
+@login_required
 @transaction.atomic
 def child_comment_create(request, pk, id_parent_comment):
     current_article = get_object_or_404(Article, id=pk)
@@ -51,15 +41,5 @@ def child_comment_create(request, pk, id_parent_comment):
             new_comment.parent = Comment.get_comment(id_parent_comment)
             new_comment.is_child = True
             new_comment.save()
-            if request.is_ajax():
-                comments_list = Comment.get_comments(pk)
-                content = {
-                    "article": current_article,
-                    "form_comment": form_comment,
-                    "media_url": settings.MEDIA_URL,
-                    "comments": comments_list,
-                }
-                #если в js стоит функция location.reload();, то result не нужен
-                result = render_to_string("comments/includes/comments_list.html", content)
-                return JsonResponse({'result':result})
-    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+            #если в js стоит функция location.reload();, то return JsonResponse не нужен
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
