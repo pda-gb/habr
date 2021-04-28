@@ -147,4 +147,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Set login path:
 #   https://docs.djangoproject.com/en/2.2/ref/settings/#login-url
-LOGIN_URL = "apps.authorization:login"
+LOGIN_URL = "auth:login"
