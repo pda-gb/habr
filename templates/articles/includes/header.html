@@ -66,7 +66,7 @@
                 </div>
             {% else %}
                 {% if check_verify %}
-                    <div class="warning-verify">Подтвердите свою учётную запись!</div>
+                    <img class="warning-verify" src="{% static 'img/danger.svg' %}" alt="warning" title="Подтвердите свою учётную запись!">
                     <a class="btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
                 {% else %}
                     <a class="btn btn-outline-light me-2" href="{% url 'auth:login' %}">Войти</a>
