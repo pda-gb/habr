@@ -24,6 +24,9 @@ def main_page(request, page=1):
         articles_paginator = paginator.page(1)
     except EmptyPage:
         articles_paginator = paginator.page(paginator.num_pages)
+    check_verify = request.session.get('verify', None)
+    if check_verify:
+        del request.session['verify']
     page_data = {
         "title": title,
         "articles": articles_paginator,

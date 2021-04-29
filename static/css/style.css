@@ -491,3 +491,8 @@ div.scrollup:hover {
 .verify-block {
     text-align: center;
 }
+
+.warning-verify {
+    color: red;
+    width: 140px;
+}

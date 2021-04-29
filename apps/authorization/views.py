@@ -27,9 +27,6 @@ def verify(request, email, activation_key):
         page_data = {
             'title': 'верификация',
         }
-        check_verify = request.session.get('verify', None)
-        if check_verify:
-            del request.session['verify']
         return render(request, "authorization/verification.html", page_data)
     except Exception as e:
         messages.error(request, f'ошибка активации {e.args}')
@@ -84,7 +81,6 @@ def register(request):
     функция выполняет регистрацию
     """
     title = "Регистрация"
-
     if request.method == "POST":
         register_form = HabrUserRegisterForm(request.POST)
 
@@ -111,7 +107,6 @@ def forgive(request):
     """
     Функция отвечающая если забыли пароль
     """
-
     title = "Забыл пароль"
     page_data = {
         "title": title,
@@ -129,4 +124,3 @@ def change_username(request):
     }
 
     return render(request, "authorization/change_username.html", page_data)
-
