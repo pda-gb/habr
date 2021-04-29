@@ -493,6 +493,6 @@ div.scrollup:hover {
 }
 
 .warning-verify {
-    color: red;
-    width: 140px;
+    width: 45px;
+    margin-right: 15px;
 }

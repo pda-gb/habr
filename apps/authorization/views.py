@@ -16,8 +16,8 @@ def verify(request, email, activation_key):
     Функция проверяет и активирует учётную запись пользователя
     """
     try:
-        user = HabrUser.objects.get(activation_key=activation_key)
-        if not user.is_activation_key_expired():
+        user = HabrUser.objects.get(email=email)
+        if not user.is_activation_key_expired() and user.activation_key == activation_key:
             user.is_active = True
             user.save()
             auth.login(request, user, backend='django.contrib.auth.backends.ModelBackend')
@@ -27,6 +27,9 @@ def verify(request, email, activation_key):
         page_data = {
             'title': 'верификация',
         }
+        check_verify = request.session.get('verify', None)
+        if check_verify:
+            del request.session['verify']
         return render(request, "authorization/verification.html", page_data)
     except Exception as e:
         messages.error(request, f'ошибка активации {e.args}')
