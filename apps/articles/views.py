@@ -149,7 +149,7 @@ def like_dislike_author_ajax(request):
     if request.is_ajax() and request.user.is_authenticated:
         user = request.GET.get("user")
         field = request.GET.get("field")
-        if request.user.pk != user:
+        if request.user.pk != int(user):
             user = HabrUserProfile.objects.get(pk=user)
             if field == "like":
                 if user.karma_positive.filter(pk=request.user.pk).exists():

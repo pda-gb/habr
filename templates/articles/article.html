@@ -67,24 +67,26 @@
                                 Карма
                             </div>
                         </div>
-                        <div class="author-rating">
-                            <div class="mt-1">
-                                Оцени автора
+                        {% if article.author.pk != request.user.pk %}
+                            <div class="author-rating">
+                                <div class="mt-1">
+                                    Оцени автора
+                                </div>
+                                <div class="choose-karma post-status">
+                                    {% if article.author_liked is True %}
+                                        <img src="{% static 'svg/like(filled).svg' %}" alt="" id="karma_like"/>
+                                    {% else %}
+                                        <img src="{% static 'svg/like.svg' %}" alt="" id="karma_like"/>
+                                    {% endif %}
+                                    <div class="separator"></div>
+                                    {% if article.author_disliked is True %}
+                                        <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="karma_dislike"/>
+                                    {% else %}
+                                        <img src="{% static 'svg/dislike.svg' %}" alt="" id="karma_dislike"/>
+                                    {% endif %}
+                                </div>
                             </div>
-                            <div class="choose-karma post-status">
-                                {% if article.author_liked is True %}
-                                    <img src="{% static 'svg/like(filled).svg' %}" alt="" id="karma_like"/>
-                                {% else %}
-                                    <img src="{% static 'svg/like.svg' %}" alt="" id="karma_like"/>
-                                {% endif %}
-                                <div class="separator"></div>
-                                {% if article.author_disliked is True %}
-                                    <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="karma_dislike"/>
-                                {% else %}
-                                    <img src="{% static 'svg/dislike.svg' %}" alt="" id="karma_dislike"/>
-                                {% endif %}
-                            </div>
-                        </div>
+                        {% endif %}
                     </div>
                     <div class="author-block">
                         <a href="{% url 'articles:author_profile' article.author_id %}">
