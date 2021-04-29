@@ -1,6 +1,13 @@
 {% extends 'articles/base.html' %}
 {% load static %}
 {% load my_tags %}
+
+{% block css %}
+    {{ block.super }}
+{#    стили комментариев   #}
+    <link href="{% static 'css/comments.css' %}" rel="stylesheet"/>
+{% endblock css %}
+
 {% block content %}
     <div class="container mt-4">
         <div class="row">
@@ -38,7 +45,8 @@
                     <div class="author-block">
                         <img class="author-avatar" src="{{ article.author.habruserprofile.avatar|media_folder_users }}"
                              alt="avatar"/>
-                        <div class="author-rating" title="Рейтинг автора на основании лайков и дизлайков его статей и комментариев">
+                        <div class="author-rating"
+                             title="Рейтинг автора на основании лайков и дизлайков его статей и комментариев">
                             <div class="author-rating-num
                                 {% if article.author.habruserprofile.rating > 0 %}green
                                 {% elif article.author.habruserprofile.rating < 0 %}red{% endif %}"
@@ -48,7 +56,8 @@
                                 Рейтинг
                             </div>
                         </div>
-                        <div class="author-rating karma" title="Рейтинг (карма) автора на основании его оценки другими авторами">
+                        <div class="author-rating karma"
+                             title="Рейтинг (карма) автора на основании его оценки другими авторами">
                             <div class="author-karma-num
                                 {% if article.author.habruserprofile.karma > 0 %}pink
                                 {% elif article.author.habruserprofile.karma < 0 %}dark{% endif %}"
@@ -95,17 +104,17 @@
 
 {% block js %}
     {{ block.super }}
-{#    <script#}
-{#            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"#}
-{#            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"#}
-{#            crossorigin="anonymous"#}
-{#    ></script>#}
-{#    <script#}
-{#            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"#}
-{#            integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="#}
-{#            crossorigin="anonymous"#}
-{#    ></script>#}
-{#    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>#}
+    {#    <script#}
+    {#            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"#}
+    {#            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"#}
+    {#            crossorigin="anonymous"#}
+    {#    ></script>#}
+    {#    <script#}
+    {#            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"#}
+    {#            integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="#}
+    {#            crossorigin="anonymous"#}
+    {#    ></script>#}
+    {#    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>#}
     {% if request.user.is_authenticated %}
         <script>
             const likeUrl = "{% static 'svg/like.svg' %}";
@@ -307,4 +316,56 @@
             });
         </script>
     {% endif %}
+    {#   скрипт комментариев   #}
+    <script>
+        $(document).ready(function () {
+            $(".reply").on('click', function () {
+                var parentId = $(this).attr('data-id')
+                $("#form-" + parentId).fadeToggle();
+            })
+            $(".submit-reply").on('click', function (e) {
+                e.preventDefault()
+                let target = event.target;
+                var parentId = $(this).attr('data-submit-reply')
+                var id = $(this).attr('data-id')
+                var text = $('#form-' + id).find('textarea[name="comment-text"]').val();
+                let pk = target.baseURI.split('/').slice(-1)[0]
+                var url = "{% url 'comments:comment_child_create' pk=article.id %}"
+
+                function getCookie(name) {
+                    let cookieValue = null;
+                    if (document.cookie && document.cookie !== '') {
+                        const cookies = document.cookie.split(';');
+                        for (let i = 0; i < cookies.length; i++) {
+                            const cookie = cookies[i].trim();
+                            // Does this cookie string begin with the name we want?
+                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
+                        }
+                    }
+                    return cookieValue;
+                }
+
+                const csrftoken = getCookie('csrftoken');
+                data = {
+                    user: "{{ request.user.username }}",
+                    parentId: parentId,
+                    text: text,
+                    id: id,
+                    csrfmiddlewaretoken: csrftoken
+                }
+                $.ajax({
+                    method: "POST",
+                    data: data,
+                    url: url,
+                    success: function (data) {
+                        window.location.replace(pk)
+                    }
+                })
+            })
+        });
+    </script>
+
 {% endblock js %}
