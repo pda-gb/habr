@@ -62,7 +62,8 @@ def login(request):
             return HttpResponseRedirect(reverse("articles:main_page"))
     from_register = request.session.get('register', None)
     if from_register:
-        del request.session['register']
+        # del request.session['register']
+        request.session.flush()
     page_data = {
         "title": title,
         "login_form": login_form,
