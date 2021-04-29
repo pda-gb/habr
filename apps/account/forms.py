@@ -1,16 +1,18 @@
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
+from django.contrib.auth.forms import UserChangeForm
 from django.forms import CharField
 
 from apps.articles.models import Article
-from apps.authorization.models import HabrUserProfile
+from apps.authorization.models import HabrUserProfile, HabrUser
 
 
 class HabrUserProfileEditForm(forms.ModelForm):
     class Meta:
         model = HabrUserProfile
         fields = (
-            "full_name",
+            "first_name",
+            "last_name",
             "place_of_work",
             "specialization",
             "gender",
@@ -29,19 +31,18 @@ class HabrUserProfileEditForm(forms.ModelForm):
 
 
 class ArticleCreate(forms.ModelForm):
-    body = CharField(label='Текст статьи',
-                     widget=CKEditorUploadingWidget(config_name="for_user"),
-                     )
-
+    body = CharField(
+        label="Текст статьи",
+        widget=CKEditorUploadingWidget(config_name="for_user"),
+    )
 
     class Meta:
         model = Article
-        fields = ("title", "hubs", "image", "link_to_original", "body")
+        fields = ("title", "hub", "image", "link_to_original", "body")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            print(f'{field=}')
             field.widget.attrs["class"] = "form-control"
             field.help_text = ""
             field.required = ""
@@ -98,13 +99,14 @@ class ArticleEditForm(forms.ModelForm):
 
     class Meta:
         model = Article
-        fields = ("title", "hubs", "image", "link_to_original", "body")
+        fields = ("title", "hub", "image", "link_to_original", "body")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs["class"] = "form-control"
             field.help_text = ""
+
 
 # class ArticleEditForm(forms.ModelForm):
 #     class Meta:

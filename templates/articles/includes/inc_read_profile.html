@@ -19,6 +19,11 @@
                 <td>{{ current_user.habruserprofile.full_name|no_data_specified }}</td>
             </tr>
             <tr>
+            <tr>
+                <td>Фамилия:</td>
+                <td>{{ current_user.habruserprofile.last_name|no_data_specified }}</td>
+            </tr>
+            <tr>
                 <td>Место работы:</td>
                 <td>{{ current_user.habruserprofile.place_of_work|no_data_specified }}</td>
             </tr>
@@ -49,6 +54,11 @@
             <tr>
                 <td>Рейтинг:</td>
                 <td>{{ current_user.habruserprofile.rating|no_data_specified }}</td>
+            </tr>
+            <tr>
+                <td>Карма:</td>
+                <td>
+                    {{ current_user.habruserprofile.karma }}</td>
             </tr>
         </table>
 

@@ -13,8 +13,11 @@ urlpatterns = [
     path("del_article/<int:pk>", account.del_article, name="del_article"),
     path("edit_profile/", account.edit_profile, name="edit_profile"),
     path("publications/", account.publications, name="publications"),
+    path("publications/<int:page>", account.publications, name="publications_pag"),
     path("user_articles/", account.user_articles, name="user_articles"),
+    path("user_articles/<int:page>", account.user_articles, name="user_articles_pag"),
     path("draft", account.draft, name="draft"),
+    path("draft/<int:page>", account.draft, name="draft_pag"),
     path("edit_profile/edit_password/", account.edit_password, name="edit_password"),
     path("edit_article/<int:pk>", account.edit_article, name="edit_article"),
 ]

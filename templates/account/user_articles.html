@@ -13,6 +13,11 @@
                 {% empty %}
                     <p>У вас нет статей.</p>
                 {% endfor %}
+                {% if articles.paginator.count > 5 %}
+                <!-- Начало блока пагинации -->
+                    {% include 'account/includes/paginations/pagination_user_article.html' %}
+                {% endif %}
+                <!-- Конец блока пагинации -->
             </div>
         </div>
     </div>
