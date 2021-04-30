@@ -1,0 +1,22 @@
+{% extends 'authorization/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="verify-block">
+        {% for message in messages %}
+            <div class="message {{ message.tags }}" style="color:red">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% if user.is_authenticated %}
+            <h1>Успех!</h1>
+            <br>
+        {% else %}
+            <h1>Попытка потерпела неудачу</h1>
+            <br>
+        {% endif %}
+        <button class="btn btn-primary">
+            <a href="{% url 'articles:main_page' %}">На главную</a>
+        </button>
+    </div>
+{% endblock %}

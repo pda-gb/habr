@@ -76,6 +76,8 @@ a:hover {
 .post-status {
     margin-top: 1em;
     padding: 0.3em;
+    display: flex;
+    flex-direction: row;
 }
 
 .post-status img, .comment-rating img {
@@ -176,6 +178,7 @@ a:hover {
     display: flex;
     flex-direction: column;
     margin-bottom: 70px;
+    margin-top: 50px;
 }
 
 .author-block {
@@ -197,8 +200,38 @@ a:hover {
     margin: 5px;
     font-family: "Arial Black", Gadget, sans-serif;
     font-size: 24px;
-
 }
+
+.author-karma-num {
+    margin: 5px;
+    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: 24px;
+    font-style: italic;
+}
+
+.author-karma-text {
+    margin: 7px;
+    font-size: 18px;
+    font-style: italic;
+    color: gray;
+}
+
+.author-karma-num{
+    margin-right: 10px;
+}
+
+.choose-karma {
+    display: flex;
+    flex-direction: row;
+}
+
+.separator {
+    min-width: 35px;
+}
+
+/* .karma {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
+} */
 
 .author-rating-text {
     margin: 5px;
@@ -263,7 +296,7 @@ body {
 }
 
 .form-control {
-    width: 25%;
+    width: 100%;
     margin-top: 1em;
     margin-bottom: 1em;
 }
@@ -349,4 +382,117 @@ body {
 .red {
     color: red;
     font-weight: bold;
+}
+
+.pink {
+    color: #FF6699;
+}
+
+.dark {
+    color: #990000;
+}
+
+div.scrollup {
+  position: fixed;
+  color: gray;
+  background-color: white;
+  left: 40px;
+  bottom: 65px;
+  padding: 10px;
+  font-size: 28px;
+  border-radius: 50px;
+  cursor: pointer;
+  display: none;
+  text-align: center;
+  border: 1px gray;
+}
+
+div.scrollup:hover {
+  background-color: lightgrey;
+}
+
+.page-link {
+    color: black;
+}
+.page-link:hover {
+    color: black;
+}
+
+.magnifier {
+    height: 36px;
+    width: 55px;
+}
+
+.icon-item {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+}
+
+.element-search-list {
+    float: left;
+}
+
+.input-search {
+    margin: 0 auto;
+}
+
+.form-search {
+    display: none;
+}
+
+.form-search form{
+    display: flex;
+}
+
+.magnifier-in-input {
+    position: relative;
+    right: 51px;
+}
+
+
+.scrollup, .scrolldown {
+  position: fixed;
+  color: gray;
+  background-color: white;
+  left: 40px;
+  bottom: 65px;
+  padding: 10px;
+  font-size: 28px;
+  border-radius: 50px;
+  cursor: pointer;
+  display: none;
+  text-align: center;
+  border: 1px gray;
+}
+
+.scrollup:hover, .scrolldown:hover {
+  background-color: lightgrey;
+}
+
+.text-muted {
+    margin-top: 13px;
+}
+
+.auth-form {
+    margin: 0 auto;
+    width: 300px;
+}
+
+.social-auth {
+    text-align: center;
+}
+
+.auth-form button {
+    width: 100%;
+    margin-top: .5rem;
+}
+
+.verify-block {
+    text-align: center;
+}
+
+.warning-verify {
+    width: 45px;
+    margin-right: 15px;
 }

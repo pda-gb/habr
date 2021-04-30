@@ -5,18 +5,23 @@
        href="{% url 'articles:article' article.id %}">Читать далее</a>
     {% block post-status %}
         <div class="post-status">
-            <img src="{% static 'svg/star(white).svg' %}"/>
-                {% if article.rating > 0 %}
-                    <small class="green">{{ article.rating }}</small>
-                {% elif article.rating < 0 %}
-                    <small class="red">{{ article.rating }}</small>
-                {% else %}
-                    <small>{{ article.rating }}</small>
-                {% endif %}
-            <img src="{% static 'svg/bookmark.svg' %}"/><small
-                class="text-muted">{{ article.bookmarks }}</small>
-            <img src="{% static 'svg/view.svg' %}"/><small
-                class="text-muted">{{ article.views }}</small>
+            <div class="me-2" title="Рейтинг статьи  &#128077; {{ article.likes.count }}  &#128078; {{ article.dislikes.count }}">
+                <img src="{% static 'svg/star(white).svg' %}"/>
+                    {% if article.rating > 0 %}
+                        <small class="green">{{ article.rating }}</small>
+                    {% elif article.rating < 0 %}
+                        <small class="red">{{ article.rating }}</small>
+                    {% else %}
+                        <small>{{ article.rating }}</small>
+                    {% endif %}</div>
+{#            <div class="me-2" title="Сколько пользователей добавили в закладки">#}
+{#                <img src="{% static 'svg/bookmark.svg' %}"/>#}
+{#                    <small class="text-muted">{{ article.bookmarks.count }}</small>#}
+{#            </div>#}
+            <div title="Сколько зарегистрированных пользователей прочитали статью">
+                <img src="{% static 'svg/view.svg' %}"/>
+                    <small class="text-muted">{{ article.views.count }}</small>
+            </div>
         </div>
     {% endblock post-status %}
 </div>

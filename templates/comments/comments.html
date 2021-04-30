@@ -26,7 +26,7 @@
                                     {% csrf_token %}
                                     {{ form_comment.as_p }}
                                     <button type="button" data-id="{{ comment.id }}" class="btn btn-outline-success createCommentChildBtn">Отправить</button>
-                                </form>        
+                                </form>
                                 {% include 'comments/includes/inc_tree_comments.html' %}
                             </div>
                         </li>
@@ -61,7 +61,7 @@
                     };
                     e.preventDefault()
                     let content = $('#createCommentForm').serialize();
-                    
+
                     $.ajax({
                         url: $("#createCommentForm").data('url'),
                         data: content,
@@ -75,7 +75,7 @@
                 })
 
                 $('#createCommentForm')[0].reset();
-                
+
                 $('.createCommentChildBtn').click(function(e) {
                     if ('{{ request.user.is_authenticated }}'=='False') {
                         let url = "/auth/login/";

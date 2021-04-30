@@ -14,11 +14,10 @@ class Command(BaseCommand):
         "create_article number_article"
     )
 
-    # def add_arguments(self, parser):
-    #     parser.add_argument('number', type=int, help=u'Количество создаваемых статей')
 
     def add_arguments(self, parser):
-        parser.add_argument("number", type=int, help="Количество создаваемых статей")
+        parser.add_argument("number", type=int,
+                            help="Количество создаваемых статей")
 
     def get_random_query_set_item(self, my_model):
         """
@@ -36,8 +35,8 @@ class Command(BaseCommand):
     def get_list_models(my_model):
         return list(
             my_model.objects.values_list("pk", flat=True)
-            .order_by("?")
-            .distinct()[: randint(1, 5)]
+                .order_by("?")
+                .distinct()[: randint(1, 5)]
         )
 
     def handle(self, *args, **options):
@@ -47,7 +46,6 @@ class Command(BaseCommand):
         # Экземпляры данных из библиотеки mimesis
         text = Text("ru")
         hubs = [
-            "Все потоки",
             "Разработка",
             "Дизайн",
             "Маркетинг",
@@ -58,58 +56,72 @@ class Command(BaseCommand):
         number = options["number"]
         # number = 100
         # Создаем хабы
-        if Hub.objects.values_list("hub", flat=True).count() < 10:
-            for hub_item in hubs:
-                if hub_item in Hub.objects.values_list("hub", flat=True).distinct():
-                    self.stdout.write(self.style.SUCCESS(f"This hub exist {hub_item}"))
-                else:
-                    hub_object = Hub(hub=hub_item)
-                    hub_object.save()
-                    self.stdout.write(
-                        self.style.SUCCESS(f"Successfully created hub {hub_object.hub}")
-                    )
+        for hub_item in hubs:
+            if hub_item in Hub.objects.values_list("hub",
+                                                   flat=True).distinct():
+                self.stdout.write(self.style.SUCCESS(f"This hub exist "
+                                                     f"{hub_item}"))
+            else:
+                hub_object = Hub(hub=hub_item)
+                hub_object.save()
+                self.stdout.write(
+                    self.style.SUCCESS(f"Successfully created hub "
+                                       f"{hub_object.hub}")
+                )
         # Создаем теги в количестве, равном половине статей.
         for i in range(number // 2):
             tag_object = Tag(tag=internet.hashtags(quantity=1))
-            if tag_object.tag in Tag.objects.values_list("tag", flat=True).distinct():
+            if tag_object.tag in Tag.objects.values_list("tag",
+                                                         flat=True).distinct():
                 self.stdout.write(
                     self.style.SUCCESS(f"This tag exist {tag_object.tag}")
                 )
             else:
                 tag_object.save()
                 self.stdout.write(
-                    self.style.SUCCESS(f"Successfully created tag {tag_object.tag}")
+                    self.style.SUCCESS(f"Successfully created tag "
+                                       f"{tag_object.tag}")
                 )
-        # Создаем статьи
+
+        ## Создаем статьи
+        # ключевые слова для поиска картинок
+        keyword_img = ['it', 'development', 'design', 'marketing',
+                       'mobile']
         for i in range(number):
+            id_hub = randint(1, 4)
             article = Article(
                 title=text.title(),
                 author=self.get_random_query_set_item(HabrUser),
-                body=text.text(quantity=randint(10, 100)),
+                body=text.text(quantity=randint(10, 70)),
                 image=internet.stock_image(
-                    width=1920, height=1080, keywords=None, writable=False
+                    width=1920, height=1080,
+                    keywords=[keyword_img[0], keyword_img[id_hub]],
+                    writable=False
                 ),
-                link_to_original=internet.top_level_domain(tld_type=None),
+                link_to_original=internet.home_page(tld_type=None),
                 draft=False,
+                hub=Hub.objects.get(id=id_hub)
             )
 
             article.save()
             self.stdout.write(
                 self.style.SUCCESS(
-                    f"Successfully created article by the author {article.author}"
+                    f"Successfully created article by the author "
+                    f"{article.author}"
                 )
             )
 
-            # Добавляем к статье хабы, выбранные случайным образом в количестве от 1 до 5
-            article.hubs.add(*self.get_list_models(Hub))
-            for hub in article.hubs.all():
-                self.stdout.write(
-                    self.style.SUCCESS(
-                        f"Successfully added hub {hub.hub} to article {article.title}"
-                    )
-                )
+            # # Добавляем к статье хабы, выбранные случайным образом в количестве от 1 до 5
+            # article.hub.add(*self.get_list_models(Hub))
+            # for hub in article.hub.all():
+            #     self.stdout.write(
+            #         self.style.SUCCESS(
+            #             f"Successfully added hub {hub.hub} to article {article.title}"
+            #         )
+            #     )
 
-            # Добавляем к статье теги, выбранные случайным образом в количестве от 1 до 5
+            # Добавляем к статье теги, выбранные случайным образом в
+            # количестве от 1 до 5
             article.tags.add(*self.get_list_models(Tag))
             for tag in article.tags.all():
                 self.stdout.write(

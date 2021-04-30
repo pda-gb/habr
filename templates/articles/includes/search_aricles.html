@@ -1,0 +1,23 @@
+{% extends 'articles/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            {% for article in articles %}
+                {% include 'articles/includes/post.html' %}
+            {% empty %}
+                <p>Тут пока нет статей.</p>
+            {% endfor %}
+            <!-- Начало блока пагинации -->
+            {% if articles.paginator.count > 5 %}
+                {% include 'articles/includes/paginations/paggination.html' %}
+            {% endif %}
+            <!-- Конец блока пагинации -->
+        </div>
+        <div class="col-1"></div>
+        {% if last_articles != None %}
+            {% include 'articles/includes/right_block.html' %}
+        {% endif %}
+    </div>
+{% endblock content %}

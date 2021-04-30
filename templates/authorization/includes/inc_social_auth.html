@@ -1,0 +1,12 @@
+<div class="social-auth">
+    <h6 class="text-muted">Вход через соцсети</h6>
+    <a href="{% url 'social:begin' 'vk-oauth2' %}?next=/" class="btn btn-social-icon btn-lg btn-vk">
+        <span class="fa fa-vk"></span>
+    </a>
+    <a href="{% url 'social:begin' 'google-oauth2' %}?/next=/" class="btn btn-social-icon btn-lg btn-google">
+        <span class="fa fa-google"></span>
+    </a>
+    <a href="{% url 'social:begin' 'github' %}?/next=/" class="btn btn-social-icon btn-lg btn-github">
+        <span class="fa fa-github"></span>
+    </a>
+</div>
