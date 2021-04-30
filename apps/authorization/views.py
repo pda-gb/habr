@@ -1,4 +1,5 @@
 from django.contrib import auth, messages
+from django.core.exceptions import ValidationError
 from django.shortcuts import HttpResponseRedirect, render
 from django.urls import reverse
 from django.core.mail import send_mail
@@ -27,9 +28,16 @@ def verify(request, email, activation_key):
         page_data = {
             'title': 'верификация',
         }
-        check_verify = request.session.get('verify', None)
-        if check_verify:
-            del request.session['verify']
+        from_register = request.session.get('register', None)
+        print('+' * 100)
+        print(from_register)
+        if from_register:
+            del request.session['register']
+        # check_verify = request.session.get('verify', None)
+
+        # if check_verify:
+        #     # del request.session['verify']
+        #     request.session.flush()
         return render(request, "authorization/verification.html", page_data)
     except Exception as e:
         messages.error(request, f'ошибка активации {e.args}')
@@ -60,10 +68,8 @@ def login(request):
         if user and user.is_active:
             auth.login(request, user)
             return HttpResponseRedirect(reverse("articles:main_page"))
-    from_register = request.session.get('register', None)
-    if from_register:
-        # del request.session['register']
-        request.session.flush()
+    # from_register = request.session.get('register', None)
+    from_register = True
     page_data = {
         "title": title,
         "login_form": login_form,
@@ -85,19 +91,26 @@ def register(request):
     функция выполняет регистрацию
     """
     title = "Регистрация"
+
     if request.method == "POST":
         register_form = HabrUserRegisterForm(request.POST)
 
         if register_form.is_valid():
             user = register_form.save()
             if send_verify_email(user):
+                pass
                 request.session['register'] = True
-                request.session['verify'] = True
+                # print('*'*100)
+                # from_register = request.session.get('register', None)
+                # print(from_register)
+                # request.session['verify'] = True
             else:
                 messages.error(request, 'Ошибка отправки сообщения')
+                # raise ValidationError(register_form.errors)
             return HttpResponseRedirect(reverse("auth:login"))
         else:
-            messages.error(request, "ЛОГИН ИЛИ ПАРОЛЬ ВВЕДЕНЫ НЕКОРРЕКТНО!")
+            messages.error(request, register_form.errors)
+            # raise ValidationError(register_form.errors)
     register_form = HabrUserRegisterForm()
 
     page_data = {
