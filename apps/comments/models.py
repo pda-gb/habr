@@ -10,8 +10,9 @@ class Comment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
                                on_delete=models.CASCADE)
     parent = models.ForeignKey("self", null=True, blank=True,
-        related_name="comment_parent", on_delete=models.CASCADE,
-    )
+                               related_name="comment_parent",
+                               on_delete=models.CASCADE,
+                               )
     body = models.TextField(verbose_name="текст комментария")
     date = models.DateTimeField(verbose_name="дата", auto_now_add=True)
 
@@ -58,6 +59,6 @@ class Comment(models.Model):
 
     @staticmethod
     def get_comment(parent_id):
-        ''' получение родительского комментария '''
+        """ получение родительского комментария """
         comment = Comment.objects.get(id=parent_id)
         return comment

@@ -1,7 +1,7 @@
 {% load static %}
 {% load my_tags %}
-{% if comment.child_comments.all %}
-    {% for child_comment in comment.child_comments.all %}
+{% if comment.comment_parent.all %}
+    {% for child_comment in comment.comment_parent.all %}
         <ul style="list-style-type:none;">
             <div class="col-md-12 mt-2">
                 <li class="li-reply-comment">

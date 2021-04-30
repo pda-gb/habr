@@ -1,10 +1,9 @@
-from django.http import JsonResponse
-from django.conf import settings
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
 from apps.articles.models import Article
-from apps.authorization.models import HabrUser
+from apps.authorization.models import HabrUser, HabrUserProfile
 from apps.comments.forms import CommentCreateForm
 from apps.comments.models import Comment
 
@@ -59,10 +58,7 @@ def article(request, pk=None):
     hub_articles = Article.get_articles()
     last_articles = Article.get_last_articles(hub_articles)
     current_article = get_object_or_404(Article, id=pk)
-    current_comments = Comment.get_comments(pk)
-    comments = create_comments_tree(
-        current_comments, request.user if request.user.is_authenticated else None
-    )
+    comments = Comment.get_comments(pk)
     form_comment = CommentCreateForm(request.POST or None)
     if request.user.is_authenticated:
         current_article.views.add(request.user)
@@ -127,7 +123,8 @@ def change_article_rate(request):
                     rated_article.bookmarks.remove(request.user)
                 else:
                     rated_article.bookmarks.add(request.user)
-            rated_article.rating = rated_article.likes.count() - rated_article.dislikes.count()
+            rated_article.rating = rated_article.likes.count() - \
+                                   rated_article.dislikes.count()
             rated_article.author.habruserprofile.save()
             rated_article.save()
         return JsonResponse(
@@ -135,7 +132,8 @@ def change_article_rate(request):
                 "likes": rated_article.likes.count(),
                 "dislikes": rated_article.dislikes.count(),
                 "author_rating": rated_article.author.habruserprofile.rating,
-                "like": rated_article.likes.filter(pk=request.user.pk).exists(),
+                "like": rated_article.likes.filter(pk=request.user.pk
+                                                   ).exists(),
                 "dislike": rated_article.dislikes.filter(
                     pk=request.user.pk
                 ).exists(),
