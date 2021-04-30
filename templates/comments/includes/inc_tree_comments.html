@@ -18,13 +18,35 @@
                         <div class="comment-text">
                             <div>{{ child_comment.body }}</div>
                         </div>
+                        {#          лайки          #}
+                        <div class="post-status">
+                            {% if liked is True %}
+                                <img src="{% static 'svg/like(filled).svg' %}" alt="" id="like-{{ id }}"
+                                     class="comment_like"/>
+                            {% else %}
+                                <img src="{% static 'svg/like.svg' %}" alt="" id="like-{{ id }}" class="comment_like"/>
+                            {% endif %}
+                            <small class="green" id="likes{{ id }}">{{ likes }}</small>
+                            {% if disliked is True %}
+                                <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="dislike-{{ id }}"
+                                     class="comment_dislike"/>
+                            {% else %}
+                                <img src="{% static 'svg/dislike.svg' %}" alt="" id="dislike-{{ id }}"
+                                     class="comment_dislike"/>
+                            {% endif %}
+                            <small class="red" id="dislikes{{ id }}">{{ dislikes }}</small>
+                        </div>
+                        {#          лайки          #}
                         <span class='reply reply-comment' data-id="{{ child_comment.id }}">Ответить</span>
-                            <form method="POST" class="comment-form" id="createChildCommentForm-{{ child_comment.id }}"
-                            data-url="{% url 'comments:comment_child_create' pk=article.id id_parent_comment=child_comment.id %}" style="display:none;">
-                                {% csrf_token %}
-                                {{ form_comment.as_p }}
-                                <button type="button" data-id="{{ child_comment.id }}" class="btn btn-outline-success createCommentChildBtn">Отправить</button>
-                            </form>
+                        <form method="POST" class="comment-form" id="createChildCommentForm-{{ child_comment.id }}"
+                              data-url="{% url 'comments:comment_child_create' pk=article.id id_parent_comment=child_comment.id %}"
+                              style="display:none;">
+                            {% csrf_token %}
+                            {{ form_comment.as_p }}
+                            <button type="button" data-id="{{ child_comment.id }}"
+                                    class="btn btn-outline-success createCommentChildBtn">Отправить
+                            </button>
+                        </form>
                         {% with comment=child_comment template_name='comments/includes/inc_tree_comments.html' %}
                             {% include template_name %}
                         {% endwith %}
