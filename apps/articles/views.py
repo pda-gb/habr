@@ -35,10 +35,11 @@ def main_page(request, page=1):
 
 
 def hub(request, pk=None, page=1):
-    hub_articles = Article.get_articles()
-    last_articles = Article.get_last_articles(hub_articles)
-    if pk != 1:
+    if pk is None:
+        hub_articles = Article.get_articles()
+    else:
         hub_articles = Article.get_by_hub(pk)
+    last_articles = Article.get_last_articles(hub_articles)
 
     paginator = Paginator(hub_articles, 5)
     try:
@@ -149,7 +150,7 @@ def like_dislike_author_ajax(request):
     if request.is_ajax() and request.user.is_authenticated:
         user = request.GET.get("user")
         field = request.GET.get("field")
-        if request.user.pk != user:
+        if request.user.pk != int(user):
             user = HabrUserProfile.objects.get(pk=user)
             if field == "like":
                 if user.karma_positive.filter(pk=request.user.pk).exists():
@@ -211,9 +212,8 @@ def search_articles(request, page=1):
         articles_paginator = paginator.page(paginator.num_pages)
     page_data = {
         "title": title,
-        "articles": hub_articles,
         "last_articles": last_articles,
         "current_user": request.user,
-        "pag_articles": articles_paginator,
+        "articles": articles_paginator,
     }
     return render(request, "articles/includes/search_aricles.html", page_data)

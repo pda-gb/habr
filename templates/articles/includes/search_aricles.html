@@ -4,13 +4,15 @@
 {% block content %}
     <div class="row">
         <div class="col-8">
-            {% for article in pag_articles %}
+            {% for article in articles %}
                 {% include 'articles/includes/post.html' %}
             {% empty %}
                 <p>Тут пока нет статей.</p>
             {% endfor %}
             <!-- Начало блока пагинации -->
-            {% include 'articles/includes/paginations/paggination.html' %}
+            {% if articles.paginator.count > 5 %}
+                {% include 'articles/includes/paginations/paggination.html' %}
+            {% endif %}
             <!-- Конец блока пагинации -->
         </div>
         <div class="col-1"></div>

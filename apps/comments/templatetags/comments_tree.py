@@ -18,7 +18,7 @@ def comments_filter(comments_list):
     <li class="li-reply-comment">
         <div class="main-comment-section col-md-12">
             <div>
-                <a href="#" class="post-author comment-author">
+                <a href="{% url 'articles:author_profile' author.id %}" class="post-author comment-author">
                     <img src="/static/img/avatar.jpg" alt=""/>
                     <small>{{author}}</small>
                 </a>

@@ -134,7 +134,7 @@ class Article(models.Model):
         Returns all published articles
         # and last articles (right block)
         """
-        hub_articles = Article.objects.filter(draft=False)
+        hub_articles = Article.objects.filter(draft=False, is_active=True)
         return hub_articles
 
     @staticmethod
