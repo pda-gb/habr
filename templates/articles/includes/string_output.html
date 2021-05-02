@@ -1,0 +1,30 @@
+{% load static %}
+{% for article in articles %}
+    <a href="{% url 'articles:article' article.id %}" class="bookmark__row col-12">
+        <div class="col-6 bord">{{ article.title|truncatewords:15 }}</div>
+        <div class="col-2 bord">
+            <p style="font-weight: 700; margin: 0">{{ article.author }}</p>
+            {#                                <img src="{{ article.author.habruserprofile.avatar }}" alt="ava"/>#}
+        </div>
+        <div class="col-1 bord">{{ article.hub }}</div>
+        <img class="mini-img col-2" src="{{ article.image }}" alt="">
+        <div class="col-1">
+            <div class="post-status column_rate">
+                <div class="me-1"
+                     title="Рейтинг статьи  &#128077; {{ article.likes.count }}  &#128078; {{ article.dislikes.count }}">
+                    <img src="{% static 'svg/star(white).svg' %}"/>
+                    {% if article.rating > 0 %}
+                        <small class="green">{{ article.rating }}</small>
+                    {% elif article.rating < 0 %}
+                        <small class="red">{{ article.rating }}</small>
+                    {% else %}
+                        <small>{{ article.rating }}</small>
+                    {% endif %}</div>
+                <div title="Сколько зарегистрированных пользователей прочитали статью">
+                    <img src="{% static 'svg/view.svg' %}"/>
+                    <small class="text-muted">{{ article.views.count }}</small>
+                </div>
+            </div>
+        </div>
+    </a>
+{% endfor %}

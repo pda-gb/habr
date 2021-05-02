@@ -80,7 +80,7 @@ a:hover {
     flex-direction: row;
 }
 
-.post-status img, .comment-rating img {
+.post-status img, .comment-rating img, .heading img {
     width: 1.8em;
     height: 1.2em;
     filter: brightness(0.5) sepia(1) hue-rotate(-70deg) saturate(5);
@@ -495,4 +495,46 @@ div.scrollup:hover {
 .warning-verify {
     width: 45px;
     margin-right: 15px;
+}
+
+.wrapper {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark__container{
+	max-width: 1260px;
+	margin: 10px;
+}
+
+.bookmark__row {
+	display: flex;
+    flex-direction: row;
+	justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+    height: 75px;
+    text-align: center;
+    vertical-align: center;
+    border: 1px solid lightgrey;
+}
+
+.bookmark__row:hover {
+    border: 1px solid darkblue;
+    color: darkblue;
+}
+
+.mini-img {
+    max-width: 120px;
+    height: auto;
+}
+
+.column_rate {
+    margin-top: 0;
+    margin-left: -0.5em;
+}
+
+.heading {
+    display: flex;
+    justify-content: center;
 }

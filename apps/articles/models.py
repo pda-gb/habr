@@ -217,6 +217,14 @@ class Article(models.Model):
         )
 
     @staticmethod
+    def get_bookmarks(id):
+        objects = Article.bookmarks.through.objects.filter(habruser_id=id)
+        bookmarks = []
+        for i in objects:
+            bookmarks.append(Article.get_article(i.article_id))
+        return bookmarks
+
+    @staticmethod
     def del_article(id):
         """
         delete(is_active = False) article

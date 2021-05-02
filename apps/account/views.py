@@ -199,3 +199,11 @@ def edit_article(request, pk):
     }
 
     return render(request, "account/edit_article.html", page_data)
+
+@login_required
+@transaction.atomic()
+def bookmarks_page(request):
+    bookmarks = Article.get_bookmarks(request.user.id)
+    title = "Закладки"
+    page_data = {"title": title, "articles": bookmarks}
+    return render(request, "account/bookmarks.html", page_data)
