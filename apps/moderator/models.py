@@ -41,7 +41,7 @@ class VerifyArticle(models.Model):
                                      on_delete=models.DO_NOTHING)
     is_verified = models.BooleanField(default=False,
                                       help_text="одобрение статьи")
-    remark = models.TextField(verbose_name="Замечание модератора")
+    remark = models.TextField(blank=True, verbose_name="Замечание модератора")
     for_checking = models.BooleanField(default=False,
                                        help_text="автор запросил проверку "
                                                  "иправления")
