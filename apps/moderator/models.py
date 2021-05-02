@@ -35,6 +35,16 @@ class BannedComment(models.Model):
         verbose_name_plural = "удалённые комментарии"
 
 
+class BannedArticle(models.Model):
+    """Забаненная статья"""
+    delete = models.ForeignKey(Article, help_text="удалённая статья",
+                               on_delete=models.CASCADE())
+
+    class Meta:
+        verbose_name = "удалённая статья"
+        verbose_name_plural = "удалённые статьи"
+
+
 class VerifyArticle(models.Model):
     """Проверка статьи модератором"""
     verification = models.ForeignKey(Article, help_text="статья на модерацию",
