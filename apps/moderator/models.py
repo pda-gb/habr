@@ -37,10 +37,20 @@ class BannedComment(models.Model):
 
 class VerifyArticle(models.Model):
     """Проверка статьи модератором"""
-    verification = models.ForeignKey(Article,
+    verification = models.ForeignKey(Article, help_text="статья на модерацию",
                                      on_delete=models.DO_NOTHING)
-
+    is_verified = models.BooleanField(default=False,
+                                      help_text="одобрение статьи")
+    remark = models.TextField(verbose_name="Замечание модератора")
+    for_checking = models.BooleanField(default=False,
+                                       help_text="автор запросил проверку "
+                                                 "иправления")
 
     class Meta:
         verbose_name = "статья"
         verbose_name_plural = "статьи"
+
+# class Remark(models.Model):
+#     """Замечания модератора и корректировки статьи автора"""
+#     message = models.TextField(verbose_name="Замечание модератора")
+#     correction = models.TextField(verbose_name="исправление")
