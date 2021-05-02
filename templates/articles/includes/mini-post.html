@@ -18,9 +18,13 @@
 {#                <img src="{% static 'svg/bookmark.svg' %}"/>#}
 {#                    <small class="text-muted">{{ article.bookmarks.count }}</small>#}
 {#            </div>#}
-            <div title="Сколько зарегистрированных пользователей прочитали статью">
+            <div class="me-2" title="Сколько зарегистрированных пользователей прочитали статью">
                 <img src="{% static 'svg/view.svg' %}"/>
                     <small class="text-muted">{{ article.views.count }}</small>
+            </div>
+            <div title="Количество комментариев статьи">
+                <img src="{% static 'svg/comment.svg' %}" alt=""/>
+                <small class="text-muted">{{ comment.count }}</small>
             </div>
         </div>
     {% endblock post-status %}

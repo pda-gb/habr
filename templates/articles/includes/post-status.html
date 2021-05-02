@@ -14,17 +14,19 @@
         {% endif %}
         <small class="red" id="dislikes_count">{{ article.dislikes.count }}</small>
     </div>
-{#    <div class="me-2" title="Добавить в закладки">#}
-{#        {% if article.bookmarked %}#}
-{#            <img src="{% static 'svg/bookmark(filled).svg' %}" alt="" id="bookmark"/>#}
-{#        {% else %}#}
-{#            <img src="{% static 'svg/bookmark.svg' %}" alt="" id="bookmark"/>#}
-{#        {% endif %}#}
-{#    </div>#}
+    <div class="me-2" title="Добавить в закладки">
+        {% if article.bookmarked %}
+            <img src="{% static 'svg/bookmark(filled).svg' %}" alt="" id="bookmark"/>
+        {% else %}
+            <img src="{% static 'svg/bookmark.svg' %}" alt="" id="bookmark"/>
+        {% endif %}
+    </div>
     <div class="me-2" title="Сколько зарегистрированных пользователей прочитали статью">
         <img src="{% static 'svg/view.svg' %}" alt=""/>
         <small class="text-muted">{{ article.views.count }}</small>
     </div>
-{#    <img src="{% static 'svg/comment.svg' %}" alt=""/>#}
-{#    <small class="text-muted">2</small>#}
+    <div>
+        <img src="{% static 'svg/comment.svg' %}" alt=""/>
+        <small class="text-muted">{{ comments.count }}</small>
+    </div>
 </div>
