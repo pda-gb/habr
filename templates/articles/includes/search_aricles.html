@@ -3,11 +3,14 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-8">
+        <div class="col-12">
+            <div class="heading mb-4">
+                <h3>По вашему запросу "</h3>
+                <p class="search_text">{{ search_query|truncatewords:5 }}</p>
+                <h3>" найдено:</h3>
+            </div>
             {% for article in articles %}
-                {% include 'articles/includes/post.html' %}
-            {% empty %}
-                <p>Тут пока нет статей.</p>
+                {% include 'articles/includes/string_output.html' %}
             {% endfor %}
             <!-- Начало блока пагинации -->
             {% if articles.paginator.count > 5 %}
@@ -15,9 +18,5 @@
             {% endif %}
             <!-- Конец блока пагинации -->
         </div>
-        <div class="col-1"></div>
-        {% if last_articles != None %}
-            {% include 'articles/includes/right_block.html' %}
-        {% endif %}
-    </div>
+     </div>
 {% endblock content %}

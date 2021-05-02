@@ -502,7 +502,7 @@ div.scrollup:hover {
 	flex-direction: column;
 }
 
-.bookmark__container{
+.string__container{
 	max-width: 1260px;
 	margin: 10px;
 }
@@ -537,4 +537,9 @@ div.scrollup:hover {
 .heading {
     display: flex;
     justify-content: center;
+}
+
+.search_text {
+    font-size: 25px;
+    font-style: italic;
 }

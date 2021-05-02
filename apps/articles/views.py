@@ -215,5 +215,6 @@ def search_articles(request, page=1):
         "last_articles": last_articles,
         "current_user": request.user,
         "articles": articles_paginator,
+        "search_query": search_query,
     }
     return render(request, "articles/includes/search_aricles.html", page_data)
