@@ -1,10 +1,9 @@
+import time
 from django.contrib import auth, messages
-from django.core.exceptions import ValidationError
 from django.shortcuts import HttpResponseRedirect, render
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
-
 from apps.authorization.forms import (
     HabrUserLoginForm,
     HabrUserRegisterForm,
@@ -19,29 +18,18 @@ def verify(request, email, activation_key):
     try:
         user = HabrUser.objects.get(email=email)
         if not user.is_activation_key_expired() and user.activation_key == activation_key:
-            user.is_active = True
+            user.is_confirmed = True
             user.save()
-            auth.login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             print('активация прошла успешно')
         else:
             messages.error(request, 'Ошибка активации')
-        page_data = {
-            'title': 'верификация',
-        }
-        from_register = request.session.get('register', None)
-        print('+' * 100)
-        print(from_register)
-        if from_register:
-            del request.session['register']
-        # check_verify = request.session.get('verify', None)
-
-        # if check_verify:
-        #     # del request.session['verify']
-        #     request.session.flush()
-        return render(request, "authorization/verification.html", page_data)
+        auth.login(request, user, backend='django.contrib.auth.backends.ModelBackend')
     except Exception as e:
         messages.error(request, f'ошибка активации {e.args}')
-        return HttpResponseRedirect(reverse('main_page'))
+    page_data = {
+        'title': 'верификация',
+    }
+    return render(request, "authorization/verification.html", page_data)
 
 
 def send_verify_email(user):
@@ -54,22 +42,36 @@ def send_verify_email(user):
     return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
 
 
+def send_repeat_email(request, pk):
+    user = HabrUser.objects.get(pk=int(pk))
+    verify_link = reverse('auth:verify', args=[user.email, user.activation_key])
+    subject = f'Активация пользователя {user.username}'
+    message = f'Для подтверждения активации перейдите по ссылке:\n {settings.DOMAIN_NAME}{verify_link}'
+    send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+    time.sleep(5)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
 def login(request):
     """
     функция выполняет авторизацию
     """
     title = "Авторизация"
-    login_form = HabrUserLoginForm(data=request.POST or None)
-    if request.method == "POST" and login_form.is_valid():
-        username = request.POST["username"]
-        password = request.POST["password"]
 
-        user = auth.authenticate(username=username, password=password)
-        if user and user.is_active:
-            auth.login(request, user)
-            return HttpResponseRedirect(reverse("articles:main_page"))
-    # from_register = request.session.get('register', None)
-    from_register = True
+    if request.method == "POST":
+        login_form = HabrUserLoginForm(data=request.POST or None)
+        if login_form.is_valid():
+            username = request.POST["username"]
+            password = request.POST["password"]
+            user = auth.authenticate(username=username, password=password)
+            if user and user.is_active:
+                auth.login(request, user)
+                return HttpResponseRedirect(reverse("articles:main_page"))
+    else:
+        login_form = HabrUserLoginForm()
+    from_register = request.session.get('register', None)
+    if from_register:
+        del request.session['register']
     page_data = {
         "title": title,
         "login_form": login_form,
@@ -94,24 +96,18 @@ def register(request):
 
     if request.method == "POST":
         register_form = HabrUserRegisterForm(request.POST)
-
         if register_form.is_valid():
             user = register_form.save()
+            user.is_active = True
+            user.save()
+            auth.login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             if send_verify_email(user):
-                pass
                 request.session['register'] = True
-                # print('*'*100)
-                # from_register = request.session.get('register', None)
-                # print(from_register)
-                # request.session['verify'] = True
             else:
                 messages.error(request, 'Ошибка отправки сообщения')
-                # raise ValidationError(register_form.errors)
             return HttpResponseRedirect(reverse("auth:login"))
-        else:
-            messages.error(request, register_form.errors)
-            # raise ValidationError(register_form.errors)
-    register_form = HabrUserRegisterForm()
+    else:
+        register_form = HabrUserRegisterForm()
 
     page_data = {
         "title": title,

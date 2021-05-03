@@ -16,7 +16,6 @@ def main_page(request, page=1):
     title = "главная страница"
     hub_articles = Article.get_articles()
     last_articles = Article.get_last_articles(hub_articles)
-
     paginator = Paginator(hub_articles, 5)
     try:
         articles_paginator = paginator.page(page)

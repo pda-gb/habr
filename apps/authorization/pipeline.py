@@ -15,16 +15,20 @@ def save_user_profile(backend, user, response, *args, **kwargs):
                               'api.vk.com',
                               '/method/users.get',
                               None,
-                              urlencode(dict(fields=','.join(('first_name', 'last_name', 'career',
+                              urlencode(dict(fields=','.join(('first_name', 'last_name', 'career', 'email',
                                                               'sex', 'bdate', 'country', 'city', 'photo_max_orig')),
                                              access_token=response['access_token'],
                                              v='5.92')),
                               None
                               ))
+        print(f'response::::::::::{response}')
         response = requests.get(api_url)
         if response.status_code != 200:
             return
         data = response.json()['response'][0]
+        print(f'DATA::::::::::{data}')
+        user.is_confirmed = True
+        user.email = 'kostitsin.a@mail.ru'
         if data.get('first_name'):
             user.habruserprofile.first_name = data["first_name"]
         if data.get('last_name'):
@@ -45,6 +49,7 @@ def save_user_profile(backend, user, response, *args, **kwargs):
             user.habruserprofile.avatar = f'avatars/{user.pk}.jpg'
         user.save()
     elif backend.name == 'google-oauth2':
+        user.is_confirmed = True
         if response.get('given_name'):
             user.habruserprofile.first_name = response['given_name']
         if response.get('family_name'):
@@ -54,6 +59,7 @@ def save_user_profile(backend, user, response, *args, **kwargs):
             user.habruserprofile.avatar = f'avatars/{user.pk}.jpg'
         user.save()
     elif backend.name == 'github':
+        user.is_confirmed = True
         if response.get('name'):
             user.habruserprofile.first_name = response['name']
         if response.get('avatar_url'):
