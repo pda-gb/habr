@@ -2,11 +2,11 @@
 
 <nav class="sorted-menu">
     <img class="sorted-icon" src="{% static 'svg/sorted.svg' %}" alt="">
-    <form action="#" id="form-sorted">
+    <form role="sorted" method="GET" id="form-sorted" action="{% url 'articles:articles_page' 1 %}">
         <ul class="sorted-list">
             <li class="sorted-elem">
-                <input class="sorted-input" type="radio" name="sorted" value="date">
-                <label class="sorted-label"  for="date">По дате</label>
+                <input class="sorted-input" type="radio" name="sorted" value="-date">
+                <label class="sorted-label"  for="-date">По дате</label>
             </li>
             <li class="sorted-elem">
                 <input class="sorted-input" type="radio" name="sorted" value="like">

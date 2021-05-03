@@ -5,8 +5,8 @@
     <div class="row">
         <div class="col-8">
             <!-- Начало блока сортировки -->
-        {% include 'articles/includes/sorted.html' %}
-        <!-- Конец блока сортировки -->    
+            {% include 'articles/includes/sorted/sorted.html' %}
+            <!-- Конец блока сортировки -->    
             {% for article in articles %}
                 {% include 'articles/includes/post.html' %}
             {% empty %}

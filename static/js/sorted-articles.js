@@ -15,4 +15,7 @@ $(document).ready(function () {
             });
         }
     })
+    $('.sorted-input').click(function(){
+        $('#form-sorted').submit();
+    })
 })

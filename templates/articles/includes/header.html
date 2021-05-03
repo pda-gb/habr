@@ -17,7 +17,7 @@
         <div class="collapse navbar-collapse" id="navbarToggler02">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 hubs">
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.route == "all/" %} active {% endif %}"
+                    <a class="nav-link {% if request.resolver_match.route == 'all/' %} active {% endif %}"
                        href="{% url 'articles:all_hubs' %}">Все хабы</a>
                 </li>
                 {% for hub in hubs_menu %}

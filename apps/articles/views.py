@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.utils.datastructures import MultiValueDictKeyError
 
 from apps.articles.models import Article
 from apps.authorization.models import HabrUser
@@ -11,10 +12,19 @@ from apps.comments.models import Comment
 from apps.comments.utils import create_comments_tree
 
 
-def main_page(request, page=1):
+def main_page(request, pk=None, page=1):
     """рендер главной страницы"""
     title = "главная страница"
-    hub_articles = Article.get_articles()
+
+    try:
+        sorted_query = request.GET['sorted']
+        hub_articles = Article.Sorted.sort(sorted_query).get_data()
+    except MultiValueDictKeyError:
+        if pk is None:
+            hub_articles = Article.get_articles()
+        else:
+            hub_articles = Article.get_by_hub(pk)
+
     last_articles = Article.get_last_articles(hub_articles)
 
     paginator = Paginator(hub_articles, 5)
@@ -35,10 +45,19 @@ def main_page(request, page=1):
 
 
 def hub(request, pk=None, page=1):
-    if pk is None:
-        hub_articles = Article.get_articles()
-    else:
-        hub_articles = Article.get_by_hub(pk)
+
+    try:
+        sorted_query = request.GET['sorted']
+        if pk is None:
+            hub_articles = Article.Sorted.sort(sorted_query).get_data()
+        else:
+            hub_articles = Article.Sorted.sort(sorted_query, pk).get_data()
+    except MultiValueDictKeyError:
+        if pk is None:
+            hub_articles = Article.get_articles()
+        else:
+            hub_articles = Article.get_by_hub(pk)
+
     last_articles = Article.get_last_articles(hub_articles)
 
     paginator = Paginator(hub_articles, 5)
@@ -216,4 +235,4 @@ def search_articles(request, page=1):
         "current_user": request.user,
         "articles": articles_paginator,
     }
-    return render(request, "articles/includes/search_aricles.html", page_data)
+    return render(request, "articles/articles.html", page_data)
