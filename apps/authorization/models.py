@@ -10,7 +10,7 @@ from django.utils.timezone import now
 class HabrUser(AbstractUser):
     first_name = None
     last_name = None
-
+    is_staff = models.BooleanField(verbose_name='модератор', default=False)
     activation_key = models.CharField(max_length=128, blank=True)
     activation_key_expires = models.DateTimeField(default=(now() + timedelta(hours=24)))
 
