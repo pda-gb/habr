@@ -3,6 +3,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
+from django.template.loader import render_to_string
 
 from apps.articles.models import Article
 from apps.authorization.models import HabrUser
@@ -16,17 +17,12 @@ def main_page(request, pk=None, page=1):
     """рендер главной страницы"""
     title = "главная страница"
 
-    try:
-        sorted_query = request.GET['sorted']
-        hub_articles = Article.Sorted.sort(sorted_query).get_data()
-    except MultiValueDictKeyError:
-        if pk is None:
-            hub_articles = Article.get_articles()
-        else:
-            hub_articles = Article.get_by_hub(pk)
+    if pk is None:
+        hub_articles = Article.get_articles()
+    else:
+        hub_articles = Article.get_by_hub(pk)
 
     last_articles = Article.get_last_articles(hub_articles)
-
     paginator = Paginator(hub_articles, 5)
     try:
         articles_paginator = paginator.page(page)
@@ -235,4 +231,27 @@ def search_articles(request, page=1):
         "current_user": request.user,
         "articles": articles_paginator,
     }
-    return render(request, "articles/articles.html", page_data)
+    return render(request, "articles/search_articles.html", page_data)
+
+def post_list(request, pk=None, page=1):
+    if request.is_ajax():    
+        sorted_query = request.GET['sorted']
+        if pk is None:
+            hub_articles = Article.Sorted.sort(sorted_query).get_data()
+        else:
+            hub_articles = Article.Sorted.sort(sorted_query, pk).get_data()
+
+        paginator = Paginator(hub_articles, 5)
+        try:
+            articles_paginator = paginator.page(page)
+        except PageNotAnInteger:
+            articles_paginator = paginator.page(1)
+        except EmptyPage:
+            articles_paginator = paginator.page(paginator.num_pages)
+
+        page_data = {
+            "articles": articles_paginator,
+            "current_user": request.user,
+        }
+        result = render_to_string('articles/includes/post_list.html', page_data)
+        return JsonResponse({'result': result})

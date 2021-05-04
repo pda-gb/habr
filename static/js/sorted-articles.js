@@ -15,7 +15,19 @@ $(document).ready(function () {
             });
         }
     })
-    $('.sorted-input').click(function(){
-        $('#form-sorted').submit();
+    $('.sorted-input').click(function(e){
+        e.preventDefault()
+        let content = $('#form-sorted').serialize();
+        $(this).attr('checked', true);
+
+        $.ajax({
+            url: $('#form-sorted').data('url'),
+            data: content,
+            type: 'GET',
+            success: function(response) {
+                $('.post-list').html(response.result);
+            }
+        })
     })
+    
 })
