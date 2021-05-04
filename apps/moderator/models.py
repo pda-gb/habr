@@ -38,7 +38,7 @@ class BannedComment(models.Model):
 class BannedArticle(models.Model):
     """Забаненная статья"""
     delete = models.ForeignKey(Article, help_text="удалённая статья",
-                               on_delete=models.CASCADE())
+                               on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "удалённая статья"
