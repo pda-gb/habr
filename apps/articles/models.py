@@ -43,6 +43,7 @@ class Article(models.Model):
     title = models.CharField(max_length=120, verbose_name="заголовок",
                              blank=False)
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
+                               related_name='author_article',
                                on_delete=models.CASCADE)
     hub = models.ForeignKey(Hub, verbose_name="хаб", default=False,
                             on_delete=models.CASCADE)
@@ -64,7 +65,10 @@ class Article(models.Model):
     is_active = models.BooleanField(verbose_name="удалена", default=True)
 
     likes = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, verbose_name="лайки", related_name="likes",
+        settings.AUTH_USER_MODEL,
+        verbose_name="лайки",
+        # related_name="likes",
+        through="Like",
         blank=True
     )
     dislikes = models.ManyToManyField(
@@ -236,6 +240,14 @@ class Article(models.Model):
         else:
             art.draft = False
         art.save()
+
+
+class Like(models.Model):
+    article = models.ForeignKey(Article,
+                                on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    viewed = models.BooleanField(default=False, verbose_name='просмотрено')
 
 
 if __name__ == "__main__":
