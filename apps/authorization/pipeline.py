@@ -1,10 +1,10 @@
 import urllib
 from datetime import datetime
 from urllib.parse import urlunparse, urlencode
-from django.shortcuts import HttpResponseRedirect, render
+
 import requests
 from django.conf import settings
-from django.urls import reverse, reverse_lazy
+
 
 from apps.authorization.models import HabrUserProfile, HabrUser
 
@@ -21,14 +21,11 @@ def save_user_profile(backend, user, response, *args, **kwargs):
                                              v='5.92')),
                               None
                               ))
-        print(f'response::::::::::{response}')
         response = requests.get(api_url)
         if response.status_code != 200:
             return
         data = response.json()['response'][0]
-        print(f'DATA::::::::::{data}')
         user.is_confirmed = True
-        user.email = 'kostitsin.a@mail.ru'
         if data.get('first_name'):
             user.habruserprofile.first_name = data["first_name"]
         if data.get('last_name'):
