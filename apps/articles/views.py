@@ -9,7 +9,7 @@ from apps.articles.models import Article
 from apps.authorization.models import HabrUser
 from apps.authorization.models import HabrUserProfile
 from apps.comments.forms import CommentCreateForm
-from apps.comments.models import Comment
+from apps.comments.models import Comment, Sorted
 from apps.comments.utils import create_comments_tree
 
 
@@ -237,9 +237,9 @@ def post_list(request, pk=None, page=1):
     if request.is_ajax():    
         sorted_query = request.GET['sorted']
         if pk is None:
-            hub_articles = Article.Sorted.sort(sorted_query).get_data()
+            hub_articles = Sorted.sort(sorted_query).get_data()
         else:
-            hub_articles = Article.Sorted.sort(sorted_query, pk).get_data()
+            hub_articles = Sorted.sort(sorted_query, pk).get_data()
 
         paginator = Paginator(hub_articles, 5)
         try:

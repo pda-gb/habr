@@ -239,57 +239,6 @@ class Article(models.Model):
         art.save()
 
 
-    class Sorted(abc.ABC):
-
-        @abc.abstractclassmethod
-        def get_data(self, pk=None):
-            pass
-
-        @staticmethod
-        def sort(sort_type, pk=None):
-            TYPE = {
-                '-date': Article.SortDate,
-                'like': Article.SortLike,
-                'view': Article.SortView,
-            }
-            if pk:
-                return TYPE[sort_type](pk)
-            else:
-                return TYPE[sort_type]()
-
-    class SortDate(Sorted):
-
-        def __init__(self, pk=None):
-            self.pk = pk
-
-        def get_data(self):
-            if self.pk:
-                return Article.objects.filter(hub=self.pk, draft=False).order_by('-updated')
-            else:
-                return Article.objects.filter(draft=False).order_by('-updated')
-    class SortLike(Sorted):
-
-        def __init__(self, pk=None):
-            self.pk = pk
-
-        def get_data(self):
-            if self.pk:
-                return Article.objects.filter(hub=self.pk, draft=False).order_by('-rating')
-            else:
-                return Article.objects.filter(draft=False).order_by('-rating')
-    class SortView(Sorted):
-
-        def __init__(self, pk=None):
-            self.pk = pk
-
-        def get_data(self):
-            if self.pk:
-                articles = Article.objects.filter(hub=self.pk, draft=False)
-            else:
-                articles = Article.objects.filter(draft=False)
-            result = sorted(articles, key=lambda x: x.views.count(), reverse=True)
-            return result
-
 
 if __name__ == "__main__":
     hub = Hub(hub="development")
