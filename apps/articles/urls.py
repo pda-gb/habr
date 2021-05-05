@@ -17,6 +17,6 @@ urlpatterns = [
     path('search/<int:page>', main_page.search_articles, name='search_articles'),
     path("sorted_articles/<int:page>/", main_page.post_list, name='sorted_articles'),
     path("sorted_articles/<int:pk>/<int:page>/", main_page.post_list, name='sorted_articles_hub'),
-    path("sorted_articles_user/<int:pk>/<int:page>/", main_page.post_list_user, name='sorted_articles_user'),
+    path("sorted_articles_user/<int:user_pk>/<int:page>/", main_page.post_list_user, name='sorted_articles_user'),
     path("sorted_articles_search/<int:page>/", main_page.post_list_search, name='sorted_articles_search'),
 ]

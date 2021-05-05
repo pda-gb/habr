@@ -94,8 +94,16 @@ class Sorted(abc.ABC):
         pass
 
     @staticmethod
-    def sort(sort_type, pk=None, search_query=None):
-        if pk:
+    def sort(sort_type, pk=None, search_query=None, user=None):
+        if user:
+            TYPE = {
+            '-date': SortDateUser,
+            'like': SortLikeUser,
+            'view': SortViewUser,
+            'comments': SortCommentsUser,
+        }
+            return TYPE[sort_type](user)
+        elif pk:
             TYPE = {
             '-date': SortDateHub,
             'like': SortLikeHub,
@@ -226,6 +234,47 @@ class SortCommentsSearch(Sorted):
     def get_data(self):
         comments = {}
         for article in self.search_query:
+            current_comments = Comment.get_comments(article.id)
+            comments[article] = current_comments.count()
+        comments = sorted(comments.items(), key=lambda x:x[1] ,reverse=True)
+        result = [i[0] for i in comments]
+        return result
+
+class SortDateUser(Sorted):
+
+    def __init__(self, user):
+        self.user = user
+
+    def get_data(self):
+        return Article.objects.filter(author=self.user, draft=False).order_by('-updated')
+
+class SortLikeUser(Sorted):
+
+    def __init__(self, user):
+        self.user = user
+
+    def get_data(self):
+        return Article.objects.filter(author=self.user, draft=False).order_by('-rating')
+
+class SortViewUser(Sorted):
+
+    def __init__(self, user):
+        self.user = user
+
+    def get_data(self):
+        articles = Article.objects.filter(author=self.user, draft=False)
+        result = sorted(articles, key=lambda x: x.views.count(), reverse=True)
+        return result
+
+class SortCommentsUser(Sorted):
+
+    def __init__(self, user):
+        self.user = user
+
+    def get_data(self):
+        comments = {}
+        articles = Article.objects.filter(author=self.user, draft=False)
+        for article in articles:
             current_comments = Comment.get_comments(article.id)
             comments[article] = current_comments.count()
         comments = sorted(comments.items(), key=lambda x:x[1] ,reverse=True)

@@ -276,14 +276,14 @@ def post_list_search(request, page=1):
         return JsonResponse({'result': result})
 
 
-def post_list_user(request, pk=None, page=1):
+def post_list_user(request, user_pk, page=1):
     """ функция используется для сортировке статей пользователя"""
     if request.is_ajax():    
         sorted_query = request.GET['sorted']
-        if pk is None:
+        if user_pk is None:
             hub_articles = Sorted.sort(sorted_query).get_data()
         else:
-            hub_articles = Sorted.sort(sorted_query, pk).get_data()
+            hub_articles = Sorted.sort(sorted_query, user_pk).get_data()
 
         paginator = Paginator(hub_articles, 5)
         try:
