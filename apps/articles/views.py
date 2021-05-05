@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect
 
-from apps.articles.models import Article
+from apps.articles.models import Article, Like
 from apps.authorization.models import HabrUser
 from apps.authorization.models import HabrUserProfile
 from apps.comments.forms import CommentCreateForm
@@ -16,7 +16,7 @@ def main_page(request, page=1):
     title = "главная страница"
     hub_articles = Article.get_articles()
     last_articles = Article.get_last_articles(hub_articles)
-
+    notifications = notification(request)
     paginator = Paginator(hub_articles, 5)
     try:
         articles_paginator = paginator.page(page)
@@ -30,6 +30,7 @@ def main_page(request, page=1):
         "articles": articles_paginator,
         "last_articles": last_articles,
         "current_user": request.user,
+        'notifications': notifications,
     }
     return render(request, "articles/articles.html", page_data)
 
@@ -62,6 +63,7 @@ def article(request, pk=None):
     last_articles = Article.get_last_articles(hub_articles)
     current_article = get_object_or_404(Article, id=pk)
     current_comments = Comment.get_comments(pk)
+    notifications = notification (request)
     comments = create_comments_tree(
         current_comments, request.user if request.user.is_authenticated else None
     )
@@ -93,6 +95,7 @@ def article(request, pk=None):
         "comments": comments,
         "form_comment": form_comment,
         "media_url": settings.MEDIA_URL,
+        "notifications": notifications
     }
     return render(request, "articles/article.html", page_data)
 
@@ -217,3 +220,28 @@ def search_articles(request, page=1):
         "articles": articles_paginator,
     }
     return render(request, "articles/includes/search_aricles.html", page_data)
+
+def notification (request):
+    if request.user.is_authenticated:
+        noti = []
+        current_article = Article.get_by_author(author_pk=request.user.pk)
+        for artic in current_article:
+            likes = Like.objects.filter(article_id=artic.id)
+            comment = Comment.get_comments(artic.id)
+            for com in comment:
+                if com.viewed == False:
+                    noti.append(com)
+            for like in likes:
+                if like.viewed == False:
+                    noti.append(like)
+        return noti
+
+def viewed(request):
+    current_article = Article.get_by_author(author_pk=request.user.pk)
+    for i in current_article:
+        Like.objects.filter(article_id=i.id).update(viewed=True)
+        Like.save
+        Comment.get_comments(i.id).update(viewed=True)
+        Comment.save
+
+    return HttpResponseRedirect (request.META.get ('HTTP_REFERER'))
