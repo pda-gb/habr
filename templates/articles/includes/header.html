@@ -45,6 +45,38 @@
                 <!-- Конец блока поиска --->
             </ul>
             {% if user.is_authenticated %}
+                <!-- Начало блока уведомлений -->
+            {%if notifications%}
+            <a style="color:red">{{notifications|length}}</a>
+            {%endif%}
+            <div class="post-link mini-title" style="padding: 0px 20px 0px 4px">
+                <a class="bell" type="" id="dropdownMenuLink"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{% static 'svg/bell-2.ico' %}" width="20" height="20"/>
+                </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2" style="font-size: small; padding: 5px 20px">
+                            {%for i in notifications%}
+
+                            {%if i.author%}
+                                <a href="{% url 'articles:author_profile' i.author.id %}">
+                                    {{i.author}} </a>прокомментировал <a href="{% url 'articles:article' i.article.id %}">
+                        {{i.article}}</a><hr>
+                            {%elif i.user%}
+                                <a href="{% url 'articles:author_profile' i.user.id %}">
+                                    {{i.user}} </a>
+                                 лайкнул <a href="{% url 'articles:article' i.article.id %}">{{i.article}}</a><hr>
+                            {%endif%}
+
+
+                        {%endfor%}
+                        {%if notifications%}
+                        <a href="{% url 'articles:viewed' %}">
+                            <button type="button">закрыть</button>
+                        </a>
+                        {%endif%}
+                    </div>
+                    </div>
+            <!-- Конец блока уведомдлений -->
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
