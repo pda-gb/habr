@@ -1,0 +1,25 @@
+{% load static %}
+
+<nav class="sorted-menu">
+    <img class="sorted-icon" src="{% static 'svg/sorted.svg' %}" alt="">
+    <form role="sorted" method="GET" id="form-sorted" action="{% url 'articles:search_articles' 1 %}">
+        <ul class="sorted-list">
+            <li class="sorted-elem">
+                <input class="sorted-input" type="radio" name="sorted" value="-date">
+                <label class="sorted-label"  for="-date">По дате</label>
+            </li>
+            <li class="sorted-elem">
+                <input class="sorted-input" type="radio" name="sorted" value="like">
+                <label class="sorted-label" for="like">По лайкам</label>
+            </li>
+            <li class="sorted-elem">
+                <input class="sorted-input" type="radio" name="sorted" value="comments">
+                <label class="sorted-label" for="comments">По комментариям</label>
+            </li >
+            <li class="sorted-elem">
+                <input class="sorted-input" type="radio" name="sorted" value="view">
+                <label class="sorted-label" for="view">По просмотрам</label>
+            </li>  
+        </ul>
+    </form>
+</nav>

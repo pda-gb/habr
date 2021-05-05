@@ -1,10 +1,10 @@
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
 from django.db import models
+import abc
 
 from apps.articles.models import Article
 from apps.authorization.models import HabrUser
-
 
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
@@ -75,3 +75,86 @@ class Comment(models.Model):
     def get_comments(article_pk):
         comments = Comment.objects.filter(article__pk=article_pk).order_by("date")
         return comments
+
+    @staticmethod
+    def get_all_comments():
+        comments = Comment.objects.all()
+        return comments
+
+    @staticmethod
+    def get_all_comments_hub(pk):
+        articles = Article.get_articles().filter(hub=pk, draft=False)
+
+
+class Sorted(abc.ABC):
+    ''' класс отвечает за сортировку  '''
+
+    @abc.abstractclassmethod
+    def get_data(self, pk=None):
+        pass
+
+    @staticmethod
+    def sort(sort_type, pk=None):
+        TYPE = {
+            '-date': SortDate,
+            'like': SortLike,
+            'view': SortView,
+            'comments': SortComments,
+        }
+        if pk:
+            return TYPE[sort_type](pk)
+        else:
+            return TYPE[sort_type]()
+
+class SortDate(Sorted):
+
+    def __init__(self, pk=None):
+        self.pk = pk
+
+    def get_data(self):
+        if self.pk:
+            return Article.objects.filter(hub=self.pk, draft=False).order_by('-updated')
+        else:
+            return Article.objects.filter(draft=False).order_by('-updated')
+
+class SortLike(Sorted):
+
+    def __init__(self, pk=None):
+        self.pk = pk
+
+    def get_data(self):
+        if self.pk:
+            return Article.objects.filter(hub=self.pk, draft=False).order_by('-rating')
+        else:
+            return Article.objects.filter(draft=False).order_by('-rating')
+
+class SortView(Sorted):
+
+    def __init__(self, pk=None):
+            self.pk = pk
+
+    def get_data(self):
+        if self.pk:
+            articles = Article.objects.filter(hub=self.pk, draft=False)
+        else:
+            articles = Article.objects.filter(draft=False)
+        result = sorted(articles, key=lambda x: x.views.count(), reverse=True)
+        return result
+
+class SortComments(Sorted):
+
+    def __init__(self, pk=None):
+        self.pk = pk
+
+    def get_data(self):
+        comments = {}
+        if self.pk:
+            articles = Article.objects.filter(hub=self.pk, draft=False)
+        else:
+            articles = Article.objects.filter(draft=False)
+        for article in articles:
+            current_comments = Comment.get_comments(article.id)
+            comments[article] = current_comments.count()
+        comments = sorted(comments.items(), key=lambda x:x[1] ,reverse=True)
+        result = [i[0] for i in comments]
+        return result
