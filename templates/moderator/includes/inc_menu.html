@@ -2,7 +2,7 @@
     <div class="featured-menu">
             <a class="{% if request.resolver_match.url_name == 'complaints' %}active{% endif %}" href="{% url 'moderator:complaints'%}">Жалобы</a>
             <a class="{% if request.resolver_match.url_name == 'review_articles' %}active{% endif %}" href="{% url 'moderator:review_articles'%}">Статьи на проверку</a>
-            <a class="{% if request.resolver_match.url_name == 'banned_users' %}active{% endif %}" href="{% url 'moderator:banned_users'%}">Заблокированные пользователи</a>
+            <a class="{% if request.resolver_match.url_name == 'banned_users' %}active{% endif %}" href="{% url 'moderator:banned_users'%}">Нарушители</a>
     </div>
 </div>
 <div class="clear-fix"></div>

@@ -56,7 +56,7 @@
                                 <button class="dropdown-item" type="button">Админка</button>
                             </a>
                         {% endif %}
-                        {% if user.is_staff %}
+                        {% if is_staff or user.is_superuser %}
                             <a href="{% url 'moderator:complaints' %}">
                                 <button class="dropdown-item" type="button">Модераторская</button>
                             </a>

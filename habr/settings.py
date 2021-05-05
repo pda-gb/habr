@@ -61,6 +61,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "apps.articles.context_processors.get_all_hubs",
                 "apps.authorization.context_processors.get_verify_flag",
+                "apps.moderator.context_processors.check_is_staff",
                 "social_django.context_processors.backends",
                 "social_django.context_processors.login_redirect",
             ],

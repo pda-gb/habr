@@ -2,4 +2,11 @@
 {% load my_tags %}
 {% block content %}
     {% include 'articles/includes/inc_read_profile.html' %}
+    {% if is_staff %}
+        <div style="width: 100%; text-align: center; margin-top: 20px;">
+            <button class="btn btn-danger">
+                <a href="{% url 'moderator:add_user_ban' current_user.pk %}">Заблокировать пользователя</a>
+            </button>
+        </div>
+    {% endif %}
 {% endblock content %}
