@@ -5,7 +5,6 @@ import apps.account.views as account
 app_name = "account"
 
 urlpatterns = [
-    path("", account.user_articles, name="user_articles"),
     path("profile/", account.read_profile, name="read_profile"),
     path("articles/", account.user_articles, name="user_articles"),
     path("add_article/", account.add_article, name="add_article"),
