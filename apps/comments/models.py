@@ -149,12 +149,12 @@ class SortComments(Sorted):
     def get_data(self):
         comments = {}
         if self.pk:
-            pass
+            articles = Article.objects.filter(hub=self.pk, draft=False)
         else:
             articles = Article.objects.filter(draft=False)
-            for article in articles:
-                current_comments = Comment.get_comments(article.id)
-                comments[article] = current_comments.count()
+        for article in articles:
+            current_comments = Comment.get_comments(article.id)
+            comments[article] = current_comments.count()
         comments = sorted(comments.items(), key=lambda x:x[1] ,reverse=True)
         result = [i[0] for i in comments]
         return result

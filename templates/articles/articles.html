@@ -13,12 +13,12 @@
                 {% empty %}
                     <p>Тут пока нет статей.</p>
                 {% endfor %}
+            </div>    
                 {% if articles.paginator.count > 5 %}
                 <!-- Начало блока пагинации -->
                 {% include 'articles/includes/paginations/paggination.html' %}
                 <!-- Конец блока пагинации -->
                 {% endif %}
-            </div>
         </div>
         <div class="col-1"></div>
         {% if last_articles != None %}

@@ -41,18 +41,10 @@ def main_page(request, pk=None, page=1):
 
 
 def hub(request, pk=None, page=1):
-
-    try:
-        sorted_query = request.GET['sorted']
-        if pk is None:
-            hub_articles = Article.Sorted.sort(sorted_query).get_data()
-        else:
-            hub_articles = Article.Sorted.sort(sorted_query, pk).get_data()
-    except MultiValueDictKeyError:
-        if pk is None:
-            hub_articles = Article.get_articles()
-        else:
-            hub_articles = Article.get_by_hub(pk)
+    if pk is None:
+        hub_articles = Article.get_articles()
+    else:
+        hub_articles = Article.get_by_hub(pk)
 
     last_articles = Article.get_last_articles(hub_articles)
 

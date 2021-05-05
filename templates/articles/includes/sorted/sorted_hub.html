@@ -2,7 +2,7 @@
 
 <nav class="sorted-menu">
     <img class="sorted-icon" src="{% static 'svg/sorted.svg' %}" alt="">
-    <form role="sorted" method="GET" id="form-sorted" action="{% url 'articles:articles_hub_pag' 1 pk %}">
+    <form role="sorted" method="GET" id="form-sorted" data-url="{% url 'articles:sorted_articles_hub' 1 pk %}">
         <ul class="sorted-list">
             <li class="sorted-elem">
                 <input class="sorted-input" type="radio" name="sorted" value="-date">
