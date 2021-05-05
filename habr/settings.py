@@ -176,12 +176,12 @@ if DEBUG:
 # Настройки для вывода сообщений о подтверждении регистрации в лог-файл\консоль
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 25
-EMAIL_HOST_USER = 'django@sputnik.local'
-EMAIL_HOST_PASSWORD = 'sputnik'
+EMAIL_HOST_USER = None
+EMAIL_HOST_PASSWORD = None
 EMAIL_USE_SSL = False
 # вариант включения логгирования сообщений почты ввиде файлов
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = 'tmp/email-messages/'
+# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# EMAIL_FILE_PATH = 'tmp/email-messages/'
 
 ## Рабочие настройки для работы через яндекс
 # DEFAULT_FROM_EMAIL = secret_value["EMAIL_HOST_USER"]
