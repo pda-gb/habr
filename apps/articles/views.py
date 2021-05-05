@@ -227,9 +227,8 @@ def search_articles(request, page=1):
     return render(request, "articles/search_articles.html", page_data)
 
 def post_list(request, pk=None, page=1):
-
     '''функция используется для сортировке всех статей или сортировки статей по хабу'''
-    if request.is_ajax():    
+    if request.is_ajax():
         sorted_query = request.GET['sorted']
         if pk is None:
             hub_articles = Sorted.sort(sorted_query).get_data()
@@ -254,7 +253,7 @@ def post_list(request, pk=None, page=1):
 def post_list_search(request, page=1):
     """ функция используется для сортировке статей поиска"""
     if request.is_ajax():
-        search_query = request.GET['search_value']    
+        search_query = request.GET['search_value']
         sorted_query = request.GET['content']
         hub_articles = Article.get_search_articles(search_query)
         hub_articles = Sorted.sort(sorted_query, search_query=hub_articles).get_data()
@@ -278,7 +277,7 @@ def post_list_search(request, page=1):
 
 def post_list_user(request, user_pk, page=1):
     """ функция используется для сортировке статей пользователя"""
-    if request.is_ajax():    
+    if request.is_ajax():
         sorted_query = request.GET['sorted']
         if user_pk is None:
             hub_articles = Sorted.sort(sorted_query).get_data()

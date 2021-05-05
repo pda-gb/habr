@@ -45,6 +45,7 @@
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/arrow_up.js' %}"></script>
     <script src="{% static 'js/search-articles.js' %}"></script>
+    <script src="{% static 'js/modal_send_email.js' %}"></script>
     <script>
         $(document).ready(function () {
             $('.sorted-menu').click(function () {
@@ -68,7 +69,7 @@
                 e.preventDefault()
                 let content = $('#form-sorted').serialize();
                 $(this).prop('checked', true);
-        
+
                 $.ajax({
                     url: $('#form-sorted').data('url'),
                     data: content,
