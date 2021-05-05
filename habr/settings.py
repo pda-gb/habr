@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "ckeditor",
     "ckeditor_uploader",
     "social_django",
+    "apps.moderator",
 ]
 # для postgresql добавить psycopg2
 
