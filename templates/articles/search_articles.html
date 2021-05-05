@@ -4,11 +4,16 @@
 {% block content %}
     <div class="row">
         <div class="col-8">
-            {% for article in articles %}
-                {% include 'articles/includes/post.html' %}
-            {% empty %}
-                <p>Тут пока нет статей.</p>
-            {% endfor %}
+            <!-- Начало блока сортировки -->
+            {% include 'articles/includes/sorted/sorted_search.html' %}
+            <!-- Конец блока сортировки -->
+            <div class="post-list">  
+                {% for article in articles %}
+                    {% include 'articles/includes/post.html' %}
+                {% empty %}
+                    <p>Тут пока нет статей.</p>
+                {% endfor %}
+            </div>
             <!-- Начало блока пагинации -->
             {% if articles.paginator.count > 5 %}
                 {% include 'articles/includes/paginations/paggination.html' %}

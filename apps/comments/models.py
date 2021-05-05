@@ -94,65 +94,138 @@ class Sorted(abc.ABC):
         pass
 
     @staticmethod
-    def sort(sort_type, pk=None):
-        TYPE = {
+    def sort(sort_type, pk=None, search_query=None):
+        if pk:
+            TYPE = {
+            '-date': SortDateHub,
+            'like': SortLikeHub,
+            'view': SortViewHub,
+            'comments': SortCommentsHub,
+        }
+            return TYPE[sort_type](pk)
+        elif search_query:
+            TYPE = {
+            '-date': SortDateSearch,
+            'like': SortLikeSearch,
+            'view': SortViewSearch,
+            'comments': SortCommentsSearch,
+        }
+            return TYPE[sort_type](search_query)
+        else:
+            TYPE = {
             '-date': SortDate,
             'like': SortLike,
             'view': SortView,
             'comments': SortComments,
         }
-        if pk:
-            return TYPE[sort_type](pk)
-        else:
             return TYPE[sort_type]()
 
 class SortDate(Sorted):
 
-    def __init__(self, pk=None):
-        self.pk = pk
-
     def get_data(self):
-        if self.pk:
-            return Article.objects.filter(hub=self.pk, draft=False).order_by('-updated')
-        else:
-            return Article.objects.filter(draft=False).order_by('-updated')
+        return Article.objects.filter(draft=False).order_by('-updated')
 
 class SortLike(Sorted):
 
-    def __init__(self, pk=None):
-        self.pk = pk
-
     def get_data(self):
-        if self.pk:
-            return Article.objects.filter(hub=self.pk, draft=False).order_by('-rating')
-        else:
-            return Article.objects.filter(draft=False).order_by('-rating')
+        return Article.objects.filter(draft=False).order_by('-rating')
 
 class SortView(Sorted):
 
-    def __init__(self, pk=None):
-            self.pk = pk
-
     def get_data(self):
-        if self.pk:
-            articles = Article.objects.filter(hub=self.pk, draft=False)
-        else:
-            articles = Article.objects.filter(draft=False)
+        articles = Article.objects.filter(draft=False)
         result = sorted(articles, key=lambda x: x.views.count(), reverse=True)
         return result
 
 class SortComments(Sorted):
 
-    def __init__(self, pk=None):
+    def get_data(self):
+        comments = {}
+        articles = Article.objects.filter(draft=False)
+        for article in articles:
+            current_comments = Comment.get_comments(article.id)
+            comments[article] = current_comments.count()
+        comments = sorted(comments.items(), key=lambda x:x[1] ,reverse=True)
+        result = [i[0] for i in comments]
+        return result
+
+class SortDateHub(Sorted):
+
+    def __init__(self, pk):
+        self.pk = pk
+
+    def get_data(self):
+        return Article.objects.filter(hub=self.pk, draft=False).order_by('-updated')
+
+class SortLikeHub(Sorted):
+
+    def __init__(self, pk):
+        self.pk = pk
+
+    def get_data(self):
+        return Article.objects.filter(hub=self.pk, draft=False).order_by('-rating')
+
+class SortViewHub(Sorted):
+
+    def __init__(self, pk):
+        self.pk = pk
+
+    def get_data(self):
+        articles = Article.objects.filter(hub=self.pk, draft=False)
+        result = sorted(articles, key=lambda x: x.views.count(), reverse=True)
+        return result
+
+class SortCommentsHub(Sorted):
+
+    def __init__(self, pk):
         self.pk = pk
 
     def get_data(self):
         comments = {}
-        if self.pk:
-            articles = Article.objects.filter(hub=self.pk, draft=False)
-        else:
-            articles = Article.objects.filter(draft=False)
+        articles = Article.objects.filter(hub=self.pk, draft=False)
         for article in articles:
+            current_comments = Comment.get_comments(article.id)
+            comments[article] = current_comments.count()
+        comments = sorted(comments.items(), key=lambda x:x[1] ,reverse=True)
+        result = [i[0] for i in comments]
+        return result
+
+class SortDateSearch(Sorted):
+
+    def __init__(self, search_query):
+        self.search_query = search_query
+
+    def get_data(self):
+        return self.search_query.order_by('-updated')
+
+class SortLikeSearch(Sorted):
+
+    def __init__(self, search_query):
+        self.search_query = search_query
+
+
+    def get_data(self):
+        return self.search_query.order_by('-rating')
+
+class SortViewSearch(Sorted):
+
+    def __init__(self, search_query):
+        self.search_query = search_query
+
+
+    def get_data(self):
+        result = sorted(self.search_query, key=lambda x: x.views.count(), reverse=True)
+        return result
+
+class SortCommentsSearch(Sorted):
+
+    def __init__(self, search_query):
+        self.search_query = search_query
+
+
+    def get_data(self):
+        comments = {}
+        for article in self.search_query:
             current_comments = Comment.get_comments(article.id)
             comments[article] = current_comments.count()
         comments = sorted(comments.items(), key=lambda x:x[1] ,reverse=True)
