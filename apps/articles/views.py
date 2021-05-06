@@ -1,10 +1,8 @@
 from django.conf import settings
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.http import JsonResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
-from django.utils.datastructures import MultiValueDictKeyError
 from django.template.loader import render_to_string
 
 from apps.articles.models import Article, Like
@@ -73,7 +71,7 @@ def article(request, pk=None):
     last_articles = Article.get_last_articles(hub_articles)
     current_article = get_object_or_404(Article, id=pk)
     current_comments = Comment.get_comments(pk)
-    notifications = notification (request)
+    notifications = notification(request)
     comments = create_comments_tree(
         current_comments, request.user if request.user.is_authenticated else None
     )
@@ -232,6 +230,7 @@ def search_articles(request, page=1):
     }
     return render(request, "articles/search_articles.html", page_data)
 
+
 def post_list(request, pk=None, page=1):
     '''функция используется для сортировке всех статей или сортировки статей по хабу'''
     if request.is_ajax():
@@ -255,6 +254,7 @@ def post_list(request, pk=None, page=1):
         }
         result = render_to_string('articles/includes/post_list.html', page_data)
         return JsonResponse({'result': result})
+
 
 def post_list_search(request, page=1):
     """ функция используется для сортировке статей поиска"""
@@ -304,7 +304,9 @@ def post_list_user(request, user_pk, page=1):
         }
         result = render_to_string('articles/includes/post_list.html', page_data)
         return JsonResponse({'result': result})
-def notification (request):
+
+
+def notification(request):
     if request.user.is_authenticated:
         noti = []
         current_article = Article.get_by_author(author_pk=request.user.pk)
@@ -319,6 +321,7 @@ def notification (request):
                     noti.append(like)
         return noti
 
+
 def viewed(request):
     current_article = Article.get_by_author(author_pk=request.user.pk)
     for i in current_article:
@@ -327,4 +330,4 @@ def viewed(request):
         Comment.get_comments(i.id).update(viewed=True)
         Comment.save
 
-    return HttpResponseRedirect (request.META.get ('HTTP_REFERER'))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
