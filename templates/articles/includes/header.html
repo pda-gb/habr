@@ -17,7 +17,7 @@
         <div class="collapse navbar-collapse" id="navbarToggler02">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 hubs">
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.route == "all/" %} active {% endif %}"
+                    <a class="nav-link {% if request.resolver_match.route == 'all/' %} active {% endif %}"
                        href="{% url 'articles:all_hubs' %}">Все хабы</a>
                 </li>
                 {% for hub in hubs_menu %}
@@ -36,7 +36,8 @@
                               action="{% url 'articles:search_articles' 1 %}">
                             <input class="form-control input-search" type="text" placeholder="Search"
                                    aria-label="Search" name="search">
-                            <img src="{% static 'svg/magnifier-black.svg' %}" class="magnifier magnifier-in-input" alt="">
+                            <img src="{% static 'svg/magnifier-black.svg' %}" class="magnifier magnifier-in-input"
+                                 alt="">
                         </form>
                     </div>
                     <a id="main-magnifier" href="#"><img src="{% static 'svg/magnifier-white.svg' %}" class="magnifier"
@@ -45,6 +46,49 @@
                 <!-- Конец блока поиска --->
             </ul>
             {% if user.is_authenticated %}
+                {% if not user.is_confirmed %}
+                    <a class="warning-verify-btn" data-toggle="modal" data-target=".modal">
+                        <img class="warning-verify" src="{% static 'img/danger.svg' %}"
+                             title="Подтвердите учётную запись!">
+                    </a>
+                {% endif %}
+                <!-- Начало блока уведомлений -->
+                {% if notifications %}
+                    <a style="color:red">{{ notifications|length }}</a>
+                {% endif %}
+                <div class="post-link mini-title" style="padding: 0px 20px 0px 4px">
+                    <a class="bell" type="" id="dropdownMenuLink"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{% static 'svg/bell-2.ico' %}" width="20" height="20"/>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2"
+                         style="font-size: small; padding: 5px 20px">
+                        {% for i in notifications %}
+
+                            {% if i.author %}
+                                <a href="{% url 'articles:author_profile' i.author.id %}" class="post-author">
+                                    {{ i.author }} </a>прокомментировал<br>
+                                <a href="{% url 'articles:article' i.article.id %}">
+                                    {{ i.article|truncatewords:5 }}</a>
+                                <hr>
+                            {% elif i.user %}
+                                <a href="{% url 'articles:author_profile' i.user.id %}" class="post-author">
+                                    {{ i.user }} </a>
+                                лайкнул<br>
+                                <a href="{% url 'articles:article' i.article.id %}">{{ i.article|truncatechars:25 }}</a>
+                                <hr>
+                            {% endif %}
+
+
+                        {% endfor %}
+                        {% if notifications %}
+                            <a href="{% url 'articles:viewed' %}">
+                                <button type="button">закрыть</button>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- Конец блока уведомдлений -->
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -54,12 +98,14 @@
                         <a href="{% url 'account:read_profile' %}">
                             <button class="dropdown-item" type="button">Личный кабинет</button>
                         </a>
-                        <a href="{% url 'account:bookmarks_page' %}">
-                            <button class="dropdown-item" type="button">Закладки</button>
-                        </a>
-                        <a href="{% url 'account:add_article' %}">
-                            <button class="dropdown-item" type="button">Написать статью</button>
-                        </a>
+                        {% if user.is_confirmed %}
+                            <a href="{% url 'account:bookmarks_page' %}">
+                                <button class="dropdown-item" type="button">Закладки</button>
+                            </a>
+                            <a href="{% url 'account:add_article' %}">
+                                <button class="dropdown-item" type="button">Написать статью</button>
+                            </a>
+                        {% endif %}
                         <div class="dropdown-divider"></div>
                         <a href="{% url 'auth:logout' %}">
                             <button class="dropdown-item" type="button">Выход</button>
@@ -68,7 +114,8 @@
                 </div>
             {% else %}
                 {% if check_verify %}
-                    <img class="warning-verify" src="{% static 'img/danger.svg' %}" alt="warning" title="Подтвердите свою учётную запись!">
+                    <img class="warning-verify" src="{% static 'img/danger.svg' %}" alt="warning"
+                         title="Подтвердите свою учётную запись!">
                     <a class="btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
                 {% else %}
                     <a class="btn btn-outline-light me-2" href="{% url 'auth:login' %}">Войти</a>
@@ -78,3 +125,6 @@
         </div>
     </div>
 </nav>
+
+{% include 'articles/includes/modals/repeat_send_email.html' %}
+{% include 'articles/includes/modals/success_send_email.html' %}

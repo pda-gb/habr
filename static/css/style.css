@@ -492,9 +492,14 @@ div.scrollup:hover {
     text-align: center;
 }
 
+.warning-verify-btn {
+    cursor: pointer;
+}
+
 .warning-verify {
     width: 45px;
     margin-right: 15px;
+    position: relative;
 }
 
 .wrapper {

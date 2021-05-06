@@ -4,13 +4,15 @@
 {% block content %}
     <div class="row">
         <div class="col-12">
+            <!-- Начало блока сортировки -->
+            {% include 'articles/includes/sorted/sorted_search.html' %}
+            <!-- Конец блока сортировки -->
             {% if articles %}
                 <div class="heading mb-4">
                     <h3>По вашему запросу "</h3>
                     <p class="search_text">{{ search_query|truncatewords:5 }}</p>
                     <h3>" найдено:</h3>
                 </div>
-                    {% include 'articles/includes/string_output.html' %}
                 <!-- Начало блока пагинации -->
                 {% if articles.paginator.count > 5 %}
                     {% include 'articles/includes/paginations/paggination.html' %}

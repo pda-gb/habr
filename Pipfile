@@ -8,8 +8,8 @@ django = "*"
 pillow = "*"
 mimesis = "*"
 django-ckeditor = "*"
-social-auth-app-django = "*"
 requests = "*"
+python-social-auth = {editable = true, git = "https://github.com/python-social-auth/social-app-django.git"}
 
 [dev-packages]
 flake8 = "*"
