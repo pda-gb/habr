@@ -1,0 +1,58 @@
+<nav aria-label="Page navigation example">
+    <ul class="pagination pagination-lg">
+            {% if articles.has_previous %}
+            <li class="page-item">
+                <div>
+                    <form class="search" role="search" id="search-articles-form" method="GET"
+                              action="{% url 'articles:search_articles' 1 %}">
+                            <input class="form-control input-search" type="text" placeholder="Search"
+                                   aria-label="Search" name="search" value="{{ search_query }}">
+                            <img src="{% static 'svg/magnifier-black.svg' %}" class="magnifier magnifier-in-input" alt="">
+                    </form>
+                    <a href="{% url 'articles:search_articles' 1 search_query  %}" class="page-link" aria-label="Previous">
+                    <i class="fas fa-chevron-circle-left"></i></a>
+                </div>
+            </li>
+            {% endif %}
+            {% if articles.paginator.page_range.stop > 3 %}
+                {% if articles.number|add:'-3' > 1 %}
+                <div>
+                    <li class="page-item">
+                        <a href="{% url 'articles:search_articles' articles.number|add:'-3' %}" class="page-link">...</a>
+                    </li>
+                </div>    
+                {% endif %}
+            {% endif %}    
+            {% for cur_page in articles.paginator.page_range %}
+                {% if cur_page > articles.number|add:'-3' and cur_page < articles.number|add:'3' %}
+                <div>
+                    <li class="page-item {% if articles.number == cur_page %}active{% endif %}"></li>
+                        <a class="page-link" href="{% url 'articles:search_articles' cur_page %}">{{ cur_page }}</a>
+                    </li>
+                </div>    
+                {% endif %}
+            {% endfor %}
+            {% if articles.paginator.page_range.stop > 3 %}
+                {% if articles.number|add:'3' < 6 %}
+                <div>
+                    <li class="page-item">
+                        <a href="{% url 'articles:search_articles' articles.number|add:'3' %}" class="page-link">...</a>
+                    </li>
+                </div>
+                {% endif %}
+            {% endif %}   
+            {% if articles.has_next %}
+            <li class="page-item">
+                <a href="{% url 'articles:search_articles' articles.paginator.num_pages %}" class="page-link" aria-label="Next">
+                <i class="fas fa-chevron-circle-right"></i></a>
+            </li>    
+            {% endif %}
+    </ul>    
+</nav>
+<script>
+    $(document).ready(function () {
+        $('.magnifier-in-input').click(function(){
+            $('#search-articles-form').submit();
+        });
+    })
+</script>
