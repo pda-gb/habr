@@ -1,5 +1,4 @@
 {% load static %}
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
     <div class="container">
         <a class="logo" href="{% url 'articles:main_page' %}">Sputnik</a>
@@ -17,7 +16,7 @@
         <div class="collapse navbar-collapse" id="navbarToggler02">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 hubs">
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.route == "all/" %} active {% endif %}"
+                    <a class="nav-link {% if request.resolver_match.route == 'all/' %} active {% endif %}"
                        href="{% url 'articles:all_hubs' %}">Все хабы</a>
                 </li>
                 {% for hub in hubs_menu %}
@@ -45,6 +44,11 @@
                 <!-- Конец блока поиска --->
             </ul>
             {% if user.is_authenticated %}
+                {% if not user.is_confirmed %}
+                    <a class="warning-verify-btn" data-toggle="modal" data-target=".modal">
+                        <img class="warning-verify" src="{% static 'img/danger.svg' %}" title="Подтвердите учётную запись!">
+                    </a>
+                {% endif %}
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -64,9 +68,11 @@
                         <a href="{% url 'account:read_profile' %}">
                             <button class="dropdown-item" type="button">Личный кабинет</button>
                         </a>
-                        <a href="{% url 'account:add_article' %}">
-                            <button class="dropdown-item" type="button">Написать статью</button>
-                        </a>
+                        {% if user.is_confirmed %}
+                            <a href="{% url 'account:add_article' %}">
+                                <button class="dropdown-item" type="button">Написать статью</button>
+                            </a>
+                        {% endif %}
                         <div class="dropdown-divider"></div>
                         <a href="{% url 'auth:logout' %}">
                             <button class="dropdown-item" type="button">Выход</button>
@@ -74,14 +80,12 @@
                     </div>
                 </div>
             {% else %}
-                {% if check_verify %}
-                    <img class="warning-verify" src="{% static 'img/danger.svg' %}" alt="warning" title="Подтвердите свою учётную запись!">
-                    <a class="btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
-                {% else %}
-                    <a class="btn btn-outline-light me-2" href="{% url 'auth:login' %}">Войти</a>
-                    <a class="btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
-                {% endif %}
+                <a class="btn btn-outline-light me-2" href="{% url 'auth:login' %}">Войти</a>
+                <a class="btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
             {% endif %}
         </div>
     </div>
 </nav>
+
+{% include 'articles/includes/modals/repeat_send_email.html' %}
+{% include 'articles/includes/modals/success_send_email.html' %}

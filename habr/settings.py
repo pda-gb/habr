@@ -178,12 +178,12 @@ if DEBUG:
 # Настройки для вывода сообщений о подтверждении регистрации в лог-файл\консоль
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 25
-EMAIL_HOST_USER = 'django@sputnik.local'
-EMAIL_HOST_PASSWORD = 'sputnik'
+EMAIL_HOST_USER = None
+EMAIL_HOST_PASSWORD = None
 EMAIL_USE_SSL = False
 # вариант включения логгирования сообщений почты ввиде файлов
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = 'tmp/email-messages/'
+# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# EMAIL_FILE_PATH = 'tmp/email-messages/'
 
 ## Рабочие настройки для работы через яндекс
 # DEFAULT_FROM_EMAIL = secret_value["EMAIL_HOST_USER"]
@@ -202,15 +202,15 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 SOCIAL_AUTH_VK_OAUTH2_IGNORE_DEFAULT_SCOPE = True
-SOCIAL_AUTH_VK_OAUTH_SCOPE = ['email']
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
 SOCIAL_AUTH_VK_OAUTH2_KEY = secret_value['SOCIAL_AUTH_VK_OAUTH2_KEY']
 SOCIAL_AUTH_VK_OAUTH2_SECRET = secret_value['SOCIAL_AUTH_VK_OAUTH2_SECRET']
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = secret_value['SOCIAL_AUTH_GOOGLE_OAUTH2_KEY']
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = secret_value['SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET']
 
-SOCIAL_AUTH_GITHUB_OAUTH2_IGNORE_DEFAULT_SCOPE = True
-SOCIAL_AUTH_GITHUB_OAUTH2_SCOPE = ['email']
+SOCIAL_AUTH_GITHUB_IGNORE_DEFAULT_SCOPE = True
+SOCIAL_AUTH_GITHUB_SCOPE = ['user:email']
 SOCIAL_AUTH_GITHUB_KEY = secret_value['SOCIAL_AUTH_GITHUB_KEY']
 SOCIAL_AUTH_GITHUB_SECRET = secret_value['SOCIAL_AUTH_GITHUB_SECRET']
 
@@ -220,11 +220,11 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_uid',
     'social_core.pipeline.social_auth.auth_allowed',
     'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.social_auth.associate_by_email',
     'social_core.pipeline.user.create_user',
     'apps.authorization.pipeline.save_user_profile',
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
-    'social_core.pipeline.social_auth.associate_by_email',
 )
 

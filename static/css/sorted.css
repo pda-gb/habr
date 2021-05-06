@@ -1,0 +1,27 @@
+.sorted-menu * {
+    margin: 0;
+    padding: 0;
+}
+
+.sorted-menu {
+    float: right;
+    cursor: pointer;
+}
+
+#form-sorted {
+    display: none;
+}
+
+
+.sorted-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.sorted-list {
+    position: absolute;
+    list-style-type: none;
+    padding-left: 0px;
+    background: white;
+    border: solid black 1px;
+}
