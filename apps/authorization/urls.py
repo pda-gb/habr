@@ -10,4 +10,5 @@ urlpatterns = [
     path("logout/", auth.logout, name="logout"),
     path("forgive/", auth.forgive, name="forgive"),
     path("verify/<email>/<activation_key>/", auth.verify, name='verify'),
+    path("send/<pk>/", auth.send_repeat_email, name='send'),
 ]

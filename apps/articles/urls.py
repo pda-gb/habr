@@ -15,5 +15,9 @@ urlpatterns = [
     path("ajax/rate_author/", main_page.like_dislike_author_ajax, name="ajax_rate_author"),
     path("author/<int:pk>/", main_page.show_author_profile, name="author_profile"),
     path('search/<int:page>', main_page.search_articles, name='search_articles'),
+    path("sorted_articles/<int:page>/", main_page.post_list, name='sorted_articles'),
+    path("sorted_articles/<int:pk>/<int:page>/", main_page.post_list, name='sorted_articles_hub'),
+    path("sorted_articles_user/<int:user_pk>/<int:page>/", main_page.post_list_user, name='sorted_articles_user'),
+    path("sorted_articles_search/<int:page>/", main_page.post_list_search, name='sorted_articles_search'),
     path("notifications/", main_page.viewed, name='viewed'),
 ]

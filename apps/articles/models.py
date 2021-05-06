@@ -250,6 +250,5 @@ class Like(models.Model):
     viewed = models.BooleanField(default=False, verbose_name='просмотрено')
 
 
-
 if __name__ == "__main__":
     hub = Hub(hub="development")
