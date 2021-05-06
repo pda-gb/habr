@@ -21,4 +21,5 @@ urlpatterns = [
     path("edit_profile/edit_password/", account.edit_password, name="edit_password"),
     path("edit_article/<int:pk>", account.edit_article, name="edit_article"),
     path("bookmarks/", account.bookmarks_page, name="bookmarks_page"),
+    path("bookmarks/<int:page>", account.bookmarks_page, name="bookmarks_paggination"),
 ]

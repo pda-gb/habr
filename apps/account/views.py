@@ -202,8 +202,16 @@ def edit_article(request, pk):
 
 @login_required
 @transaction.atomic()
-def bookmarks_page(request):
+def bookmarks_page(request, page=1):
     bookmarks = Article.get_bookmarks(request.user.id)
     title = "Закладки"
-    page_data = {"title": title, "articles": bookmarks}
+    paginator = Paginator(bookmarks, 20)
+    try:
+        bookmarks_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        bookmarks_paginator = paginator.page(1)
+    except EmptyPage:
+        bookmarks_paginator = paginator.page(paginator.num_pages)
+
+    page_data = {"title": title, "articles": bookmarks_paginator}
     return render(request, "account/bookmarks.html", page_data)

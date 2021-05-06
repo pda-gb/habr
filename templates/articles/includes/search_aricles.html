@@ -12,7 +12,7 @@
                 </div>
                 {% include 'articles/includes/string_output.html' %}
                 <!-- Начало блока пагинации -->
-                {% if articles.paginator.count > 5 %}
+                {% if articles.paginator.count > 20 %}
                     {% include 'articles/includes/paginations/paggination_search.html' %}
                 {% endif %}
                  <!-- Конец блока пагинации -->

@@ -10,6 +10,11 @@
             <div class="bookmark">
                 {% include 'articles/includes/string_output.html' %}
             </div>
+            {% if articles.paginator.count > 20 %}
+            <!-- Начало блока пагинации -->
+            {% include 'account/includes/paginations/paggination_bookmarks.html' %}
+            <!-- Конец блока пагинации -->
+            {% endif %}
         </div>
     </div>
 {% endblock content %}
