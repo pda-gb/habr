@@ -11,6 +11,7 @@ from apps.authorization.models import HabrUserProfile
 from apps.comments.forms import CommentCreateForm
 from apps.comments.models import Comment, Sorted
 from apps.comments.utils import create_comments_tree
+from apps.moderator.models import BannedUser
 
 
 def main_page(request, pk=None, page=1):
@@ -192,9 +193,15 @@ def like_dislike_author_ajax(request):
 def show_author_profile(request, pk=None):
     title = "Информация об авторе"
     author = get_object_or_404(HabrUser, pk=pk)
+    author_banned_query = BannedUser.objects.filter(offender=author, is_active=True)
+    if author_banned_query:
+        author_banned = author_banned_query[0]
+    else:
+        author_banned = None
     page_data = {
         "title": title,
         "current_user": author,
+        "author_banned": author_banned,
     }
     return render(request, "articles/author_profile.html", page_data)
 

@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-
+from datetime import datetime
 from apps.moderator.forms import BannedUserForm
 from apps.moderator.models import VerifyArticle, BannedUser
 from apps.authorization.models import HabrUser
@@ -27,20 +27,28 @@ def review_articles(request):
 def add_user_ban(request, pk):
     title = 'Блокирование пользователя'
     current_user = HabrUser.objects.get(pk=pk)
-    print(f'REQUEST: {request.POST}')
 
     if request.method == 'POST':
-        print(f'1111111: {request.POST["reason"]}')
-        print(f'22222: {request.POST["is_forever"]}')
         ban_form = BannedUserForm(request.POST)
         if ban_form.is_valid():
-            if request.POST["is_forever"] == 'true':
-                is_forever = True
+            # if request.POST["is_forever"] == 'true':
+            #     is_forever = True
+            # else:
+            #     is_forever = False
+            banned_user_query = BannedUser.objects.filter(offender=pk)
+            if banned_user_query:
+                banned_user = banned_user_query[0]
+                banned_user.is_active = True
+                banned_user.reason = request.POST["reason"]
+                banned_user.num_days = request.POST["num_days"]
+                banned_user.date_ban = datetime.today()
+                banned_user.save()
             else:
-                is_forever = False
-            BannedUser.objects.create(offender=current_user,
-                                      reason=request.POST["reason"],
-                                      is_forever=is_forever)
+                BannedUser.objects.create(offender=current_user,
+                                          reason=request.POST["reason"],
+                                          num_days=request.POST["num_days"],
+                                          is_active=True)
+                                          # is_forever=is_forever)
             return HttpResponseRedirect(reverse("articles:author_profile", args=[pk]))
         else:
             messages.error(request, 'ошибка')
@@ -54,9 +62,15 @@ def add_user_ban(request, pk):
     return render(request, 'moderator/add_ban.html', page_data)
 
 
+def remove_user_ban(request, pk):
+    current_user = BannedUser.objects.get(offender=pk)
+    current_user.is_active = False
+    current_user.save()
+    return HttpResponseRedirect(reverse("articles:author_profile", args=[pk]))
+
+
 def banned_users(request):
     title = "Заблокированные пользователи"
-    banned_users = BannedUser.objects.filter(is_active=True)
     page_data = {
         'title': title,
     }

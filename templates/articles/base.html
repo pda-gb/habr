@@ -26,7 +26,11 @@
 <div class="scrollup"><i class="fas fa-angle-double-up"></i></div>
 <div class="scrolldown"><i class="fas fa-angle-double-down"></i></div>
 {% block header %}{% include 'articles/includes/header.html' %}{% endblock header %}
-<div class="container mt-4">{% block content %}{% endblock content %}</div>
+{% if not is_banned %}
+    <div class="container mt-4">{% block content %}{% endblock content %}</div>
+{% else %}
+    {% include 'articles/includes/ban_page.html' %}
+{% endif %}
 {% block footer %}{% include 'articles/includes/footer.html' %}{% endblock footer %}
 {% block js %}
 {#    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>#}

@@ -19,7 +19,8 @@ class BannedUser(models.Model):
     """Забаненный пользователь"""
     offender = models.ForeignKey(settings.AUTH_USER_MODEL,
                                  on_delete=models.DO_NOTHING)
-    period = models.DateTimeField(auto_now_add=True, verbose_name='дата снятия блокировки')
+    date_ban = models.DateField(auto_now_add=True, verbose_name='дата блокировки')
+    num_days = models.IntegerField(verbose_name='дней блокировки', blank=True, default=0)
     is_forever = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     reason = models.TextField(blank=True, verbose_name='причина блокировки')
