@@ -203,7 +203,7 @@ def show_author_profile(request, pk=None):
     return render(request, "articles/author_profile.html", page_data)
 
 
-def search_articles(request, page=1):
+def search_articles(request, page=1, search_query=None):
     """рендер главной страницы после поиска"""
     title = "главная страница"
 
@@ -214,7 +214,7 @@ def search_articles(request, page=1):
         hub_articles = Article.get_articles()
 
     last_articles = Article.get_last_articles(hub_articles)
-    paginator = Paginator(hub_articles, 5)
+    paginator = Paginator(hub_articles, 20)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:
