@@ -61,7 +61,7 @@
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <img src="{% static 'svg/bell-2.ico' %}" width="20" height="20"/>
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2"
+                    <div class="dropdown-menu menu_scroll" aria-labelledby="dropdownMenu2"
                          style="font-size: small; padding: 5px 20px">
                         {% for i in notifications %}
 
@@ -83,7 +83,7 @@
                         {% endfor %}
                         {% if notifications %}
                             <a href="{% url 'articles:viewed' %}">
-                                <button type="button">закрыть</button>
+                                <button type="button" title="отметить все уведомления как просмотренные">закрыть</button>
                             </a>
                         {% endif %}
                     </div>

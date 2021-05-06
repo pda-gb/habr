@@ -326,8 +326,8 @@ def viewed(request):
     current_article = Article.get_by_author(author_pk=request.user.pk)
     for i in current_article:
         Like.objects.filter(article_id=i.id).update(viewed=True)
-        Like.save
+        Like.save()
         Comment.get_comments(i.id).update(viewed=True)
-        Comment.save
+        Comment.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
