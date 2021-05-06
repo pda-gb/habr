@@ -3,7 +3,7 @@
 {% block content %}
 
     <div class="comment-row">
-        <h2 class="mb-4">{{ comments.count }}Комментарии</h2>
+        <h2 class="mb-4">({{ comments|length }}) Комментарии</h2>
         <hr/>
         {{ comments|comments_filter }}
         <div class="container-fluid mt-2">

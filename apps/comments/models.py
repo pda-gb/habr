@@ -31,6 +31,7 @@ class Comment(models.Model):
         related_name="comment_dislikes",
         blank=True,
     )
+    viewed = models.BooleanField(default=False, verbose_name='просмотрено')
 
     def __str__(self):
         return f"{self.article.title}-{self.author.username}"

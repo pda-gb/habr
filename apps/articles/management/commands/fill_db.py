@@ -22,5 +22,5 @@ class Command(BaseCommand):
         num_users = options["num_users"]
         num_articles = options["num_articles"]
 
-        os.system(f"python manage.py create_user {num_users}")
-        os.system(f"python manage.py create_article {num_articles}")
+        os.system(f"python3 manage.py create_user {num_users}")
+        os.system(f"python3 manage.py create_article {num_articles}")
