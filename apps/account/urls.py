@@ -5,7 +5,6 @@ import apps.account.views as account
 app_name = "account"
 
 urlpatterns = [
-    path("", account.user_articles, name="user_articles"),
     path("profile/", account.read_profile, name="read_profile"),
     path("articles/", account.user_articles, name="user_articles"),
     path("add_article/", account.add_article, name="add_article"),
@@ -20,4 +19,5 @@ urlpatterns = [
     path("draft/<int:page>", account.draft, name="draft_pag"),
     path("edit_profile/edit_password/", account.edit_password, name="edit_password"),
     path("edit_article/<int:pk>", account.edit_article, name="edit_article"),
+    path("bookmarks/", account.bookmarks_page, name="bookmarks_page"),
 ]

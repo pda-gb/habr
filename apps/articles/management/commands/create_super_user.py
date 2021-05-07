@@ -31,4 +31,5 @@ class Command(BaseCommand):
             username=secret_value["SU_name"],
             email=secret_value["SU_email"],
             password=secret_value["SU_password"],
+            is_confirmed=True,
         )

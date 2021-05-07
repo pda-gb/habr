@@ -18,6 +18,7 @@
         <link rel="stylesheet" href="{% static 'css/fa.all.min.css' %}">
         <script src="https://kit.fontawesome.com/a92ddd463b.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-social.css' %}"/>
+        <link rel="stylesheet" href="{% static 'css/sorted.css' %}">
     {% endblock css %}
     <title>{% block title %}{{ title|title }}{% endblock title %}</title>
 </head>
@@ -25,7 +26,11 @@
 <div class="scrollup"><i class="fas fa-angle-double-up"></i></div>
 <div class="scrolldown"><i class="fas fa-angle-double-down"></i></div>
 {% block header %}{% include 'articles/includes/header.html' %}{% endblock header %}
-<div class="container mt-4">{% block content %}{% endblock content %}</div>
+{% if not is_banned %}
+    <div class="container mt-4">{% block content %}{% endblock content %}</div>
+{% else %}
+    {% include 'articles/includes/ban_page.html' %}
+{% endif %}
 {% block footer %}{% include 'articles/includes/footer.html' %}{% endblock footer %}
 {% block js %}
 {#    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>#}
@@ -44,6 +49,60 @@
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/arrow_up.js' %}"></script>
     <script src="{% static 'js/search-articles.js' %}"></script>
+    <script src="{% static 'js/modal_send_email.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.sorted-menu').click(function () {
+                $('#form-sorted').css({
+                    'display': 'block',
+                });
+            })
+            $(document).click(function(e) {
+                if (!$(e.target).is('.sorted-icon')
+                && !$(e.target).is('.sorted-input')
+                && !$(e.target).is('.sorted-input-search')
+                && !$(e.target).is('.sorted-list')
+                && !$(e.target).is('.sorted-label')
+                && !$(e.target).is('.sorted-elem')) {
+                    $('#form-sorted').css({
+                        'display': 'none',
+                    });
+                }
+            })
+            $('.sorted-input').click(function(e){
+                e.preventDefault()
+                let content = $('#form-sorted').serialize();
+                $(this).prop('checked', true);
+
+                $.ajax({
+                    url: $('#form-sorted').data('url'),
+                    data: content,
+                    type: 'GET',
+                    success: function(response) {
+                        $('.post-list').html(response.result);
+                    }
+                })
+            })
+            $('.sorted-input-search').click(function(e){
+                e.preventDefault()
+                let content = $('#form-sorted').serialize();
+                content = content.split('=')[1];
+                $(this).attr('checked', true);
+                let data = {
+                    content: content,
+                    search_value: '{{ value_search }}'
+                }
+                $.ajax({
+                    url: $('#form-sorted').data('url'),
+                    data: data,
+                    type: 'GET',
+                    success: function(response) {
+                        $('.post-list').html(response.result);
+                    }
+                })
+            })
+        })
+    </script>
 {% endblock js %}
 </body>
 </html>

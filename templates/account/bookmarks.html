@@ -1,0 +1,15 @@
+{% extends 'articles/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="wrapper">
+        <div class="content">
+            <div class="heading mb-4">
+                <h2>Закладки</h2>
+                <img src="{% static 'svg/book.svg' %}" alt="">
+            </div>
+            <div class="bookmark">
+                {% include 'articles/includes/string_output.html' %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

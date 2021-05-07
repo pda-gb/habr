@@ -1,0 +1,40 @@
+{% load static %}
+{% load my_tags %}
+{% block post %}
+{% for article in articles %}
+    <div class="post mb-4">
+        {% block post-head %}
+            <div class="post-head">
+                <a href="{% url 'articles:article' article.id %}" class="post-link mb-3"
+                >{{ article.title|truncatewords:10  }}</a>
+                {#            загрузка главной картинки    #}
+                <img class="main-image" src="{{ article.image|media_folder_images }}" alt="main-image"/><br/>
+                <a href="{% url 'articles:author_profile' article.author_id %}" class="post-author">
+                    {#            загрузка аваттарки    #}
+                    <img src="{{ article.author.habruserprofile.avatar|media_folder_users }}" alt="avatar"/>
+                    {#            загрузка юзернейм     #}
+                    {% if article.author.username %}
+                        {{ article.author.username }}
+                    {% else %}
+                        User
+                    {% endif %}
+                </a>
+                <span class="text-muted">{{ article.published }}</span>
+                <div class="hubs mt-2">
+                    <p>Хаб:
+                          <a href="{% url 'articles:hub' article.hub.id %}" class="post-author">{{ article.hub }}</a>
+                    </p>
+                </div>
+            </div>
+        {% endblock post-head %}
+        {% block post-content %}
+            {% include 'articles/includes/mini-post.html' %}
+        {% endblock post-content %}
+    </div>
+    <hr>
+{% empty %}
+    <p>Тут пока нет статей.</p>
+{% endfor %}
+{% endblock post %}
+<br>
+

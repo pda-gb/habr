@@ -3,18 +3,18 @@
 
 {% block content %}
     {% if from_register %}
-        <h5>Сообщение подтверждения отправлено на почту.</h5><br>
-        <h5>Проверьте свой почтовый ящик.</h5><br>
-    {% else %}
-        <form class="auth-form" action="{% url 'auth:login' %}" method="POST">
-            {% csrf_token %}
-            <h1>Вход</h1>
-            {{ login_form.as_p }}
-            <div class="form-text"><a href="{% url 'auth:forgive' %}">Забыли пароль?</a></div>
-            <button type="submit" class="btn btn-primary">Войти</button>
-            <button class="btn btn-primary"><a class="outline-light" href="{% url 'auth:register' %}">Зарегистрироваться
-            </a></button>
-        </form>
-        {% include 'authorization/includes/inc_social_auth.html' %}
+        <h5 style="text-align: center">Сообщение подтверждения отправлено на почту.</h5><br>
+        <h5 style="text-align: center">Проверьте свой почтовый ящик.</h5><br>
     {% endif %}
+    <form class="auth-form" action="{% url 'auth:login' %}" method="POST">
+        {% csrf_token %}
+        <h1>Вход</h1>
+        {{ login_form.as_p }}
+        <div class="form-text"><a href="{% url 'auth:forgive' %}">Забыли пароль?</a></div>
+        <button type="submit" class="btn btn-primary">Войти</button>
+        <button class="btn btn-primary"><a class="outline-light" href="{% url 'auth:register' %}">Зарегистрироваться
+        </a></button>
+    </form>
+    {% include 'authorization/includes/inc_social_auth.html' %}
+
 {% endblock content %}

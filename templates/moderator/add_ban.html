@@ -1,0 +1,12 @@
+{% extends 'articles/base.html' %}
+{% load my_tags %}
+{% block content %}
+    <h1>Блокирование пользователя</h1>
+    <form class="auth-form" action="{% url 'moderator:add_user_ban' current_user_pk %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ ban_form.as_table }}
+        <br>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <button type="reset" class="btn btn-danger"><a href="{% url 'articles:author_profile' 3 %}"></a>Назад</button>
+    </form>
+{% endblock content %}
