@@ -71,8 +71,10 @@ def remove_user_ban(request, pk):
 
 def banned_users(request):
     title = "Заблокированные пользователи"
+    banned_users_query = BannedUser.objects.filter(is_active=True)
     page_data = {
         'title': title,
+        'banned_users': banned_users_query
     }
     return render(request, "moderator/banned_users.html", page_data)
 
