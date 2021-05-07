@@ -216,9 +216,7 @@ def search_articles(request, page=1, search_query=None):
 
     search_query = request.GET.get('search', '')
     if search_query:
-        fromdate = request.GET.get('fromdate')
-        todate = request.GET.get('todate')
-        hub_articles = Article.get_search_articles(search_query, fromdate, todate)
+        hub_articles = Article.get_search_articles(search_query)
     else:
         hub_articles = Article.get_articles()
 
