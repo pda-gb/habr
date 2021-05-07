@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 
 class Hub(models.Model):
@@ -142,7 +143,8 @@ class Article(models.Model):
         return hub_articles
 
     @staticmethod
-    def get_search_articles(search_query):
+    def get_search_articles(search_query, fromdate=None, todate=None):
+        ''' функция отвечает за поиск соответсвий в бд по имени и содержимого статьи '''
         result = Article.get_articles().filter(
             Q(title__icontains=search_query) | Q(body__icontains=search_query)
         )
@@ -160,6 +162,12 @@ class Article(models.Model):
                     pass
                 else:
                     result = result.exclude(pk=el['id'])
+                    
+        try:
+            result = result.filter(updated__range=(fromdate, todate))
+        except ValidationError:
+            pass
+
         return result
 
     @staticmethod

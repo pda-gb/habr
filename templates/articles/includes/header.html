@@ -39,6 +39,16 @@
                                        aria-label="Search" name="search">
                                 <img src="{% static 'svg/magnifier-black.svg' %}" class="magnifier magnifier-in-input"
                                      alt="">
+                                <img class="filter-icon" src="{% static 'svg/filter.svg' %}" alt="">
+                                <ul class="filter-list">
+                                    <li>
+                                        <img class="close-filter-menu" src="{% static 'svg/close.svg' %}" alt="">
+                                    </li>
+                                    <li>
+                                        <input type="date" name="fromdate">
+                                        <input type="date" name="todate">
+                                    </li>
+                                </ul>
                             </form>
                         </div>
                         <a id="main-magnifier" href="#"><img src="{% static 'svg/magnifier-white.svg' %}"
