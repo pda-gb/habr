@@ -179,11 +179,14 @@ class Article(models.Model):
         if search_dic['search_by_name']:
             search_list = search_dic['search_by_name'].replace(' ', '').split(',')
             for el in articles:
+                name_count = 0
                 for name in search_list:
                     if name == el.author.username.lower():
-                        pass
+                        continue
                     else:
-                        result = result.exclude(pk=el.id)
+                        name_count += 1
+                if name_count == len(search_list):
+                    result = result.exclude(pk=el.id)
 
         return result
 
