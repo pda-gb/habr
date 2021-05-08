@@ -2,4 +2,13 @@
 {% load my_tags %}
 {% block content %}
   {% include 'moderator/includes/inc_menu.html' %}
+    <div class='string__container'>
+      {% for user in banned_users %}
+        <div class="bookmark__row col-12">
+          <div class="col-6 bord">{{ user.offender.username }}</div>
+          <div class="col-1 bord">{{ user.date_ban }}</div>
+          <div class="col-1 bord">{{ user.reason }}</div>
+        </div>
+      {% endfor %}
+    </div>
 {% endblock content %}
