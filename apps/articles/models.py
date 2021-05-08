@@ -68,13 +68,14 @@ class Article(models.Model):
         settings.AUTH_USER_MODEL,
         verbose_name="лайки",
         related_name="likes",
-        through="Like",
-        blank=True
+        through="LikesViewed",
+        blank=True,
     )
     dislikes = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         verbose_name="дизлайки",
         related_name="dislikes",
+        through="DislikesViewed",
         blank=True,
     )
     views = models.ManyToManyField(
@@ -250,7 +251,24 @@ class Article(models.Model):
         art.save()
 
 
-class Like(models.Model):
+
+class LikesViewed(models.Model):
+    """
+    Расширение промежуточной таблицы дополнением
+    поля просмотра уведомления
+     """
+    article = models.ForeignKey(Article,
+                                on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    viewed = models.BooleanField(default=False, verbose_name='просмотрено')
+
+
+class DislikesViewed(models.Model):
+    """
+    Расширение промежуточной таблицы дополнением
+    поля просмотра уведомления
+     """
     article = models.ForeignKey(Article,
                                 on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,

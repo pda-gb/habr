@@ -1,0 +1,58 @@
+{% load static %}
+{% if notifications %}
+    <a style="color:red">{{ notifications|length }}</a>
+{% endif %}
+<div class="post-link mini-title" style="padding: 0px 20px 0px 4px">
+    <a class="bell" type="" id="dropdownMenuLink"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <img src="{% static 'svg/bell-2.ico' %}" width="20" height="20"/>
+    </a>
+    <div class="dropdown-menu menu_scroll" aria-labelledby="dropdownMenu2"
+         style="font-size: small; padding: 5px 20px">
+        {% for key, value in notifications %}
+            {% if key == 'comment' %}
+                <a href="{% url 'articles:author_profile' value.author.id %}" class="post-author">
+                    {{ value.author }}
+                </a>
+                прокомментировал статью
+                <br>
+                <a href="{% url 'articles:article' value.article.id %}">
+                    {{ value.article|truncatewords:5 }}</a>
+                <hr>
+            {% elif key == 'answered_you' %}
+                <a href="{% url 'articles:author_profile' value.author.id %}" class="post-author">
+                    {{ value.author }}
+                </a>
+                ответил
+                <br>
+                <a href="{% url 'articles:article' value.article.id %}">
+                    {{ value.article|truncatewords:5 }}</a>
+                <hr>
+            {% elif key == 'like' %}
+                <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
+                    {{ value.user }}
+                </a>
+                like
+                <br>
+                <a href="{% url 'articles:article' value.article.id %}">{{ value.article|truncatechars:25 }}</a>
+                <hr>
+            {% elif key == 'dislike' %}
+                <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
+                    {{ value.user }}
+                </a>
+                dislike
+                <br>
+                <a href="{% url 'articles:article' value.article.id %}">{{ value.article|truncatechars:25 }}</a>
+                <hr>
+            {% endif %}
+
+
+        {% endfor %}
+        {% if notifications %}
+            <a href="{% url 'articles:viewed' %}">
+                <button type="button" title="отметить все уведомления как просмотренные">очистить
+                </button>
+            </a>
+        {% endif %}
+    </div>
+</div>
