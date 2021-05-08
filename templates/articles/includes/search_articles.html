@@ -10,22 +10,23 @@
             {% if articles %}
                 <div class="heading mb-4">
                     <h3>По вашему запросу "</h3>
-                    <p class="search_text">{{ value_search|truncatewords:5 }}</p>
+                    <p class="search_text">{{ search_query|truncatewords:5 }}</p>
                     <h3>" найдено:</h3>
                 </div>
                 {% include 'articles/includes/string_output.html' %}
                 <!-- Начало блока пагинации -->
-                {% if articles.paginator.count > 5 %}
+                {% if articles.paginator.count > 20 %}
                     {% include 'articles/includes/paginations/paggination_search.html' %}
                 {% endif %}
+                <!-- Конец блока пагинации -->
             {% else %}
                 <div class="heading mb-4">
                     <h3>По вашему запросу "</h3>
-                    <p class="search_text">{{ value_search|truncatewords:5 }}</p>
+                    <p class="search_text">{{ search_query|truncatewords:5 }}</p>
                     <h3>" ничего не найдено</h3>
                 </div>
             {% endif %}
-            <!-- Конец блока пагинации -->
+            
         </div>
     </div>
 {% endblock content %}

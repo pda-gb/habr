@@ -13,6 +13,7 @@ from django.utils import timezone
 from apps.account.forms import ChangePasswordForm, ArticleEditForm, ArticleCreate
 from apps.account.forms import HabrUserProfileEditForm
 from apps.articles.models import Article, Hub
+from apps.articles.views import notification
 from apps.authorization.models import HabrUser
 
 
@@ -20,7 +21,18 @@ from apps.authorization.models import HabrUser
 def read_profile(request):
     title = "Профиль пользователя"
     current_user = request.user
-    page_data = {"title": title, "current_user": current_user}
+    # TODO импорт вьюшки во вьюшку - результат несоблюдения "толстые модели,
+    #  тонкие контроллеры"
+    if request.user.is_authenticated:
+        notifications = notification(request)
+    else:
+        notifications = None
+
+    page_data = {
+        "title": title,
+        "current_user": current_user,
+        "notifications": notifications,
+    }
     return render(request, "account/read_profile.html", page_data)
 
 
@@ -36,8 +48,18 @@ def add_article(request):
             return HttpResponseRedirect(reverse("account:user_articles"))
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
+    if request.user.is_authenticated:
+        notifications = notification(request)
+    else:
+        notifications = None
+
     title = "Создание статьи"
-    page_data = {"title": title, "article_add": article_add}
+    page_data = {
+        "title": title,
+        "article_add": article_add,
+        "notifications": notifications,
+
+    }
     return render(request, "account/form_add_article.html", page_data)
 
 
@@ -71,10 +93,18 @@ def edit_profile(request):
     hubs_menu = Hub.get_all_hubs()
     profile_edit_form = HabrUserProfileEditForm(
         instance=request.user.habruserprofile)
+
+    if request.user.is_authenticated:
+        notifications = notification(request)
+    else:
+        notifications = None
+
     page_data = {
         "title": title,
         "hubs_menu": hubs_menu,
         "edit_form": profile_edit_form,
+        "notifications": notifications,
+
     }
     return render(request, "account/edit_profile.html", page_data)
 
@@ -93,9 +123,17 @@ def user_articles(request, page=1):
         articles_paginator = paginator.page(1)
     except EmptyPage:
         articles_paginator = paginator.page(paginator.num_pages)
+
+    if request.user.is_authenticated:
+        notifications = notification(request)
+    else:
+        notifications = None
+
     page_data = {
         "title": title,
         "articles": articles_paginator,
+        "notifications": notifications,
+
     }
     return render(request, "account/user_articles.html", page_data)
 
@@ -114,9 +152,17 @@ def publications(request, page=1):
         articles_paginator = paginator.page(1)
     except EmptyPage:
         articles_paginator = paginator.page(paginator.num_pages)
+
+    if request.user.is_authenticated:
+        notifications = notification(request)
+    else:
+        notifications = None
+
     page_data = {
         "title": title,
         "articles": articles_paginator,
+        "notifications": notifications,
+
     }
     return render(request, "account/user_articles_publications.html",
                   page_data)
@@ -136,9 +182,17 @@ def draft(request, page=1):
         articles_paginator = paginator.page(1)
     except EmptyPage:
         articles_paginator = paginator.page(paginator.num_pages)
+
+    if request.user.is_authenticated:
+        notifications = notification(request)
+    else:
+        notifications = None
+
     page_data = {
         "title": title,
         "articles": articles_paginator,
+        "notifications": notifications,
+
     }
     return render(request, "account/user_articles_draft.html", page_data)
 
@@ -165,9 +219,16 @@ def edit_password(request):
 
     form = ChangePasswordForm()
 
+    if request.user.is_authenticated:
+        notifications = notification(request)
+    else:
+        notifications = None
+
     page_data = {
         "title": title,
         "edit_form": form,
+        "notifications": notifications,
+
     }
     return render(request, "account/edit_password.html", page_data)
 
@@ -192,18 +253,43 @@ def edit_article(request, pk):
     else:
         edit_form = ArticleEditForm(instance=edit_article)
 
+    if request.user.is_authenticated:
+        notifications = notification(request)
+    else:
+        notifications = None
+
     page_data = {
         "title": title,
         "update_form": edit_form,
         "media_url": settings.MEDIA_URL,
+        "notifications": notifications,
     }
 
     return render(request, "account/edit_article.html", page_data)
 
+
 @login_required
 @transaction.atomic()
-def bookmarks_page(request):
+def bookmarks_page(request, page=1):
     bookmarks = Article.get_bookmarks(request.user.id)
     title = "Закладки"
-    page_data = {"title": title, "articles": bookmarks}
+
+    if request.user.is_authenticated:
+        notifications = notification(request)
+    else:
+        notifications = None
+
+    paginator = Paginator(bookmarks, 20)
+    try:
+        bookmarks_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        bookmarks_paginator = paginator.page(1)
+    except EmptyPage:
+        bookmarks_paginator = paginator.page(paginator.num_pages)
+
+    page_data = {
+        "title": title,
+        "articles": bookmarks_paginator,
+        "notifications": notifications,
+    }
     return render(request, "account/bookmarks.html", page_data)
