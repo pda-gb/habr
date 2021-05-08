@@ -23,7 +23,7 @@ def create_img_body(keyword_img):
     )
     img = f'<img alt=\"\" src=\"{img_link}\" style=\"height:500px; ' \
           f'width:500px\" />\n'
-    return choice([img, '', ''])
+    return choice([img, None, None])
 
 
 def create_text_body(keyword_img):
@@ -31,7 +31,10 @@ def create_text_body(keyword_img):
     for i in range(randint(3, 6)):
         paragraph = create_paragraph()
         image = create_img_body(keyword_img)
-        text_body += paragraph + image
+        if image is None:
+            text_body += paragraph
+        else:
+            text_body += paragraph + image
     return text_body
 
 
