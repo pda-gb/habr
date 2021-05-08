@@ -1,44 +1,54 @@
 {% load static %}
 {% load my_tags %}
 
-    <div class="comment-row" id="commentArticle">
-        <h2 class="mb-4">({{ comments.count }}) Комментарии</h2>
-        <ul style="list-style-type:none;">
-            <div class="col-md-12 mt-2" id="CommentList">
-                {% for comment in comments %}
-                    {% if comment.parent == Null %}
-                        <li class="li-reply-comment">
-                            <div class="main-comment-section col-md-12" id='CommentId-{{ comment.id }}'>
-                                <div>
-                                    <a href="{% url 'articles:author_profile' comment.author.id %}"
-                                       class="post-author comment-author">
-                                        <img src="{{ comment.author.habruserprofile.avatar|media_folder_users }}"
-                                             alt=""/>
-                                        <small>{{ comment.author }}</small>
-                                    </a>
-                                    <span>{{ comment.date }}</span>
-                                </div>
-                                <div class="comment-text">
-                                    <div>{{ comment.body }}</div>
-                                </div>
-                                <span class='reply reply-comment' data-id="{{ comment.id }}">Ответить</span>
-                                <form method="POST" class="comment-form" id="createChildCommentForm-{{ comment.id }}" data-url="{% url 'comments:comment_child_create' pk=article.id id_parent_comment=comment.id %}" style="display:none;">
-                                    {% csrf_token %}
-                                    {{ form_comment.as_p }}
-                                    <button type="button" data-id="{{ comment.id }}" class="btn btn-outline-success createCommentChildBtn">Отправить</button>
-                                </form>
-                                {% include 'comments/includes/inc_tree_comments.html' %}
+<div class="comment-row" id="commentArticle">
+    <h2 class="mb-4">({{ comments.count }}) Комментарии</h2>
+    <ul style="list-style-type:none;">
+        <div class="col-md-12 mt-2" id="CommentList">
+            {% for comment in comments %}
+                {% if comment.parent == Null %}
+                    <li class="li-reply-comment">
+                        <div class="main-comment-section col-md-12" id='CommentId-{{ comment.id }}'>
+                            <div>
+                                <a href="{% url 'articles:author_profile' comment.author.id %}"
+                                   class="post-author comment-author">
+                                    <img src="{{ comment.author.habruserprofile.avatar|media_folder_users }}"
+                                         alt=""/>
+                                    <small>{{ comment.author }}</small>
+                                </a>
+                                <span>{{ comment.date }}</span>
                             </div>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </ul>
-    </div>
-    <div class="container-fluid mt-2">
-        <form method="POST" class="comment-form" id="createCommentForm" data-url="{% url 'comments:comment_create' pk=article.id %}">
-            {% csrf_token %}
-            {{ form_comment.as_p }}
-            <button type="button" id="createCommentBtn" class="btn btn-outline-success">Отправить</button>
-        </form>
-    </div>
+                            <div class="comment-text">
+                                <div>{{ comment.body }}</div>
+                            </div>
+                            {#          лайки          #}
+                            <div id="">
+                                {% include 'comments/includes/inc_like.html' %}
+                            </div>
+                            {#          лайки          #}
+                            <span class='reply reply-comment' data-id="{{ comment.id }}">Ответить</span>
+                            <form method="POST" class="comment-form" id="createChildCommentForm-{{ comment.id }}"
+                                  data-url="{% url 'comments:comment_child_create' pk=article.id id_parent_comment=comment.id %}"
+                                  style="display:none;">
+                                {% csrf_token %}
+                                {{ form_comment.as_p }}
+                                <button type="button" data-id="{{ comment.id }}"
+                                        class="btn btn-outline-success createCommentChildBtn">Отправить
+                                </button>
+                            </form>
+                            {% include 'comments/includes/inc_tree_comments.html' %}
+                        </div>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </ul>
+</div>
+<div class="container-fluid mt-2">
+    <form method="POST" class="comment-form" id="createCommentForm"
+          data-url="{% url 'comments:comment_create' pk=article.id %}">
+        {% csrf_token %}
+        {{ form_comment.as_p }}
+        <button type="button" id="createCommentBtn" class="btn btn-outline-success">Отправить</button>
+    </form>
+</div>

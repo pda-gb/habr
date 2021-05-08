@@ -19,22 +19,8 @@
                             <div>{{ child_comment.body }}</div>
                         </div>
                         {#          лайки          #}
-                        <div class="post-status">
-                            {% if liked is True %}
-                                <img src="{% static 'svg/like(filled).svg' %}" alt="" id="like-{{ id }}"
-                                     class="comment_like"/>
-                            {% else %}
-                                <img src="{% static 'svg/like.svg' %}" alt="" id="like-{{ id }}" class="comment_like"/>
-                            {% endif %}
-                            <small class="green" id="likes{{ id }}">{{ likes }}</small>
-                            {% if disliked is True %}
-                                <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="dislike-{{ id }}"
-                                     class="comment_dislike"/>
-                            {% else %}
-                                <img src="{% static 'svg/dislike.svg' %}" alt="" id="dislike-{{ id }}"
-                                     class="comment_dislike"/>
-                            {% endif %}
-                            <small class="red" id="dislikes{{ id }}">{{ dislikes }}</small>
+                        <div id="">
+                            {% include 'comments/includes/inc_like.html' %}
                         </div>
                         {#          лайки          #}
                         <span class='reply reply-comment' data-id="{{ child_comment.id }}">Ответить</span>

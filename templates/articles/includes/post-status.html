@@ -1,32 +1,43 @@
 {% load static %}
 <div class="post-status">
-    <div class="me-2">
-        {% if article.liked is True %}
-            <img src="{% static 'svg/like(filled).svg' %}" alt="" id="like"/>
-        {% else  %}
-            <img src="{% static 'svg/like.svg' %}" alt="" id="like"/>
-        {% endif %}
-        <small class="green" id="likes_count">{{ article.likes.count }}</small>
-        {% if article.disliked is True %}
-            <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="dislike"/>
-        {% else %}
-            <img src="{% static 'svg/dislike.svg' %}" alt="" id="dislike"/>
-        {% endif %}
-        <small class="red" id="dislikes_count">{{ article.dislikes.count }}</small>
-    </div>
-    <div class="me-2" title="Добавить в закладки">
-        {% if article.bookmarked %}
-            <img src="{% static 'svg/bookmark(filled).svg' %}" alt="" id="bookmark"/>
-        {% else %}
-            <img src="{% static 'svg/bookmark.svg' %}" alt="" id="bookmark"/>
-        {% endif %}
-    </div>
-    <div class="me-2" title="Сколько зарегистрированных пользователей прочитали статью">
-        <img src="{% static 'svg/view.svg' %}" alt=""/>
-        <small class="text-muted">{{ article.views.count }}</small>
-    </div>
-    <div>
-        <img src="{% static 'svg/comment.svg' %}" alt=""/>
-        <small class="text-muted">{{ comments.count }}</small>
-    </div>
+    {% block like %}
+        <div class="me-2">
+            {% if article.liked is True %}
+                <img src="{% static 'svg/like(filled).svg' %}" alt="" id="like"/>
+            {% else %}
+                <img src="{% static 'svg/like.svg' %}" alt="" id="like"/>
+            {% endif %}
+            <small class="green" id="likes_count">{{ article.likes.count }}</small>
+            {% if article.disliked is True %}
+                <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="dislike"/>
+            {% else %}
+                <img src="{% static 'svg/dislike.svg' %}" alt="" id="dislike"/>
+            {% endif %}
+            <small class="red" id="dislikes_count">{{ article.dislikes.count }}</small>
+        </div>
+    {% endblock like %}
+
+    {% block bookmark %}
+        <div class="me-2" title="Добавить в закладки">
+            {% if article.bookmarked %}
+                <img src="{% static 'svg/bookmark(filled).svg' %}" alt="" id="bookmark"/>
+            {% else %}
+                <img src="{% static 'svg/bookmark.svg' %}" alt="" id="bookmark"/>
+            {% endif %}
+        </div>
+    {% endblock bookmark %}
+
+    {% block article_read %}
+        <div class="me-2" title="Сколько зарегистрированных пользователей прочитали статью">
+            <img src="{% static 'svg/view.svg' %}" alt=""/>
+            <small class="text-muted">{{ article.views.count }}</small>
+        </div>
+    {% endblock article_read %}
+
+    {% block count_comments %}
+        <div>
+            <img src="{% static 'svg/comment.svg' %}" alt=""/>
+            <small class="text-muted">{{ comments.count }}</small>
+        </div>
+    {% endblock count_comments %}
 </div>
