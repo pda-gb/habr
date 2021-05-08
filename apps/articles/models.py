@@ -143,20 +143,20 @@ class Article(models.Model):
         return hub_articles
 
     @staticmethod
-    def get_search_articles(search_query, fromdate=None, todate=None):
+    def get_search_articles(search_dic):
         ''' функция отвечает за поиск соответсвий в бд по имени и содержимого статьи '''
+        articles = Article.get_articles()
         result = Article.get_articles().filter(
-            Q(title__icontains=search_query) | Q(body__icontains=search_query)
+            Q(title__icontains=search_dic['search_query']) | Q(body__icontains=search_dic['search_query'])
         )
         if not result:
             result = Article.get_articles().filter(
-                Q(title__iexact=search_query) | Q(body__iexact=search_query)
+                Q(title__iexact=search_dic['search_query']) | Q(body__iexact=search_dic['search_query'])
             )
         if not result:
             result = Article.get_articles()
-            search_query = search_query.lower()
-            articles = Article.get_articles().values()
-            for el in articles:
+            search_query = search_dic['search_query'].lower()
+            for el in articles.values():
                 if search_query in el['title'].lower() or search_query in \
                         el['body'].lower():
                     pass
@@ -164,9 +164,26 @@ class Article(models.Model):
                     result = result.exclude(pk=el['id'])
                     
         try:
-            result = result.filter(updated__range=(fromdate, todate))
+            result = result.filter(updated__range=(search_dic['fromdate'], search_dic['todate']))
         except ValidationError:
             pass
+
+        try:
+            result = result.filter(rating__range=(search_dic['fromrating'], search_dic['torating']))
+        except (ValidationError, ValueError):
+            pass
+
+        if search_dic['search_hub'] != '0':
+            result = result.filter(hub=search_dic['search_hub'])
+
+        if search_dic['search_by_name']:
+            search_list = search_dic['search_by_name'].replace(' ', '').split(',')
+            for el in articles:
+                for name in search_list:
+                    if name == el.author.username.lower():
+                        pass
+                    else:
+                        result = result.exclude(pk=el.id)
 
         return result
 

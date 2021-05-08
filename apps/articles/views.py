@@ -210,15 +210,20 @@ def show_author_profile(request, pk=None):
     return render(request, "articles/author_profile.html", page_data)
 
 
-def search_articles(request, page=1, search_query=None):
+def search_articles(request, page=1):
     """рендер главной страницы после поиска"""
     title = "главная страница"
-
-    search_query = request.GET.get('search', '')
-    if search_query:
-        fromdate = request.GET.get('fromdate')
-        todate = request.GET.get('todate')
-        hub_articles = Article.get_search_articles(search_query, fromdate, todate)
+    search_dic = {
+        'search_query': request.GET.get('search', ''),
+    }
+    if search_dic['search_query']:
+        search_dic['fromdate'] = request.GET.get('fromdate')
+        search_dic['todate'] = request.GET.get('todate')
+        search_dic['fromrating'] = request.GET.get('fromrating')
+        search_dic['torating'] = request.GET.get('torating')
+        search_dic['search_hub'] = request.GET.get('hub')
+        search_dic['search_by_name'] = request.GET.get('search-by-name')
+        hub_articles = Article.get_search_articles(search_dic)
     else:
         hub_articles = Article.get_articles()
 
@@ -235,7 +240,7 @@ def search_articles(request, page=1, search_query=None):
         "last_articles": last_articles,
         "current_user": request.user,
         "articles": articles_paginator,
-        "value_search": search_query,
+        "value_search": search_dic['search_query'],
     }
     return render(request, "articles/search_articles.html", page_data)
 

@@ -5,7 +5,8 @@
     list-style-type: none;
     padding-left: 0px;
     background: white;
-    border: solid black 1px;
+    border: solid #A5A5A5 1px;
+    box-shadow: 0 0 5px;
 }
 
 .filter-el {
@@ -30,4 +31,13 @@
 
 .close-filter-menu {
     float: right;
+}
+
+.notif-search-by-name {
+    font-size: 9px;
+    margin-bottom: 0px;
+}
+
+.input-search-by-name {
+    margin-top: 0px;
 }
