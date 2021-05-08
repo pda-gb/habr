@@ -41,12 +41,44 @@
                                      alt="">
                                 <img class="filter-icon" src="{% static 'svg/filter.svg' %}" alt="">
                                 <ul class="filter-list">
-                                    <li>
-                                        <img class="close-filter-menu" src="{% static 'svg/close.svg' %}" alt="">
+                                    <li class="close-filter-menu">
+                                        <img class="close-filter-icon" src="{% static 'svg/close.svg' %}" alt="">
                                     </li>
-                                    <li>
-                                        <input type="date" name="fromdate">
-                                        <input type="date" name="todate">
+                                    <li class="filter-el">
+                                        <p>По дате</p>
+                                    </li>
+                                    <li class="filter-el clear-fix">
+                                        С:<input type="date" name="fromdate">
+                                    </li>
+                                    <li class="filter-el clear-fix">
+                                        По:<input type="date" name="todate">
+                                        <hr>
+                                    </li>
+                                    <li class="filter-el clear-fix">
+                                        <p>По рейтингу</p>
+                                    </li>
+                                    <li class="filter-el clear-fix">
+                                        С:<input type="text" name="fromrating">
+                                    </li>
+                                    <li class="filter-el clear-fix">
+                                        По:<input type="text" name="torating">
+                                        <hr>
+                                    </li>
+                                    <li class="filter-el clear-fix">
+                                        <label for="id_hub">Хабы:</label>
+                                        <select name="hub" class="form-control" id="id_hub">
+                                            <option value="1">Все</option>
+                                            <option value="2">Разработка</option>
+                                            <option value="3">Дизайн</option>
+                                            <option value="4">Маркетинг</option>
+                                            <option value="5">Мобильная разработка</option>
+                                        </select>
+                                    </li>
+                                    <li class="filter-el clear-fix">
+                                        <p>По именам:</p>
+                                    </li>
+                                    <li class="filter-el clear-fix">
+                                        <input class="form-control input-search-by-name" type="text" aria-label="Search-by-name" name="search-by-name">
                                     </li>
                                 </ul>
                             </form>

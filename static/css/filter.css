@@ -8,9 +8,10 @@
     border: solid black 1px;
 }
 
-.filter-list li{
-    float: right;
-    padding: 4px;
+.filter-el {
+    display: block;
+    float: left;
+    margin: 4px;
 }
 
 .filter-icon {
@@ -21,7 +22,12 @@
     top: 4px;
 }
 
-.close-filter-menu {
+.close-filter-icon {
     height: 11px;
     width: 10px;
+    margin-right: 4px
+}
+
+.close-filter-menu {
+    float: right;
 }
