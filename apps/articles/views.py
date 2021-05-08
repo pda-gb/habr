@@ -233,9 +233,9 @@ def search_articles(request, page=1, search_query=None):
         "last_articles": last_articles,
         "current_user": request.user,
         "articles": articles_paginator,
-        "value_search": search_query,
+        "search_query": search_query,
     }
-    return render(request, "articles/search_articles.html", page_data)
+    return render(request, "articles/includes/search_articles.html", page_data)
 
 
 def post_list(request, pk=None, page=1):

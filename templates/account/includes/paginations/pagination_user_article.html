@@ -20,7 +20,7 @@
             {% for cur_page in articles.paginator.page_range %}
                 {% if cur_page > articles.number|add:'-3' and cur_page < articles.number|add:'3' %}
                 <div>
-                    <li class="page-item {% if articles.number == cur_page %}active{% endif %}"></li>
+                    <li class="page-item {% if articles.number == cur_page %}active{% endif %}">
                         <a class="page-link" href="{% url 'account:user_articles_pag' cur_page %}">{{ cur_page }}</a>
                     </li>
                 </div>    

@@ -3,7 +3,7 @@
             {% if articles.has_previous %}
             <li class="page-item">
                 <div>
-                    <a href="{% url 'account:publications_pag' 1 %}" class="page-link" aria-label="Previous">
+                    <a href="{% url 'account:bookmarks_paggination' 1 %}" class="page-link" aria-label="Previous">
                     <i class="fas fa-chevron-circle-left"></i></a>
                 </div>
             </li>
@@ -12,7 +12,7 @@
                 {% if articles.number|add:'-3' > 1 %}
                 <div>
                     <li class="page-item">
-                        <a href="{% url 'account:publications_pag' articles.number|add:'-3' %}" class="page-link">...</a>
+                        <a href="{% url 'account:bookmarks_paggination' articles.number|add:'-3' %}" class="page-link">...</a>
                     </li>
                 </div>    
                 {% endif %}
@@ -21,7 +21,7 @@
                 {% if cur_page > articles.number|add:'-3' and cur_page < articles.number|add:'3' %}
                 <div>
                     <li class="page-item {% if articles.number == cur_page %}active{% endif %}">
-                        <a class="page-link" href="{% url 'account:publications_pag' cur_page %}">{{ cur_page }}</a>
+                        <a class="page-link" href="{% url 'account:bookmarks_paggination' cur_page %}">{{ cur_page }}</a>
                     </li>
                 </div>    
                 {% endif %}
@@ -30,14 +30,14 @@
                 {% if articles.number|add:'3' < 6 %}
                 <div>
                     <li class="page-item">
-                        <a href="{% url 'account:publications_pag' articles.number|add:'3' %}" class="page-link">...</a>
+                        <a href="{% url 'account:bookmarks_paggination' articles.number|add:'3' %}" class="page-link">...</a>
                     </li>
                 </div>
                 {% endif %}
             {% endif %}   
             {% if articles.has_next %}
             <li class="page-item">
-                <a href="{% url 'account:publications_pag' articles.paginator.num_pages %}" class="page-link" aria-label="Next">
+                <a href="{% url 'account:bookmarks_paggination' articles.paginator.num_pages %}" class="page-link" aria-label="Next">
                 <i class="fas fa-chevron-circle-right"></i></a>
             </li>    
             {% endif %}

@@ -36,7 +36,7 @@
                             <form class="search" role="search" id="search-articles-form" method="GET"
                                   action="{% url 'articles:search_articles' 1 %}">
                                 <input class="form-control input-search" type="text" placeholder="Search"
-                                       aria-label="Search" name="search">
+                                       aria-label="Search" name="search" value="{{ search_query }}">
                                 <img src="{% static 'svg/magnifier-black.svg' %}" class="magnifier magnifier-in-input"
                                      alt="">
                             </form>
