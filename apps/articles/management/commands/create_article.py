@@ -8,12 +8,38 @@ from apps.authorization.models import HabrUser
 from apps.comments.models import Comment
 
 
+def create_paragraph():
+    text = Text("ru")
+    paragraph = f'<p>{text.text(quantity=randint(2, 7))}<p/>\n'
+    return paragraph
+
+
+def create_img_body(keyword_img):
+    internet = Internet("ru")
+    img_link = internet.stock_image(
+        width=1920, height=1080,
+        keywords=[keyword_img[0], keyword_img[randint(1, 4)]],
+        writable=False
+    )
+    img = f'<img alt=\"\" src=\"{img_link}\" style=\"height:500px; ' \
+          f'width:500px\" />\n'
+    return choice([img, '', ''])
+
+
+def create_text_body(keyword_img):
+    text_body = ''
+    for i in range(randint(3, 6)):
+        paragraph = create_paragraph()
+        image = create_img_body(keyword_img)
+        text_body += paragraph + image
+    return text_body
+
+
 class Command(BaseCommand):
     help = (
         "Created random article data. Format python manage.py "
         "create_article number_article"
     )
-
 
     def add_arguments(self, parser):
         parser.add_argument("number", type=int,
@@ -92,7 +118,8 @@ class Command(BaseCommand):
             article = Article(
                 title=text.title(),
                 author=self.get_random_query_set_item(HabrUser),
-                body=text.text(quantity=randint(10, 70)),
+                body=create_text_body(keyword_img),
+                # body=text.text(quantity=randint(10, 70)),
                 image=internet.stock_image(
                     width=1920, height=1080,
                     keywords=[keyword_img[0], keyword_img[id_hub]],
