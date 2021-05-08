@@ -10,6 +10,7 @@
     <div class="dropdown-menu menu_scroll" aria-labelledby="dropdownMenu2"
          style="font-size: small; padding: 5px 20px">
         {% for key, value in notifications %}
+            {#    комментарии и ответы    #}
             {% if key == 'comment' %}
                 <a href="{% url 'articles:author_profile' value.author.id %}" class="post-author">
                     {{ value.author }}
@@ -28,6 +29,7 @@
                 <a href="{% url 'articles:article' value.article.id %}">
                     {{ value.article|truncatewords:5 }}</a>
                 <hr>
+                {#            лайки\дизлайки    #}
             {% elif key == 'like' %}
                 <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
                     {{ value.user }}
@@ -43,6 +45,21 @@
                 dislike
                 <br>
                 <a href="{% url 'articles:article' value.article.id %}">{{ value.article|truncatechars:25 }}</a>
+                <hr>
+                {#    карма   #}
+            {% elif key == 'like_karma' %}
+                <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
+                    {{ value.user }}
+                </a>
+                повысил карму
+                <br>
+                <hr>
+            {% elif key == 'dislike_karma' %}
+                <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
+                    {{ value.user }}
+                </a>
+                понизил карму
+                <br>
                 <hr>
             {% endif %}
 

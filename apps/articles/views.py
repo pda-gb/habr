@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 
 from apps.articles.models import Article, LikesViewed, DislikesViewed
-from apps.authorization.models import HabrUser
+from apps.authorization.models import HabrUser, KarmaPositiveViewed, KarmaNegativeViewed
 from apps.authorization.models import HabrUserProfile
 from apps.comments.forms import CommentCreateForm
 from apps.comments.models import Comment, Sorted
@@ -337,7 +337,13 @@ def notification(request):
         answered_you = Comment.get_comments(itm_article.id) \
             .filter(viewed=False,
                     parent__author_id=request.user.pk,
-                    author_id=request.user.pk)
+                    )
+
+        likes_karma = KarmaPositiveViewed.objects.filter(
+            profile_author=request.user.pk)
+        dislikes_karma = KarmaNegativeViewed.objects.filter(
+            profile_author=request.user.pk)
+
         for answer in answered_you:
             current_notifications.append(("answered_you", answer))
         for comment in comments:
@@ -346,6 +352,10 @@ def notification(request):
             current_notifications.append(("like", like))
         for dislike in dislikes:
             current_notifications.append(("dislike", dislike))
+        for like_karma in likes_karma:
+            current_notifications.append(("like_karma", like_karma))
+        for dislike_karma in dislikes_karma:
+            current_notifications.append(("dislike_karma", dislike_karma))
     return current_notifications
 
 
