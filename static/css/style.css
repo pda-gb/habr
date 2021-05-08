@@ -551,4 +551,4 @@ div.scrollup:hover {
     font-style: italic;
 }
 
-.menu_scroll {height:400px; overflow-y:scroll;}
+.menu_scroll {max-height:400px; overflow-y:scroll;}

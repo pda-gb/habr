@@ -19,5 +19,6 @@ urlpatterns = [
     path("sorted_articles/<int:pk>/<int:page>/", main_page.post_list, name='sorted_articles_hub'),
     path("sorted_articles_user/<int:user_pk>/<int:page>/", main_page.post_list_user, name='sorted_articles_user'),
     path("sorted_articles_search/<int:page>/", main_page.post_list_search, name='sorted_articles_search'),
-    path("notifications/", main_page.viewed, name='viewed'),
+    path("notifications/viewed/all/", main_page.mark_all_as_viewed, name='all_viewed'),
+    path("notifications/viewed/<str:target>/<int:pk>/", main_page.target_mark_as_viewed, name='target_viewed'),
 ]
