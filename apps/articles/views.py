@@ -340,9 +340,13 @@ def notification(request):
                     )
 
         likes_karma = KarmaPositiveViewed.objects.filter(
-            profile_author=request.user.pk)
+            viewed=False,
+            profile_author=request.user.pk
+        )
         dislikes_karma = KarmaNegativeViewed.objects.filter(
-            profile_author=request.user.pk)
+            viewed=False,
+            profile_author=request.user.pk
+        )
 
         for answer in answered_you:
             current_notifications.append(("answered_you", answer))
@@ -366,4 +370,20 @@ def mark_all_as_viewed(request):
         LikesViewed.objects.filter(article_id=i.id).update(viewed=True)
         DislikesViewed.objects.filter(article_id=i.id).update(viewed=True)
         Comment.get_comments(i.id).update(viewed=True)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def target_mark_as_viewed(request, target, pk):
+    if target == 'comment':
+        Comment.objects.filter(id=pk).update(viewed=True)
+    elif target == 'answered_you':
+        Comment.objects.filter(id=pk).update(viewed=True)
+    elif target == 'like':
+        LikesViewed.objects.filter(id=pk).update(viewed=True)
+    elif target == 'dislike':
+        DislikesViewed.objects.filter(id=pk).update(viewed=True)
+    elif target == 'like_karma':
+        KarmaPositiveViewed.objects.filter(id=pk).update(viewed=True)
+    elif target == 'dislike_karma':
+        KarmaNegativeViewed.objects.filter(id=pk).update(viewed=True)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
