@@ -62,10 +62,17 @@ def hub(request, pk=None, page=1):
     except EmptyPage:
         articles_paginator = paginator.page(paginator.num_pages)
 
+    if request.user.is_authenticated:
+        notifications = notification(request)
+    else:
+        notifications = None
+
     page_data = {
         "pk": pk,
         "articles": articles_paginator,
         "last_articles": last_articles,
+        "notifications": notifications,
+
     }
     return render(request, "articles/articles_hub.html", page_data)
 
@@ -328,7 +335,9 @@ def notification(request):
         comments = Comment.get_comments(itm_article.id) \
             .filter(viewed=False).exclude(author_id=request.user.pk)
         answered_you = Comment.get_comments(itm_article.id) \
-            .filter(viewed=False, parent__author_id=request.user.pk)
+            .filter(viewed=False,
+                    parent__author_id=request.user.pk,
+                    author_id=request.user.pk)
         for answer in answered_you:
             current_notifications.append(("answered_you", answer))
         for comment in comments:
