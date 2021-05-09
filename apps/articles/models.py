@@ -62,7 +62,7 @@ class Article(models.Model):
         verbose_name="дата публикации", default=timezone.now
     )
 
-    draft = models.BooleanField(verbose_name="черновик", default=False)
+    draft = models.BooleanField(verbose_name="черновик", default=True)
     is_active = models.BooleanField(verbose_name="удалена", default=True)
 
     likes = models.ManyToManyField(
