@@ -441,6 +441,7 @@ div.scrollup:hover {
 
 .form-search {
     display: none;
+    position: relative;
 }
 
 .form-search form{
