@@ -130,11 +130,14 @@ def user_articles(request, page=1):
     else:
         notifications = None
 
+    all_statuses = \
+        VerifyArticle.get_status_verification_articles(request.user.id)
+    print(f'{all_statuses=}')
     page_data = {
         "title": title,
         "articles": articles_paginator,
         "notifications": notifications,
-
+        "all_statuses": all_statuses,
     }
     return render(request, "account/user_articles.html", page_data)
 

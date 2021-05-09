@@ -1,5 +1,4 @@
 from django.db import models
-from django.shortcuts import get_object_or_404
 
 from apps.articles.models import Article
 from apps.comments.models import Comment
@@ -57,9 +56,13 @@ class BannedArticle(models.Model):
 class VerifyArticle(models.Model):
     """Проверка статьи модератором"""
     verification = models.ForeignKey(Article, help_text="статья на модерацию",
-                                     on_delete=models.DO_NOTHING)
-    is_verified = models.BooleanField(default=False,
-                                      help_text="одобрение статьи")
+                                     on_delete=models.DO_NOTHING,
+                                     related_name="verification_article")
+    is_verified = models.BooleanField(null=True,
+                                      verbose_name="статус проверки",
+                                      help_text="None - статья в процессе "
+                                                "проверки,True - одобрение "
+                                                "статьи, False - отказ")
     remark = models.TextField(blank=True, verbose_name="Замечание модератора")
     fixed = models.BooleanField(default=False,
                                 help_text="автор исправил статью")
@@ -74,10 +77,27 @@ class VerifyArticle(models.Model):
         article = Article.objects.filter(pk=pk_article, author_id=pk_author,
                                          draft=True)
         if article.exists():
-            VerifyArticle.objects.create(verification=Article.objects.get(id=pk_article))
+            VerifyArticle.objects.create(
+                verification=Article.objects.get(id=pk_article)
+            )
             return True
         else:
             return None
+
+    @staticmethod
+    def get_status_verification_articles(pk_author):
+        """запрос статуса проверки всех статей автора"""
+        status = []
+        if VerifyArticle.objects.filter(
+                verification__author_id=pk_author).exists():
+            for itm in VerifyArticle.objects.filter(
+                    verification__author_id=pk_author):
+                status.append(
+                    (itm.verification_id, itm.is_verified)
+                )
+        else:
+            status = None
+        return status
 
     class Meta:
         verbose_name = "статья"
