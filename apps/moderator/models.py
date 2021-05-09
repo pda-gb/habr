@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import get_object_or_404
 
 from apps.articles.models import Article
 from apps.comments.models import Comment
@@ -19,9 +20,12 @@ class BannedUser(models.Model):
     """Забаненный пользователь"""
     offender = models.ForeignKey(settings.AUTH_USER_MODEL,
                                  on_delete=models.DO_NOTHING)
-    date_ban = models.DateField(auto_now_add=True, verbose_name='дата блокировки')
-    is_forever = models.BooleanField(default=False, verbose_name='Блокировка навсегда')
-    num_days = models.IntegerField(verbose_name='дней блокировки', blank=True, default=0)
+    date_ban = models.DateField(auto_now_add=True,
+                                verbose_name='дата блокировки')
+    is_forever = models.BooleanField(default=False,
+                                     verbose_name='Блокировка навсегда')
+    num_days = models.IntegerField(verbose_name='дней блокировки',
+                                   blank=True, default=0)
     is_active = models.BooleanField(default=False)
     reason = models.TextField(blank=True, verbose_name='причина блокировки')
 
@@ -57,9 +61,23 @@ class VerifyArticle(models.Model):
     is_verified = models.BooleanField(default=False,
                                       help_text="одобрение статьи")
     remark = models.TextField(blank=True, verbose_name="Замечание модератора")
-    for_checking = models.BooleanField(default=False,
-                                       help_text="автор запросил проверку "
-                                                 "иправления")
+    fixed = models.BooleanField(default=False,
+                                help_text="автор исправил статью")
+
+    # for_checking = models.BooleanField(default=False,
+    #                                    help_text="автор запросил проверку "
+    #                                              "иправления")
+
+    @staticmethod
+    def send_article_to_verify(pk_article, pk_author):
+        """отправка статьи на проверку"""
+        article = Article.objects.filter(pk=pk_article, author_id=pk_author,
+                                         draft=True)
+        if article.exists():
+            VerifyArticle.objects.create(verification=Article.objects.get(id=pk_article))
+            return True
+        else:
+            return None
 
     class Meta:
         verbose_name = "статья"

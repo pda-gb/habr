@@ -7,7 +7,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 
 from apps.account.forms import ChangePasswordForm, ArticleEditForm, ArticleCreate
@@ -15,6 +15,7 @@ from apps.account.forms import HabrUserProfileEditForm
 from apps.articles.models import Article, Hub
 from apps.articles.views import notification
 from apps.authorization.models import HabrUser
+from apps.moderator.models import VerifyArticle
 
 
 @login_required
@@ -293,3 +294,15 @@ def bookmarks_page(request, page=1):
         "notifications": notifications,
     }
     return render(request, "account/bookmarks.html", page_data)
+
+
+@login_required
+@transaction.atomic()
+def verify_article(request, pk):
+    """отправка статьи на модерацию"""
+    # если удалось отправить, то перезагрузить страницу
+    if VerifyArticle.send_article_to_verify(pk, request.user.pk):
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+    else:
+        return HttpResponseRedirect(reverse_lazy("account:user_articles"))
+        pass
