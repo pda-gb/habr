@@ -19,6 +19,7 @@
         <script src="https://kit.fontawesome.com/a92ddd463b.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-social.css' %}"/>
         <link rel="stylesheet" href="{% static 'css/sorted.css' %}">
+        <link rel="stylesheet" href="{% static 'css/filter.css' %}">
     {% endblock css %}
     <title>{% block title %}{{ title|title }}{% endblock title %}</title>
 </head>
@@ -49,6 +50,7 @@
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/arrow_up.js' %}"></script>
     <script src="{% static 'js/search-articles.js' %}"></script>
+    <script src="{% static 'js/filter-search.js' %}"></script>
     <script src="{% static 'js/modal_send_email.js' %}"></script>
     <script>
         $(document).ready(function () {
