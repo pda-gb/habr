@@ -1,5 +1,5 @@
 from django.db import models
-
+import datetime
 from apps.articles.models import Article
 from apps.comments.models import Comment
 from habr import settings
@@ -28,6 +28,22 @@ class BannedUser(models.Model):
     class Meta:
         verbose_name = "нарушитель"
         verbose_name_plural = "нарушители"
+        ordering = ('-date_ban',)
+
+    def get_remaining_days(self):
+        num_days = self.num_days
+        date_ban = self.date_ban
+        end_date = date_ban + datetime.timedelta(days=num_days)
+        current_date = datetime.date.today()
+        remaining_days = (end_date - current_date).days
+        if remaining_days < 0:
+            self.is_active = False
+            self.save()
+        return remaining_days
+
+    def delete(self):
+        self.is_active = False
+        self.save()
 
 
 class BannedComment(models.Model):

@@ -3,11 +3,23 @@
 {% block content %}
   {% include 'moderator/includes/inc_menu.html' %}
     <div class='string__container'>
+      <div class="bookmark__row col-12">
+        <div class="col-6 bord">Имя пользователя</div>
+        <div class="col-1 bord">Дата блокировки</div>
+        <div class="col-1 bord">Причина блокировки</div>
+        <div class="col-1 bord">Количество оставшихся дней блокировки</div>
+      </div>
       {% for user in banned_users %}
         <div class="bookmark__row col-12">
           <div class="col-6 bord">{{ user.offender.username }}</div>
           <div class="col-1 bord">{{ user.date_ban }}</div>
           <div class="col-1 bord">{{ user.reason }}</div>
+          {% if user.is_forever %}
+            <div class="col-1 bord">Бессрочно</div>
+          {% else %}
+            <div class="col-1 bord">{{ user.get_remaining_days }}</div>
+          {% endif %}
+
         </div>
       {% endfor %}
     </div>
