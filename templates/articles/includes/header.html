@@ -1,35 +1,30 @@
 {% load static %}
+{% load my_tags %}
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+<nav class="main_nav navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
     <div class="container">
-        <a class="logo" href="{% url 'articles:main_page' %}">Sputnik</a>
-        <button
-                class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarToggler02"
-                aria-controls="navbarToggler02"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-        >
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        {% if not is_banned %}
-            <div class="collapse navbar-collapse" id="navbarToggler02">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 hubs">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.route == 'all/' %} active {% endif %}"
-                           href="{% url 'articles:all_hubs' %}">Все хабы</a>
-                    </li>
-                    {% for hub in hubs_menu %}
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.kwargs.pk == hub.id %} active {% endif %}"
-                               href="{% url 'articles:hub' hub.id %}">{{ hub.hub }}</a>
-                        </li>
-                    {% endfor %}
+        <a href="{% url 'articles:main_page' %}">
+            <div class="logo_block">
+                <div class="img-logo"><img class="img_in_block" src="{% static 'svg/logo.svg' %}" alt=""/></div>
+                <div class="logo">Sputnik</div>
+            </div>
 
-                </ul>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 icon">
+        </a>
+        {% if not is_banned %}
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 hubs">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.route == 'all/' %} active {% endif %}"
+                       href="{% url 'articles:all_hubs' %}">Все хабы</a>
+                </li>
+                {% for hub in hubs_menu %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.kwargs.pk == hub.id %} active {% endif %}"
+                           href="{% url 'articles:hub' hub.id %}">{{ hub.hub }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="navbar" id="navbarToggler02">
+                <ul class="navbar-nav me-auto mb-lg-0 icon">
                     <!-- Начало блока поиска --->
                     <li class="icon-item nav-item">
                         <div class="form-search">
@@ -71,7 +66,7 @@
                                             <option value="1">Разработка</option>
                                             <option value="2">Дизайн</option>
                                             <option value="3">Маркетинг</option>
-                                            <option value="4">Мобильная разработка</option>
+                                            <option value="4">Научпоп</option>
                                         </select>
                                         <hr>
                                     </li>
@@ -79,15 +74,18 @@
                                         <p>По именам:</p>
                                     </li>
                                     <li class="filter-el clear-fix">
-                                        <p class="notif-search-by-name">Если необходимо указать несколько имеен, то перечислите их через запятую</p>
-                                        <input class="form-control input-search-by-name" type="text" aria-label="Search-by-name" name="search-by-name">
+                                        <p class="notif-search-by-name">Если необходимо указать несколько имеен, то
+                                            перечислите их через запятую</p>
+                                        <input class="form-control input-search-by-name" type="text"
+                                               aria-label="Search-by-name" name="search-by-name">
                                     </li>
                                 </ul>
                             </form>
                         </div>
-                        <a id="main-magnifier" href="#"><img src="{% static 'svg/magnifier-white.svg' %}"
-                                                             class="magnifier"
-                                                             alt=""></a>
+                        <a id="main-magnifier" class="me-2 magnifier" href="#"><img src="
+{% static 'svg/magnifier-white.svg' %}"
+                                                                                    class="img_in_block"
+                                                                                    alt=""></a>
                     </li>
                     <!-- Конец блока поиска --->
                 </ul>
@@ -104,7 +102,10 @@
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ user.habruserprofile.first_name|default:user.username }}
+                            <div class="author-avatar-menu-text">{{ user.habruserprofile.first_name|default:user.username }}</div>
+                            <div class="author-avatar-menu"><img class="img_in_block"
+                                                                 src="{{ user.habruserprofile.avatar|media_folder_users }}">
+                            </div>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                             {% if user.is_superuser %}
@@ -138,15 +139,31 @@
                     {% if check_verify %}
                         <img class="warning-verify" src="{% static 'img/danger.svg' %}" alt="warning"
                              title="Подтвердите свою учётную запись!">
-                        <a class="btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
+                        <a class="regist btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
                     {% else %}
                         <a class="btn btn-outline-light me-2" href="{% url 'auth:login' %}">Войти</a>
-                        <a class="btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
+                        <a class="regist btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
                     {% endif %}
                 {% endif %}
             </div>
         {% else %}
             <a class="btn btn-outline-light me-2" href="{% url 'auth:logout' %}">Выход</a>
+        {% endif %}
+    </div>
+    <div class="mobile_hub">
+        {% if not is_banned %}
+            <ul class="navbar-mobile navbar-nav me-auto mb-2">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.route == 'all/' %} active {% endif %}"
+                       href="{% url 'articles:all_hubs' %}">Все</a>
+                </li>
+                {% for hub in hubs_menu %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.kwargs.pk == hub.id %} active {% endif %}"
+                           href="{% url 'articles:hub' hub.id %}">{{ hub.hub }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
         {% endif %}
     </div>
 </nav>
