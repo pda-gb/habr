@@ -28,23 +28,19 @@
                                     <button type="button" data-id="{{ comment.id }}" class="btn btn-outline-success createCommentChildBtn">Отправить</button>
                                 </form>
                                 <div class="post-status">
-                                    {% for author_like in comment.likes.all %}
-                                        {% if author_like.id == request.user.id %}
-                                            <img src="{% static 'svg/like(filled).svg' %}" alt="" id="like-{{ comment.id }}" class="comment_like"/>
-                                        {% endif %}
-                                    {% empty %}
-                                            <img src="{% static 'svg/like.svg' %}" alt="" id="like-{{ comment.id }}" class="comment_like"/>
-                                    {% endfor %}
+                                    {% if liked is True %}
+                                        <img src="{% static 'svg/like(filled).svg' %}" alt="" id="like-{{comment.id}}" class="comment_like"/>
+                                    {% else  %}
+                                        <img src="{% static 'svg/like.svg' %}" alt="" id="like-{{comment.id}}" class="comment_like"/>
+                                    {% endif %}
                                     <small class="green" id="likes{{ comment.id }}">{{ comment.likes.count }}</small>
-                                    {% for author_dislike in comment.dislikes.all %}
-                                        {% if author_dislike.id == request.user.id %}
-                                            <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="dislike-{{ comment.id }}" class="comment_dislike"/>
-                                        {% endif %}
-                                    {% empty %}
-                                        <img src="{% static 'svg/dislike.svg' %}" alt="" id="dislike-{{ comment.id }}" class="comment_dislike"/>
-                                    {% endfor %}
-                                    <small class="red" id="dislikes{{ comment.id }}">{{ comment.dislikes.count }}</small>
-                                </div>        
+                                    {% if disliked is True %}
+                                        <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="dislike-{{comment.id}}" class="comment_dislike"/>
+                                    {% else %}
+                                        <img src="{% static 'svg/dislike.svg' %}" alt="" id="dislike-{{comment.id}}" class="comment_dislike"/>
+                                    {% endif %}
+                                    <small class="red" id="dislikes{{comment.id}}">{{ comment.dislikes.count }}</small>
+                                </div>     
                                 {% include 'comments/includes/inc_tree_comments.html' %}
                             </div>
                         </li>
