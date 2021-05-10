@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-8">
+        <div class="col-main">
             <!-- Начало блока сортировки -->
             {% include 'articles/includes/sorted/sorted_hub.html' %}
             <!-- Конец блока сортировки -->
@@ -20,7 +20,7 @@
             <!-- Конец блока пагинации -->
             {% endif %}
         </div>
-        <div class="col-1"></div>
+        <div class="col-space"></div>
         {% if last_articles != None %}
             {% include 'articles/includes/right_block.html' %}
         {% endif %}

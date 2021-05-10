@@ -1,105 +1,107 @@
 {% load static %}
-{% if notifications %}
-    <a style="color:red">{{ notifications|length }}</a>
-{% endif %}
-<div class="post-link mini-title" style="padding: 0px 20px 0px 4px">
-    <a class="bell" type="" id="dropdownMenuLink"
-       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <img src="{% static 'svg/bell-2.ico' %}" width="20" height="20"/>
-    </a>
-    <div class="dropdown-menu menu_scroll" aria-labelledby="dropdownMenu2"
-         style="font-size: small; padding: 5px 20px">
-        {% for key, value in notifications %}
-            {#    комментарии и ответы    #}
-            {% if key == 'comment' %}
-                <dev>
+<div class="notific_block">
+    {% if notifications %}
+        <a style="color:red">{{ notifications|length }}</a>
+    {% endif %}
+    <div class="post-link mini-title" style="padding: 0px 20px 0px 4px">
+        <a class="bell" type="" id="dropdownMenuLink"
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="{% static 'svg/bell-2.ico' %}" width="20" height="20"/>
+        </a>
+        <div class="dropdown-menu menu_scroll" aria-labelledby="dropdownMenu2"
+             style="font-size: small; padding: 5px 20px">
+            {% for key, value in notifications %}
+                {#    комментарии и ответы    #}
+                {% if key == 'comment' %}
                     <dev>
-                        <a href="{% url 'articles:author_profile' value.author.id %}" class="post-author">
-                            {{ value.author }}
-                        </a>
-                        прокомментировал статью
+                        <dev>
+                            <a href="{% url 'articles:author_profile' value.author.id %}" class="post-author">
+                                {{ value.author }}
+                            </a>
+                            прокомментировал статью
+                            <br>
+                            <a href="{% url 'articles:article' value.article.id %}">
+                                {{ value.article|truncatewords:5 }}</a>
+                        </dev>
+                        {% include 'articles/includes/inc_btn_del_notification.html' %}
+                        <hr>
+                    </dev>
+                {% elif key == 'answered_you' %}
+                    <dev>
+                        <dev>
+                            <a href="{% url 'articles:author_profile' value.author.id %}" class="post-author">
+                                {{ value.author }}
+                            </a>
+                            ответил
+                            <br>
+                            <a href="{% url 'articles:article' value.article.id %}">
+                                {{ value.article|truncatewords:5 }}</a>
+                        </dev>
+                        {% include 'articles/includes/inc_btn_del_notification.html' %}
+                        <hr>
+                    </dev>
+                    {#            лайки\дизлайки    #}
+                {% elif key == 'like' %}
+                    <dev>
+                        <dev>
+                            <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
+                                {{ value.user }}
+                            </a>
+                            like
+                            <br>
+                            <a href="{% url 'articles:article' value.article.id %}">{{ value.article|truncatechars:25 }}</a>
+                        </dev>
+                        {% include 'articles/includes/inc_btn_del_notification.html' %}
+                        <hr>
+                    </dev>
+                {% elif key == 'dislike' %}
+                    <dev>
+                        <dev>
+                            <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
+                                {{ value.user }}
+                            </a>
+                            dislike
+                            <br>
+                            <a href="{% url 'articles:article' value.article.id %}">{{ value.article|truncatechars:25 }}</a>
+                        </dev>
+                        {% include 'articles/includes/inc_btn_del_notification.html' %}
+                        <hr>
+                    </dev>
+                    {#    карма   #}
+                {% elif key == 'like_karma' %}
+                    <dev>
+                        <dev>
+                            <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
+                                {{ value.user }}
+                            </a>
+                            повысил карму
+                        </dev>
+                        {% include 'articles/includes/inc_btn_del_notification.html' %}
                         <br>
-                        <a href="{% url 'articles:article' value.article.id %}">
-                            {{ value.article|truncatewords:5 }}</a>
+                        <hr>
                     </dev>
-                    {% include 'articles/includes/inc_btn_del_notification.html' %}
-                    <hr>
-                </dev>
-            {% elif key == 'answered_you' %}
-                <dev>
+                {% elif key == 'dislike_karma' %}
                     <dev>
-                        <a href="{% url 'articles:author_profile' value.author.id %}" class="post-author">
-                            {{ value.author }}
-                        </a>
-                        ответил
+                        <dev>
+                            <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
+                                {{ value.user }}
+                            </a>
+                            понизил карму
+                        </dev>
+                        {% include 'articles/includes/inc_btn_del_notification.html' %}
                         <br>
-                        <a href="{% url 'articles:article' value.article.id %}">
-                            {{ value.article|truncatewords:5 }}</a>
+                        <hr>
                     </dev>
-                    {% include 'articles/includes/inc_btn_del_notification.html' %}
-                    <hr>
-                </dev>
-                {#            лайки\дизлайки    #}
-            {% elif key == 'like' %}
-                <dev>
-                    <dev>
-                        <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
-                            {{ value.user }}
-                        </a>
-                        like
-                        <br>
-                        <a href="{% url 'articles:article' value.article.id %}">{{ value.article|truncatechars:25 }}</a>
-                    </dev>
-                    {% include 'articles/includes/inc_btn_del_notification.html' %}
-                    <hr>
-                </dev>
-            {% elif key == 'dislike' %}
-                <dev>
-                    <dev>
-                        <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
-                            {{ value.user }}
-                        </a>
-                        dislike
-                        <br>
-                        <a href="{% url 'articles:article' value.article.id %}">{{ value.article|truncatechars:25 }}</a>
-                    </dev>
-                    {% include 'articles/includes/inc_btn_del_notification.html' %}
-                    <hr>
-                </dev>
-                {#    карма   #}
-            {% elif key == 'like_karma' %}
-                <dev>
-                    <dev>
-                        <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
-                            {{ value.user }}
-                        </a>
-                        повысил карму
-                    </dev>
-                    {% include 'articles/includes/inc_btn_del_notification.html' %}
-                    <br>
-                    <hr>
-                </dev>
-            {% elif key == 'dislike_karma' %}
-                <dev>
-                    <dev>
-                        <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
-                            {{ value.user }}
-                        </a>
-                        понизил карму
-                    </dev>
-                    {% include 'articles/includes/inc_btn_del_notification.html' %}
-                    <br>
-                    <hr>
-                </dev>
+                {% endif %}
+
+
+            {% endfor %}
+            {% if notifications %}
+                <a href="{% url 'articles:all_viewed' %}">
+                    <button type="button" title="отметить все уведомления как просмотренные">очистить
+                    </button>
+                </a>
             {% endif %}
-
-
-        {% endfor %}
-        {% if notifications %}
-            <a href="{% url 'articles:all_viewed' %}">
-                <button type="button" title="отметить все уведомления как просмотренные">очистить
-                </button>
-            </a>
-        {% endif %}
+        </div>
     </div>
 </div>

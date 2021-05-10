@@ -11,6 +11,12 @@ from django.utils.timezone import now
 class HabrUser(AbstractUser):
     first_name = None
     last_name = None
+    username = models.CharField(
+        max_length=16,
+        unique=True,
+        help_text='Required. 150 characters or fewer. Letters, '
+                  'digits and @/./+/-/_ only.',
+    )
     email = models.EmailField(max_length=150, unique=True, blank=True)
     is_confirmed = models.BooleanField(verbose_name='Подтвержден',
                                        default=False)
