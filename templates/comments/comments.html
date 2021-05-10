@@ -3,10 +3,6 @@
 
 <div class="comment-row" id="commentArticle">
     <h2 class="mb-4">({{ comments.count }}) Комментарии</h2>
-
-    <h4>comments_is_liked: {{ comments_is_liked }}</h4>
-    <h4>comments_is_disliked: {{ comments_is_disliked }}</h4>
-
     <ul style="list-style-type:none;">
         <div class="col-md-12 mt-2" id="CommentList">
             {% for comment in comments %}
@@ -36,7 +32,7 @@
                                 </button>
                             </form>
                             <div class="post-status">
-                                {% if liked is True %}
+                                {% if comment.id in comments_is_liked %}
                                     <img src="{% static 'svg/like(filled).svg' %}" alt="" id="like-{{ comment.id }}"
                                          class="comment_like"/>
                                 {% else %}
@@ -44,7 +40,7 @@
                                          class="comment_like"/>
                                 {% endif %}
                                 <small class="green" id="likes{{ comment.id }}">{{ comment.likes.count }}</small>
-                                {% if disliked is True %}
+                                {% if comment.id in comments_is_disliked %}
                                     <img src="{% static 'svg/dislike(filled).svg' %}" alt=""
                                          id="dislike-{{ comment.id }}" class="comment_dislike"/>
                                 {% else %}
