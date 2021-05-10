@@ -40,7 +40,7 @@ def add_user_ban(request, pk):
                     banned_user.is_forever = True
                 else:
                     banned_user.is_forever = False
-                    banned_user.num_days = request.POST["num_days"]
+                banned_user.num_days = request.POST["num_days"]
                 banned_user.date_ban = datetime.today()
                 banned_user.save()
             else:

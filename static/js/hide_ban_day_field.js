@@ -7,6 +7,8 @@ window.onload = function () {
             $.ajax({
                 success: function (data) {
                     $('#id_num_days, label[for="id_num_days"]').hide();
+                    let day_field = $('#id_num_days')[0];
+                    day_field.value = 0;
                 },
             });
         }else {
