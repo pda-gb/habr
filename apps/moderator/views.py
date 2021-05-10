@@ -65,7 +65,8 @@ def add_user_ban(request, pk):
 def remove_user_ban(request, pk):
     current_user = BannedUser.objects.get(offender=pk)
     current_user.delete()
-    return HttpResponseRedirect(reverse("articles:author_profile", args=[pk]))
+    # return HttpResponseRedirect(reverse("articles:author_profile", args=[pk]))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def banned_users(request):

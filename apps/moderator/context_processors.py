@@ -24,8 +24,8 @@ def check_is_banned(request):
         date_ban = banned_user.date_ban
         end_date = date_ban + datetime.timedelta(days=num_days)
         current_date = datetime.date.today()
-        remaining_days = (current_date - end_date).days
-        if remaining_days > 0:
+        remaining_days = (end_date - current_date).days
+        if remaining_days <= 0:
             banned_user.is_active = False
             banned_user.save()
     else:

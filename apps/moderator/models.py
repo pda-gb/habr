@@ -36,7 +36,7 @@ class BannedUser(models.Model):
         end_date = date_ban + datetime.timedelta(days=num_days)
         current_date = datetime.date.today()
         remaining_days = (end_date - current_date).days
-        if remaining_days < 0:
+        if remaining_days <= 0:
             self.is_active = False
             self.save()
         return remaining_days
