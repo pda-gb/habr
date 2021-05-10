@@ -47,7 +47,7 @@ a:hover {
     width: 40px;
     height: 40px;
     border-radius: 20px;
-    overflow:hidden;
+    overflow: hidden;
     display: none;
 }
 
@@ -240,7 +240,7 @@ a:hover {
     color: gray;
 }
 
-.author-karma-num{
+.author-karma-num {
     margin-right: 10px;
 }
 
@@ -406,9 +406,16 @@ body {
     display: block;
 }
 
+.main-image-box {
+    margin: 15px 0px;
+    width: 100%;
+    overflow: hidden;
+}
+
 .main-image {
-    width: 840px;
-    height: 561.75px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .green {
@@ -430,27 +437,28 @@ body {
 }
 
 div.scrollup {
-  position: fixed;
-  color: gray;
-  background-color: white;
-  left: 40px;
-  bottom: 65px;
-  padding: 10px;
-  font-size: 28px;
-  border-radius: 50px;
-  cursor: pointer;
-  display: none;
-  text-align: center;
-  border: 1px gray;
+    position: fixed;
+    color: gray;
+    background-color: white;
+    left: 40px;
+    bottom: 65px;
+    padding: 10px;
+    font-size: 28px;
+    border-radius: 50px;
+    cursor: pointer;
+    display: none;
+    text-align: center;
+    border: 1px gray;
 }
 
 div.scrollup:hover {
-  background-color: lightgrey;
+    background-color: lightgrey;
 }
 
 .page-link {
     color: black;
 }
+
 .page-link:hover {
     color: black;
 }
@@ -480,7 +488,7 @@ div.scrollup:hover {
     position: relative;
 }
 
-.form-search form{
+.form-search form {
     display: flex;
 }
 
@@ -491,22 +499,22 @@ div.scrollup:hover {
 
 
 .scrollup, .scrolldown {
-  position: fixed;
-  color: gray;
-  background-color: white;
-  left: 40px;
-  bottom: 65px;
-  padding: 10px;
-  font-size: 28px;
-  border-radius: 50px;
-  cursor: pointer;
-  display: none;
-  text-align: center;
-  border: 1px gray;
+    position: fixed;
+    color: gray;
+    background-color: white;
+    left: 40px;
+    bottom: 65px;
+    padding: 10px;
+    font-size: 28px;
+    border-radius: 50px;
+    cursor: pointer;
+    display: none;
+    text-align: center;
+    border: 1px gray;
 }
 
 .scrollup:hover, .scrolldown:hover {
-  background-color: lightgrey;
+    background-color: lightgrey;
 }
 
 .text-muted {
@@ -542,19 +550,19 @@ div.scrollup:hover {
 }
 
 .wrapper {
-	display: flex;
-	flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
-.string__container{
-	max-width: 1260px;
-	margin: 10px;
+.string__container {
+    max-width: 1260px;
+    margin: 10px;
 }
 
 .bookmark__row {
-	display: flex;
+    display: flex;
     flex-direction: row;
-	justify-content: space-between;
+    justify-content: space-between;
     align-items: center;
     margin: 10px;
     height: 75px;
@@ -588,7 +596,10 @@ div.scrollup:hover {
     font-style: italic;
 }
 
-.menu_scroll {max-height:400px; overflow-y:scroll;}
+.menu_scroll {
+    max-height: 400px;
+    overflow-y: scroll;
+}
 
 .notific_block {
     display: flex;
@@ -598,6 +609,7 @@ div.scrollup:hover {
     display: flex;
     flex-direction: column;
 }
+
 .mobile_hub {
     display: none;
     flex-direction: row;
@@ -612,24 +624,39 @@ div.scrollup:hover {
     margin-left: auto;
 }
 
+.col-space {
+    width: 3%;
+}
+
+.col-right {
+    width: 28%;
+}
+
+.col-main {
+    width: 68%;
+}
+
 @media (max-width: 1200px) {
-    .col-1 {
+    .col-space {
         width: 4%;
     }
 
-    .col-3 {
+    .col-right {
         width: 32%;
     }
 
-    .col-8 {
+    .col-main {
         width: 64%;
     }
+
     .regist {
         display: none;
     }
+
     .author-avatar-menu-text {
         display: none;
     }
+
     .author-avatar-menu {
         display: flex;
     }
@@ -639,12 +666,15 @@ div.scrollup:hover {
     .logo {
         font-size: 28px;
     }
+
     .hubs, .notific_block {
         display: none;
     }
+
     .mobile_hub {
         display: flex;
     }
+
     .navbar-mobile {
         flex-direction: row;
         justify-content: space-around;
@@ -652,4 +682,19 @@ div.scrollup:hover {
         font-size: 14px;
     }
 
+    .col-space {
+        display: none;
+    }
+
+    .col-right {
+        display: none;
+    }
+
+    .col-main {
+        width: 100%;
+    }
+    .post-link {
+        font-size: calc(22px + (32 - 22) * ( (100vw - 350px) / ( 992 - 350) ));
+        font-weight: 500;
+    }
 }
