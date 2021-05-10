@@ -553,3 +553,9 @@ div.scrollup:hover {
 }
 
 .menu_scroll {max-height:400px; overflow-y:scroll;}
+
+.checkbox-field {
+    margin-left: 20px;
+    width: 20px;
+    height: 20px;
+}

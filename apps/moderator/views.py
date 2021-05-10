@@ -31,24 +31,24 @@ def add_user_ban(request, pk):
     if request.method == 'POST':
         ban_form = BannedUserForm(request.POST)
         if ban_form.is_valid():
-            # if request.POST["is_forever"] == 'true':
-            #     is_forever = True
-            # else:
-            #     is_forever = False
             banned_user_query = BannedUser.objects.filter(offender=pk)
             if banned_user_query:
                 banned_user = banned_user_query[0]
                 banned_user.is_active = True
                 banned_user.reason = request.POST["reason"]
-                banned_user.num_days = request.POST["num_days"]
+                if request.POST.get("is_forever"):
+                    banned_user.is_forever = True
+                else:
+                    banned_user.is_forever = False
+                    banned_user.num_days = request.POST["num_days"]
                 banned_user.date_ban = datetime.today()
                 banned_user.save()
             else:
                 BannedUser.objects.create(offender=current_user,
                                           reason=request.POST["reason"],
                                           num_days=request.POST["num_days"],
-                                          is_active=True)
-                                          # is_forever=is_forever)
+                                          is_active=True,
+                                          is_forever=True if request.POST.get("is_forever") else False)
             return HttpResponseRedirect(reverse("articles:author_profile", args=[pk]))
         else:
             messages.error(request, 'ошибка')
