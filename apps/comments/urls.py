@@ -10,4 +10,5 @@ urlpatterns = [
     path("create/<int:pk>", comments.comment_create, name="comment_create"),
     path("create-child/<int:pk>/<int:id_parent_comment>",
          comments.child_comment_create, name="comment_child_create", ),
+    path("ajax/like", comments.like_dislike_ajax, name="ajax_comment"),
 ]

@@ -1,49 +1,78 @@
 from django.conf import settings
 from django.db import models
+from ckeditor_uploader.fields import RichTextUploadingField
 
 from apps.articles.models import Article
-from apps.authorization.models import HabrUser, HabrUserProfile
+from apps.authorization.models import HabrUser
 
 
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     parent = models.ForeignKey(
-        "self", null=True, related_name="child_comments", on_delete=models.CASCADE
+        "self",
+        null=True,
+        blank=True,
+        related_name="child_comments",
+        on_delete=models.CASCADE,
     )
-    body = models.TextField(verbose_name="текст комментария")
+    body = RichTextUploadingField()
     date = models.DateTimeField(verbose_name="дата", auto_now_add=True)
-
-    # is_child = models.BooleanField(default=False)
+    likes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        verbose_name="лайки",
+        related_name="comment_likes",
+        blank=True,
+    )
+    dislikes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        verbose_name="дизлайки",
+        related_name="comment_dislikes",
+        blank=True,
+    )
+    viewed = models.BooleanField(default=False, verbose_name='просмотрено')
 
     def __str__(self):
         return f"{self.article.title}-{self.author.username}"
+
+    @property
+    def get_parent(self):
+        if not self.parent:
+            return ""
+        else:
+            return self.parent
 
     class Meta:
         verbose_name = "комментарий"
         verbose_name_plural = "комментарии"
 
     @staticmethod
-    def create_comment(article_pk: int, comment_pk: int, username, text_comment):
+    def create_comment(article_pk, comment_pk, author_pk, text_comment):
         try:
-            parent_comment = Comment.objects.get(pk=comment_pk)
+            comment_object = Comment.objects.get(pk=comment_pk)
         except ValueError:
-            parent_comment = None
-        print(f'{username=}')
-        author = username
-        print(f'{author=}')
+            comment_object = None
+        author = HabrUser.objects.get(pk=author_pk)
         article = Article.objects.get(pk=article_pk)
         comment = Comment(
-            body=text_comment, article=article, author=author,
-            parent=parent_comment
+            body=text_comment, article=article, author=author, comment_to=comment_object
         )
         comment.save()
 
     @staticmethod
     def get_comments(article_pk):
-        comments = Comment.objects.filter(
-            article__pk=article_pk).order_by("date")
+        comments = Comment.objects.filter(article__pk=article_pk).order_by("date")
         return comments
+
+    @staticmethod
+    def get_all_comments():
+        comments = Comment.objects.all()
+        return comments
+
+    @staticmethod
+    def get_all_comments_hub(pk):
+        articles = Article.get_articles().filter(hub=pk, draft=False)
+        return articles
 
     @staticmethod
     def get_comment(parent_id):

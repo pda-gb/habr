@@ -43,3 +43,43 @@ def child_comment_create(request, pk, id_parent_comment):
             new_comment.save()
             #если в js стоит функция location.reload();, то return JsonResponse не нужен
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+
+def like_dislike_ajax(request):
+    if request.is_ajax() and request.user.is_authenticated:
+        field = request.GET.get("field")
+        comment = request.GET.get("comment").split("-")[1]
+        comment = Comment.objects.get(pk=comment)
+        if request.user != comment.author:
+            if field == "like":
+                if comment.likes.filter(pk=request.user.pk).exists():
+                    comment.likes.remove(request.user)
+                    comment.author.habruserprofile.rating -= 1 * 0.5
+                elif comment.dislikes.filter(pk=request.user.pk).exists():
+                    comment.likes.add(request.user)
+                    comment.dislikes.remove(request.user)
+                    comment.author.habruserprofile.rating += 2 * 0.5
+                else:
+                    comment.likes.add(request.user)
+                    comment.author.habruserprofile.rating += 1 * 0.5
+            elif field == "dislike":
+                if comment.dislikes.filter(pk=request.user.pk).exists():
+                    comment.dislikes.remove(request.user)
+                    comment.author.habruserprofile.rating += 1 * 0.5
+                elif comment.likes.filter(pk=request.user.pk).exists():
+                    comment.dislikes.add(request.user)
+                    comment.likes.remove(request.user)
+                    comment.author.habruserprofile.rating -= 2 * 0.5
+                else:
+                    comment.dislikes.add(request.user)
+                    comment.author.habruserprofile.rating -= 1 * 0.5
+            comment.author.habruserprofile.save()
+        return JsonResponse(
+            {
+                "id": comment.pk,
+                "likes": comment.likes.count(),
+                "dislikes": comment.dislikes.count(),
+                "like": comment.likes.filter(pk=request.user.pk).exists(),
+                "dislike": comment.dislikes.filter(pk=request.user.pk).exists(),
+            }
+        )
