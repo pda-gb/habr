@@ -1,6 +1,6 @@
+from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
-from django.conf import settings
 
 from apps.articles.models import Article, ArticleRate
 from apps.authorization.models import HabrUser, HabrUserProfile
@@ -39,16 +39,26 @@ def article(request, pk=None):
     # for comment in comments:
     #     print(f'{comment.child_comments.values() =}')
     form_comment = CommentCreateForm(request.POST or None)
+    comments_is_liked = None
+    comments_is_disliked = None
     if request.user.is_authenticated:
         rate = ArticleRate.create(current_article, request.user)
         current_article.user_liked = rate.liked
         current_article.bookmarked = rate.in_bookmarks
+        comments_is_liked = Comment.get_liked_comments_by_user(pk,
+                                                               request.user.id)
+        comments_is_disliked = Comment.get_disliked_comments_by_user(
+            pk,
+            request.user.id
+        )
     page_data = {
         "article": current_article,
         "last_articles": last_articles,
         "comments": comments,
         "form_comment": form_comment,
         "media_url": settings.MEDIA_URL,
+        "comments_is_liked": comments_is_liked,
+        "comments_is_disliked": comments_is_disliked,
     }
     return render(request, "articles/article.html", page_data)
 
@@ -104,6 +114,7 @@ def show_author_profile(request, pk=None):
         "current_user": author,
     }
     return render(request, "articles/author_profile.html", page_data)
+
 
 def like_dislike_author_ajax(request):
     if request.is_ajax() and request.user.is_authenticated:

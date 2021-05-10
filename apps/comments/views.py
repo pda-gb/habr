@@ -1,14 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.shortcuts import HttpResponseRedirect, get_object_or_404
 from django.http import JsonResponse
-from django.forms.models import model_to_dict
-from django.conf import settings
-from django.template.loader import render_to_string
+from django.shortcuts import HttpResponseRedirect, get_object_or_404
 
-from apps.articles.models import Article, Hub
+from apps.articles.models import Article
 from .forms import CommentCreateForm
 from .models import Comment
+
 
 @login_required
 @transaction.atomic
@@ -24,8 +22,10 @@ def comment_create(request, pk):
             new_comment.parent = None
             new_comment.is_child = False
             new_comment.save()
-            #если в js стоит функция location.reload();, то return JsonResponse не нужен
+            # если в js стоит функция location.reload();,
+            # то return JsonResponse не нужен
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
 
 @login_required
 @transaction.atomic
@@ -41,7 +41,8 @@ def child_comment_create(request, pk, id_parent_comment):
             new_comment.parent = Comment.get_comment(id_parent_comment)
             new_comment.is_child = True
             new_comment.save()
-            #если в js стоит функция location.reload();, то return JsonResponse не нужен
+            # если в js стоит функция location.reload();,
+            # то return JsonResponse не нужен
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
@@ -80,6 +81,8 @@ def like_dislike_ajax(request):
                 "likes": comment.likes.count(),
                 "dislikes": comment.dislikes.count(),
                 "like": comment.likes.filter(pk=request.user.pk).exists(),
-                "dislike": comment.dislikes.filter(pk=request.user.pk).exists(),
+                "dislike": comment.dislikes.filter(
+                    pk=request.user.pk
+                ).exists(),
             }
         )
