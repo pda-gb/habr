@@ -11,18 +11,6 @@
             <div class="col-1 bord">Хаб</div>
             <div class="col-1 bord">Создана</div>
         </div>
-        {#        {% for user in banned_users %}#}
-        {#            <div class="bookmark__row col-12">#}
-        {#                <div class="col-6 bord">{{ user.offender.username }}</div>#}
-        {#                <div class="col-1 bord">{{ user.date_ban }}</div>#}
-        {#                <div class="col-1 bord">{{ user.reason }}</div>#}
-        {#                {% if user.is_forever %}#}
-        {#                    <div class="col-1 bord">Бессрочно</div>#}
-        {#                {% else %}#}
-        {#                    <div class="col-1 bord">{{ user.get_remaining_days }}</div>#}
-        {#                {% endif %}#}
-        {#            </div>#}
-        {#        {% endfor %}#}
     </div>
     {% include 'moderator/includes/inc_articles_string_output.html' %}
 {% endblock content %}

@@ -3,10 +3,12 @@
 
 {% block content %}
     <div class="container">
+        <h4>{{ all_statuses }}</h4>
         {% include 'account/includes/inc_menu.html' %}
         <div class="row">
             <div class="col-8">
                 {% for article in articles %}
+
                     {% if article.is_active %}
                         {% include 'account/includes/post.html' %}
                     {% endif %}
@@ -14,7 +16,7 @@
                     <p>У вас нет статей.</p>
                 {% endfor %}
                 {% if articles.paginator.count > 5 %}
-                <!-- Начало блока пагинации -->
+                    <!-- Начало блока пагинации -->
                     {% include 'account/includes/paginations/pagination_user_article.html' %}
                 {% endif %}
                 <!-- Конец блока пагинации -->
