@@ -16,25 +16,26 @@ def check_is_banned(request):
     """
     Проверить является ли пользователь забаненным.
     """
+    remaining_days = None
+    is_banned = False
+    banned_user = None
     banned_user_query = BannedUser.objects.filter(offender=request.user.pk, is_active=True)
     if banned_user_query:
         is_banned = True
         banned_user = banned_user_query[0]
-        num_days = banned_user.num_days
-        date_ban = banned_user.date_ban
-        end_date = date_ban + datetime.timedelta(days=num_days)
-        current_date = datetime.date.today()
-        remaining_days = (end_date - current_date).days
-        if remaining_days <= 0:
-            banned_user.is_active = False
-            banned_user.save()
-    else:
-        is_banned = False
-        banned_user = None
-        remaining_days = None
+        if not banned_user.is_forever:
+            num_days = banned_user.num_days
+            date_ban = banned_user.date_ban
+            end_date = date_ban + datetime.timedelta(days=num_days)
+            current_date = datetime.date.today()
+            remaining_days = (end_date - current_date).days
+            if remaining_days <= 0:
+                banned_user.is_active = False
+                banned_user.save()
+                banned_user.unset_ban_email()
     return {
         'is_banned': is_banned,
         'banned_user': banned_user,
-        'remaining_days': abs(remaining_days) if remaining_days else None,
+        'remaining_days': remaining_days,
     }
 

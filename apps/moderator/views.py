@@ -1,6 +1,7 @@
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.urls import reverse
 from datetime import datetime
 from apps.moderator.forms import BannedUserForm
@@ -44,11 +45,12 @@ def add_user_ban(request, pk):
                 banned_user.date_ban = datetime.today()
                 banned_user.save()
             else:
-                BannedUser.objects.create(offender=current_user,
+                banned_user = BannedUser.objects.create(offender=current_user,
                                           reason=request.POST["reason"],
                                           num_days=request.POST["num_days"],
                                           is_active=True,
                                           is_forever=True if request.POST.get("is_forever") else False)
+            banned_user.set_ban_email()
             return HttpResponseRedirect(reverse("articles:author_profile", args=[pk]))
         else:
             messages.error(request, 'ошибка')
@@ -65,8 +67,20 @@ def add_user_ban(request, pk):
 def remove_user_ban(request, pk):
     current_user = BannedUser.objects.get(offender=pk)
     current_user.delete()
-    # return HttpResponseRedirect(reverse("articles:author_profile", args=[pk]))
+    current_user.unset_ban_email()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+# def remove_user_ban(request, pk):
+#     if request.is_ajax():
+#         current_user = BannedUser.objects.get(offender=pk)
+#         current_user.delete()
+#         content = {
+#             'current_user': current_user,
+#             'user': request.user,
+#         }
+#         # result = render_to_string('moderator/includes/ban_buttons.html', content)
+#         result = render_to_string('articles/author_profile.html', content)
+#         return JsonResponse({'result': result})
 
 
 def banned_users(request):

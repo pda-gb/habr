@@ -8,7 +8,7 @@ window.onload = function () {
                 success: function (data) {
                     $('#id_num_days, label[for="id_num_days"]').hide();
                     let day_field = $('#id_num_days')[0];
-                    day_field.value = 0;
+                    day_field.value = 1;
                 },
             });
         }else {
@@ -20,4 +20,19 @@ window.onload = function () {
         };
         event.preventDefault();
     });
+
+//    $('.spam').on('click', '.btn-unlock', function (event) {
+//        let user_id = event.target.href.split('/')[event.target.href.split('/').length - 2];
+//        if (user_id) {
+//            $.ajax({
+//                url: "/moderator/remove_user_ban/" + user_id + "/",
+//
+//                success: function (data) {
+//                    $('.spam').html(data.result);
+//                    console.log('success');
+//                },
+//            });
+//        }
+//        event.preventDefault();
+//    });
 };
