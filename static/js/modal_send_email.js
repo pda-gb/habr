@@ -1,16 +1,14 @@
 'use strict';
 
-window.onload = function () {
-    $('.modal').on('click', '.btn-secondary, .close', function (event) {
-        let target_href = event.target;
-        if (target_href) {
-            $.ajax({
-                success: function (data) {
-                    $('.modal').modal('hide');
-                    console.log('close all modal');
-                },
-            });
-        };
-        event.preventDefault();
-    });
-};
+$('.modal').on('click', '.btn-secondary, .close', function (event) {
+    let target_href = event.target;
+    if (target_href) {
+        $.ajax({
+            success: function (data) {
+                $('.modal').modal('hide');
+                console.log('close all modal');
+            },
+        });
+    };
+    event.preventDefault();
+});
