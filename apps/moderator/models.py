@@ -1,5 +1,7 @@
-from django.db import models
 import datetime
+
+from django.db import models
+
 from apps.articles.models import Article
 from apps.comments.models import Comment
 from habr import settings
@@ -83,10 +85,6 @@ class VerifyArticle(models.Model):
     fixed = models.BooleanField(default=False,
                                 help_text="автор исправил статью")
 
-    # for_checking = models.BooleanField(default=False,
-    #                                    help_text="автор запросил проверку "
-    #                                              "иправления")
-
     @staticmethod
     def send_article_to_verify(pk_article, pk_author):
         """отправка статьи на проверку"""
@@ -115,11 +113,17 @@ class VerifyArticle(models.Model):
             status = None
         return status
 
+    @staticmethod
+    def get_all_articles():
+        """получение всех статей на проверку"""
+        verif_articles = VerifyArticle.objects.all().order_by(
+            'verification__created'
+        )
+        articles_to_review = []
+        for itm in verif_articles:
+            articles_to_review.append(itm.verification)
+        return articles_to_review
+
     class Meta:
         verbose_name = "статья"
         verbose_name_plural = "статьи"
-
-# class Remark(models.Model):
-#     """Замечания модератора и корректировки статьи автора"""
-#     message = models.TextField(verbose_name="Замечание модератора")
-#     correction = models.TextField(verbose_name="исправление")
