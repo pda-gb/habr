@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
@@ -52,7 +51,6 @@ def hub(request, pk=None, page=1):
         hub_articles = Article.get_by_hub(pk)
 
     last_articles = Article.get_last_articles(hub_articles)
-
     paginator = Paginator(hub_articles, 5)
     try:
         articles_paginator = paginator.page(page)
@@ -117,8 +115,7 @@ def article(request, pk=None):
         "last_articles": last_articles,
         "comments": comments,
         "form_comment": form_comment,
-        "media_url": settings.MEDIA_URL,
-        "notifications": notifications
+        "notifications": notifications,
         "comments_is_liked": comments_is_liked,
         "comments_is_disliked": comments_is_disliked,
     }
