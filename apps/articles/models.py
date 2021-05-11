@@ -290,7 +290,11 @@ class LikesViewed(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     viewed = models.BooleanField(default=False, verbose_name='просмотрено')
+    date = models.DateTimeField (verbose_name="дата", auto_now_add=True)
 
+    def get_likes(request):
+        result = LikesViewed.objects.filter(user = request.user)
+        return result
 
 class DislikesViewed(models.Model):
     """
@@ -302,6 +306,8 @@ class DislikesViewed(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     viewed = models.BooleanField(default=False, verbose_name='просмотрено')
+    date = models.DateTimeField (verbose_name="дата", auto_now_add=True)
+
 
 
 if __name__ == "__main__":

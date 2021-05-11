@@ -24,12 +24,14 @@ class Comment(models.Model):
         settings.AUTH_USER_MODEL,
         verbose_name="лайки",
         related_name="comment_likes",
+        through="CommentLikesViewed",
         blank=True,
     )
     dislikes = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         verbose_name="дизлайки",
         related_name="comment_dislikes",
+        through="CommentDislikesViewed",
         blank=True,
     )
     viewed = models.BooleanField(default=False, verbose_name='просмотрено')
@@ -295,3 +297,23 @@ class SortCommentsUser(Sorted):
         comments = sorted(comments.items(), key=lambda x: x[1], reverse=True)
         result = [i[0] for i in comments]
         return result
+
+class CommentLikesViewed(models.Model):
+    '''Промежуточная таблица с добавлением
+    поля просомтренных лайков комментариев'''
+    comment = models.ForeignKey (Comment,
+                                 on_delete=models.CASCADE)
+    user = models.ForeignKey (settings.AUTH_USER_MODEL,
+                              on_delete=models.CASCADE)
+    viewed = models.BooleanField (default=False, verbose_name='просмотрено')
+    date = models.DateTimeField (verbose_name="дата", auto_now_add=True)
+
+class CommentDislikesViewed(models.Model):
+    '''Промежуточная таблица с добавлением
+    поля просомтренных дизлайков комментариев'''
+    comment = models.ForeignKey (Comment,
+                                 on_delete=models.CASCADE)
+    user = models.ForeignKey (settings.AUTH_USER_MODEL,
+                              on_delete=models.CASCADE)
+    viewed = models.BooleanField (default=False, verbose_name='просмотрено')
+    date = models.DateTimeField (verbose_name="дата", auto_now_add=True)

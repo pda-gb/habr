@@ -10,7 +10,7 @@ from apps.authorization.models import HabrUser, KarmaPositiveViewed,\
     KarmaNegativeViewed
 from apps.authorization.models import HabrUserProfile
 from apps.comments.forms import CommentCreateForm
-from apps.comments.models import Comment, Sorted
+from apps.comments.models import Comment, Sorted, CommentLikesViewed, CommentDislikesViewed
 from apps.comments.utils import create_comments_tree
 from apps.moderator.models import BannedUser
 
@@ -333,7 +333,7 @@ def post_list_user(request, user_pk, page=1):
 
 
 def notification(request):
-    current_notifications = []
+    notifications1 = []
     current_articles = Article.get_by_author(author_pk=request.user.pk)
     for itm_article in current_articles:
         likes = LikesViewed.objects.filter(article_id=itm_article.id,
@@ -355,19 +355,33 @@ def notification(request):
             viewed=False,
             profile_author=request.user.pk
         )
+        comment_likes = CommentLikesViewed.objects.filter(
+            viewed=False,
+            comment__author_id = request.user.pk
+
+        )
+        comment_dislikes = CommentDislikesViewed.objects.filter(
+            viewed=False,
+            comment__author_id = request.user.pk
+        )
 
         for answer in answered_you:
-            current_notifications.append(("answered_you", answer))
+            notifications1.append(("answered_you", answer))
         for comment in comments:
-            current_notifications.append(("comment", comment))
+            notifications1.append(("comment", comment))
         for like in likes:
-            current_notifications.append(("like", like))
+            notifications1.append(("like", like))
         for dislike in dislikes:
-            current_notifications.append(("dislike", dislike))
+            notifications1.append(("dislike", dislike))
         for like_karma in likes_karma:
-            current_notifications.append(("like_karma", like_karma))
+            notifications1.append(("like_karma", like_karma))
         for dislike_karma in dislikes_karma:
-            current_notifications.append(("dislike_karma", dislike_karma))
+            notifications1.append(("dislike_karma", dislike_karma))
+        for comment_like in comment_likes:
+            notifications1.append(("comment_like", comment_like))
+        for comment_dislike in comment_dislikes:
+            notifications1.append(("comment_dislike", comment_dislike))
+        current_notifications = list(set(notifications1))
     return current_notifications
 
 
@@ -378,6 +392,8 @@ def mark_all_as_viewed(request):
         LikesViewed.objects.filter(article_id=i.id).update(viewed=True)
         DislikesViewed.objects.filter(article_id=i.id).update(viewed=True)
         Comment.get_comments(i.id).update(viewed=True)
+        CommentLikesViewed.objects.filter(comment__article_id = i.id).update(viewed=True)
+        CommentDislikesViewed.objects.filter(comment__article_id = i.id).update(viewed=True)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -395,3 +411,40 @@ def target_mark_as_viewed(request, target, pk):
     elif target == 'dislike_karma':
         KarmaNegativeViewed.objects.filter(id=pk).update(viewed=True)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def all_notification(request):
+    current_articles = Article.get_by_author (author_pk=request.user.pk)
+    all_notification = []
+    for itm_article in current_articles:
+        likes = LikesViewed.objects.filter(article_id=itm_article.id)
+        dislikes = DislikesViewed.objects.filter(article_id=itm_article.id)
+        comments = Comment.get_comments(itm_article.id).exclude(author_id=request.user.pk)
+        answered_you = Comment.get_comments(itm_article.id).filter(
+                    parent__author_id=request.user.pk)
+        likes_karma = KarmaPositiveViewed.objects.filter(profile_author=request.user.pk)
+        dislikes_karma = KarmaNegativeViewed.objects.filter (
+            profile_author=request.user.pk)
+        comment_likes = CommentLikesViewed.objects.filter (
+            comment__author_id=request.user.pk)
+        comment_dislikes = CommentDislikesViewed.objects.filter (
+            comment__author_id=request.user.pk)
+
+        for answer in answered_you:
+            all_notification.append (("answered_you", answer))
+        for comment in comments:
+            all_notification.append (("comment", comment))
+        for like in likes:
+            all_notification.append (("like", like))
+        for dislike in dislikes:
+            all_notification.append (("dislike", dislike))
+        for like_karma in likes_karma:
+            all_notification.append (("like_karma", like_karma))
+        for dislike_karma in dislikes_karma:
+            all_notification.append (("dislike_karma", dislike_karma))
+        for comment_like in comment_likes:
+            all_notification.append (("comment_like", comment_like))
+        for comment_dislike in comment_dislikes:
+            all_notification.append (("comment_dislike", comment_dislike))
+        cerrent_all_notification = list(set(all_notification))
+    return cerrent_all_notification
+

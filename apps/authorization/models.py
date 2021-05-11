@@ -118,7 +118,7 @@ class KarmaNegativeViewed(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     viewed = models.BooleanField(default=False, verbose_name='просмотрено')
-
+    date = models.DateTimeField (verbose_name="дата", auto_now_add=True)
 
 class KarmaPositiveViewed(models.Model):
     """
@@ -130,3 +130,4 @@ class KarmaPositiveViewed(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     viewed = models.BooleanField(default=False, verbose_name='просмотрено')
+    date = models.DateTimeField (verbose_name="дата", auto_now_add=True)

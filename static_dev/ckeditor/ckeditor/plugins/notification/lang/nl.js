@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("notification","nl",{closed:"Melding gesloten."});
+CKEDITOR.plugins.setLang("notification","nl",{closed:"Melding gesloten."});
