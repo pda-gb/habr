@@ -2,8 +2,8 @@
     <hr>
     <h4>Блок модератора</h4>
     <a class="btn btn-outline-success"
-            href="#">Разрешить</a>
+            href="{% url 'moderator:allow_publishing' article.id %}">Разрешить</a>
     <a class="btn btn-outline-danger"
-            href="#">Отклонить</a>
+            href="{% url 'moderator:reject_publishing' article.id %}">На доработку</a>
     <hr>
 </div>

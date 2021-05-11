@@ -2,9 +2,10 @@ from datetime import datetime
 
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.urls import reverse
+from django.shortcuts import render, redirect
+from django.urls import reverse, reverse_lazy
 
+from apps.articles.models import Article
 from apps.authorization.models import HabrUser
 from apps.moderator.forms import BannedUserForm
 from apps.moderator.models import BannedUser, VerifyArticle
@@ -20,7 +21,7 @@ def complaints(request):
 
 def review_articles(request):
     """получение всех статей на проверку"""
-    articles = VerifyArticle.get_all_articles()
+    articles = VerifyArticle.get_all_articles_for_verifications()
     title = "Статьи на проверку"
     page_data = {
         "title": title,
@@ -84,11 +85,9 @@ def banned_users(request):
     }
     return render(request, "moderator/banned_users.html", page_data)
 
-# def get_articles_for_verification(request):
-#     """получение всех статей на проверку"""
-#     articles = VerifyArticle.get_all_articles()
-#     page_data = {
-#         "articles": articles,
-#     }
-#     print(f'{articles=}')
-#     return render(request, "moderator/review_articles.html", page_data)
+
+def allow_publishing(request, pk):
+    """Разрешение модератором публикации статьи"""
+    VerifyArticle.objects.filter(verification=pk).update(is_verified=True)
+    Article.objects.filter(id=pk).update(draft=False)
+    return HttpResponseRedirect(reverse('moderator:review_articles'))

@@ -119,11 +119,10 @@ class VerifyArticle(models.Model):
         return status
 
     @staticmethod
-    def get_all_articles():
+    def get_all_articles_for_verifications():
         """получение всех статей на проверку"""
-        verif_articles = VerifyArticle.objects.all().order_by(
-            'verification__created'
-        )
+        verif_articles = VerifyArticle.objects.filter(
+            is_verified=None).order_by('verification__created')
         articles_to_review = []
         for itm in verif_articles:
             articles_to_review.append(itm.verification)
