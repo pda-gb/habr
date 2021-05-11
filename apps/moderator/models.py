@@ -16,6 +16,11 @@ class Moderator(models.Model):
         verbose_name = "модератор"
         verbose_name_plural = "модераторы"
 
+    @staticmethod
+    def is_moderator(id_user: int) -> bool:
+        """Проверка юзера явлляется ли он модератором"""
+        return Moderator.objects.filter(staff=id_user).exists()
+
 
 class BannedUser(models.Model):
     """Забаненный пользователь"""

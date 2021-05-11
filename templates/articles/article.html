@@ -103,6 +103,11 @@
                     </a>
                 </div>
             </div>
+            <!-- Начало блока модератора -->
+            {% if is_moderator %}
+                {% include 'articles/includes/inc_moderatos_panel.html' %}
+            {% endif %}
+            <!-- Конец блока модератора -->
             <!-- Начало блока комментариев -->
             {% include 'comments/comments.html' %}
             <!-- Конец блока комментариев -->

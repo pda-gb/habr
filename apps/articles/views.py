@@ -12,7 +12,7 @@ from apps.authorization.models import HabrUserProfile
 from apps.comments.forms import CommentCreateForm
 from apps.comments.models import Comment, Sorted
 from apps.comments.utils import create_comments_tree
-from apps.moderator.models import BannedUser
+from apps.moderator.models import BannedUser, Moderator
 
 
 def main_page(request, pk=None, page=1):
@@ -88,6 +88,7 @@ def article(request, pk=None):
         current_comments, request.user if request.user.is_authenticated else None
     )
     form_comment = CommentCreateForm(request.POST or None)
+    is_moderator = False
     if request.user.is_authenticated:
         current_article.views.add(request.user)
         current_article.liked = current_article.likes.filter(
@@ -109,13 +110,15 @@ def article(request, pk=None):
                 pk=request.user.pk
             ).exists()
         )
+        is_moderator = Moderator.is_moderator(request.user.id)
     page_data = {
         "article": current_article,
         "last_articles": last_articles,
         "comments": comments,
         "form_comment": form_comment,
         "media_url": settings.MEDIA_URL,
-        "notifications": notifications
+        "notifications": notifications,
+        "is_moderator": is_moderator,
     }
     return render(request, "articles/article.html", page_data)
 
