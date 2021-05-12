@@ -1,6 +1,6 @@
 import datetime
 
-from django.db import models
+from django.db import models, transaction
 from django.utils.timezone import now
 
 from apps.articles.models import Article
@@ -93,29 +93,44 @@ class VerifyArticle(models.Model):
                                 help_text="автор исправил статью")
 
     @staticmethod
+    @transaction.atomic
     def send_article_to_verify(pk_article, pk_author):
         """отправка статьи на проверку"""
         article = Article.objects.filter(pk=pk_article, author_id=pk_author,
                                          draft=True)
         if article.exists():
-            VerifyArticle.objects.create(
-                verification=Article.objects.get(id=pk_article)
-            )
-            Article.objects.filter(id=pk_article).update(published=now())
+            if VerifyArticle.objects.filter(
+                    verification=pk_article).exists():
+
+                send_article = VerifyArticle.objects.filter(
+                    verification=Article.objects.get(id=pk_article)
+                )
+                send_article.update(is_verified=None)
+            else:
+                send_article = VerifyArticle.objects.create(
+                    verification=Article.objects.get(id=pk_article)
+                )
+                send_article.is_verified = None
+                send_article.save()
+
+            Article.objects.filter(id=pk_article).update(updated=now())
             return True
         else:
             return None
 
     @staticmethod
     def get_status_verification_articles(pk_author):
-        """запрос статуса проверки всех статей автора"""
+        """
+        запрос статуса проверки всех статей и причин отказов
+        в публикации автора
+        """
         status = []
         if VerifyArticle.objects.filter(
                 verification__author_id=pk_author).exists():
             for itm in VerifyArticle.objects.filter(
                     verification__author_id=pk_author):
                 status.append(
-                    (itm.verification_id, itm.is_verified)
+                    (itm.verification_id, itm.is_verified, itm.remark)
                 )
         else:
             status = None

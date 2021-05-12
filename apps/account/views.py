@@ -9,7 +9,6 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.utils.timezone import now
 
 from apps.account.forms import ChangePasswordForm, ArticleEditForm, ArticleCreate
 from apps.account.forms import HabrUserProfileEditForm
@@ -264,6 +263,9 @@ def edit_article(request, pk):
             edit_article.updated = timezone.now()
             edit_article.save()
             edit_form.save()
+            # снимаем с публикации
+            edit_article.draft = True
+            edit_article.save()
             return HttpResponseRedirect(reverse("account:user_articles"))
     else:
         edit_form = ArticleEditForm(instance=edit_article)

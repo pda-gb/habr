@@ -91,7 +91,7 @@ def allow_publishing(request, pk):
     """Разрешение модератором публикации статьи"""
     VerifyArticle.objects.filter(verification=pk).update(is_verified=True)
     Article.objects.filter(id=pk).update(draft=False)
-    Article.objects.filter(id=pk).update(published=now())
+    Article.objects.filter(id=pk).update(published=now(), updated=now())
     return HttpResponseRedirect(reverse('moderator:review_articles'))
 
 
@@ -109,13 +109,12 @@ def return_article(request, pk):
     """отправка на доработку и с обязательной причиной отказа"""
     if request.method == 'POST':
         form_remark = RemarkCreateForm(request.POST or None)
-        print(f"{request.POST=}")
         if form_remark.is_valid():
             VerifyArticle.objects.filter(verification=pk).update(
                 is_verified=False,
                 remark=request.POST["remark"]
             )
-            Article.objects.filter(id=pk).update(published=now())
+            Article.objects.filter(id=pk).update(updated=now())
 
     else:
         form_remark = RemarkCreateForm()
