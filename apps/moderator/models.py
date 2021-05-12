@@ -1,6 +1,7 @@
 import datetime
 
 from django.db import models
+from django.utils.timezone import now
 
 from apps.articles.models import Article
 from apps.comments.models import Comment
@@ -99,6 +100,8 @@ class VerifyArticle(models.Model):
             VerifyArticle.objects.create(
                 verification=Article.objects.get(id=pk_article)
             )
+            Article.objects.filter(id=pk_article).update(draft=False,
+                                                         published=now())
             return True
         else:
             return None

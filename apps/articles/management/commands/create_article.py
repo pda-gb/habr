@@ -1,6 +1,7 @@
 from random import randint, choice
 
 from django.core.management.base import BaseCommand
+from django.utils.timezone import now
 from mimesis import Text, Internet
 
 from apps.articles.models import Hub, Tag, Article

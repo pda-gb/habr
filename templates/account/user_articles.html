@@ -3,11 +3,12 @@
 
 {% block content %}
     <div class="container">
-        <h4>{{ all_statuses }}</h4>
         {% include 'account/includes/inc_menu.html' %}
         <div class="row">
             <div class="col-8">
                 {% for article in articles %}
+                    {% if article.created|date:"U" == article.published|date:"U" %}
+                    {% endif %}
 
                     {% if article.is_active %}
                         {% include 'account/includes/post.html' %}

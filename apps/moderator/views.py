@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
+from django.utils.timezone import now
 
 from apps.articles.models import Article
 from apps.authorization.models import HabrUser
@@ -90,4 +91,5 @@ def allow_publishing(request, pk):
     """Разрешение модератором публикации статьи"""
     VerifyArticle.objects.filter(verification=pk).update(is_verified=True)
     Article.objects.filter(id=pk).update(draft=False)
+    Article.objects.filter(id=pk).update(published=now())
     return HttpResponseRedirect(reverse('moderator:review_articles'))

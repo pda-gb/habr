@@ -51,30 +51,29 @@
                        href="{% url 'account:del_article'  article.id %}">Удалить</a>
                 </div>
 
-                {#            {% endif %}#}
-
-            {% else %}
-                {#     если статьи нет на проверке и не проверялась      #}
-                <h4>{{ status }}/ если статьи нет на проверке и не проверялас</h4>
-                <div>
-                    <a class="btn btn-outline-info blue-word mt-1"
-                       href="{% url 'account:edit_article' article.id %}">Редактировать</a>
-                    {% if not article.draft %}
-                        <a class="btn btn-outline-warning mt-1" title="отправить в черновик"
-                           href="{% url 'account:draft_article' article.id %}">Снять с
-                            публикации</a>
-                    {% elif article.draft %}
-                        {#        <a class="btn btn-outline-success mt-1" href="{% url 'account:draft_article' article.id %}">Опубликовать</a>#}
-                        <a class="btn btn-outline-success mt-1" title="Статья будет отправлена на модерацию"
-                           href="{% url 'account:verify_article' article.id %}">Опубликовать</a>
-                    {% endif %}
-                    <a class="btn btn-outline-danger mt-1"
-                       href="{% url 'account:del_article'  article.id %}">Удалить</a>
-                </div>
-
             {% endif %}
+
         {% endif %}
 
     {% endfor %}
+    {% if article.created|date:"U" == article.published|date:"U" %}
+        {#     если статьи нет на проверке и не проверялась      #}
+        {#        да, знаю, жуткий костыль, но без исправления шаблонов иначе никак    #}
+        <div>
+            <a class="btn btn-outline-info blue-word mt-1"
+               href="{% url 'account:edit_article' article.id %}">Редактировать</a>
+            {% if not article.draft %}
+                <a class="btn btn-outline-warning mt-1" title="отправить в черновик"
+                   href="{% url 'account:draft_article' article.id %}">Снять с
+                    публикации</a>
+            {% elif article.draft %}
+                {#        <a class="btn btn-outline-success mt-1" href="{% url 'account:draft_article' article.id %}">Опубликовать</a>#}
+                <a class="btn btn-outline-success mt-1" title="Статья будет отправлена на модерацию"
+                   href="{% url 'account:verify_article' article.id %}">Опубликовать</a>
+            {% endif %}
+            <a class="btn btn-outline-danger mt-1"
+               href="{% url 'account:del_article'  article.id %}">Удалить</a>
+        </div>
+    {% endif %}
 {% endblock post-content %}
 

@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
+from django.utils.timezone import now
 
 from apps.account.forms import ChangePasswordForm, ArticleEditForm, ArticleCreate
 from apps.account.forms import HabrUserProfileEditForm
@@ -127,11 +128,12 @@ def user_articles(request, page=1):
 
     if request.user.is_authenticated:
         notifications = notification(request)
+        all_statuses = \
+            VerifyArticle.get_status_verification_articles(request.user.id)
     else:
         notifications = None
+        all_statuses = None
 
-    all_statuses = \
-        VerifyArticle.get_status_verification_articles(request.user.id)
     page_data = {
         "title": title,
         "articles": articles_paginator,
@@ -158,13 +160,18 @@ def publications(request, page=1):
 
     if request.user.is_authenticated:
         notifications = notification(request)
+        all_statuses = \
+            VerifyArticle.get_status_verification_articles(request.user.id)
+
     else:
         notifications = None
+        all_statuses = None
 
     page_data = {
         "title": title,
         "articles": articles_paginator,
         "notifications": notifications,
+        "all_statuses": all_statuses,
 
     }
     return render(request, "account/user_articles_publications.html",
@@ -188,13 +195,18 @@ def draft(request, page=1):
 
     if request.user.is_authenticated:
         notifications = notification(request)
+        all_statuses = \
+            VerifyArticle.get_status_verification_articles(request.user.id)
+
     else:
         notifications = None
+        all_statuses = None
 
     page_data = {
         "title": title,
         "articles": articles_paginator,
         "notifications": notifications,
+        "all_statuses": all_statuses,
 
     }
     return render(request, "account/user_articles_draft.html", page_data)
