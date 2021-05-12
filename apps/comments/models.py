@@ -62,3 +62,44 @@ class Comment(models.Model):
         """ получение родительского комментария """
         comment = Comment.objects.get(id=parent_id)
         return comment
+
+    @staticmethod
+    def get_liked_comments_by_user(id_comment, id_user):
+        """Проверка всех комментариев, на лайк от пользователя(для отметки
+        в шаблоне, что текущий юзер уже лайкнул комментарий)"""
+        liked_comments = []
+        for itm in LikesCommentViewed.objects.filter(user=id_user):
+            liked_comments.append(itm.comment.id)
+        return liked_comments
+
+    @staticmethod
+    def get_disliked_comments_by_user(id_comment, id_user):
+        """Проверка всех комментариев, на дизлайк от пользователя(для отметки
+        в шаблоне, что текущий юзер уже дизлайкнул комментарий)"""
+        disliked_comments = []
+        for itm in DislikesCommentViewed.objects.filter(user=id_user):
+            disliked_comments.append(itm.comment.id)
+        return disliked_comments
+
+class LikesCommentViewed(models.Model):
+    """
+    Расширение промежуточной таблицы дополнением
+    поля просмотра уведомления
+     """
+    comment = models.ForeignKey(Comment,
+                                on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    viewed = models.BooleanField(default=False, verbose_name='просмотрено')
+
+
+class DislikesCommentViewed(models.Model):
+    """
+    Расширение промежуточной таблицы дополнением
+    поля просмотра уведомления
+     """
+    comment = models.ForeignKey(Comment,
+                                   on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                on_delete=models.CASCADE)
+    viewed = models.BooleanField(default=False, verbose_name='просмотрено')

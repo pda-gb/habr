@@ -18,11 +18,6 @@
                         <div class="comment-text">
                             <div>{{ child_comment.body }}</div>
                         </div>
-                        {#          лайки          #}
-                        <div id="">
-                            {% include 'comments/includes/inc_like.html' %}
-                        </div>
-                        {#          лайки          #}
                         <span class='reply reply-comment' data-id="{{ child_comment.id }}">Ответить</span>
                         <form method="POST" class="comment-form" id="createChildCommentForm-{{ child_comment.id }}"
                               data-url="{% url 'comments:comment_child_create' pk=article.id id_parent_comment=child_comment.id %}"
@@ -33,6 +28,24 @@
                                     class="btn btn-outline-success createCommentChildBtn">Отправить
                             </button>
                         </form>
+                        <div class="post-status">
+                            {% if child_comment.id in comments_is_liked %}
+                                <img src="{% static 'svg/like(filled).svg' %}" alt="" id="like-{{ child_comment.id }}"
+                                     class="comment_like"/>
+                            {% else %}
+                                <img src="{% static 'svg/like.svg' %}" alt="" id="like-{{ child_comment.id }}"
+                                     class="comment_like"/>
+                            {% endif %}
+                            <small class="green" id="likes{{ child_comment.id }}">{{ child_comment.likes.count }}</small>
+                            {% if child_comment.id in comments_is_disliked %}
+                                <img src="{% static 'svg/dislike(filled).svg' %}" alt=""
+                                     id="dislike-{{ child_comment.id }}" class="comment_dislike"/>
+                            {% else %}
+                                <img src="{% static 'svg/dislike.svg' %}" alt="" id="dislike-{{ child_comment.id }}"
+                                     class="comment_dislike"/>
+                            {% endif %}
+                            <small class="red" id="dislikes{{ child_comment.id }}">{{ child_comment.dislikes.count }}</small>
+                        </div>  
                         {% with comment=child_comment template_name='comments/includes/inc_tree_comments.html' %}
                             {% include template_name %}
                         {% endwith %}

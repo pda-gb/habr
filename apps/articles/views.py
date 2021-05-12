@@ -60,7 +60,15 @@ def article(request, pk=None):
     current_article = get_object_or_404(Article, id=pk)
     comments = Comment.get_comments(pk)
     form_comment = CommentCreateForm(request.POST or None)
+    comments_is_liked = None
+    comments_is_disliked = None
     if request.user.is_authenticated:
+        comments_is_liked = Comment.get_liked_comments_by_user(pk,
+                                                               request.user.id)
+        comments_is_disliked = Comment.get_disliked_comments_by_user(
+            pk,
+            request.user.id
+        )
         current_article.views.add(request.user)
         current_article.liked = current_article.likes.filter(
             pk=request.user.pk
@@ -86,6 +94,8 @@ def article(request, pk=None):
         "last_articles": last_articles,
         "comments": comments,
         "form_comment": form_comment,
+        "comments_is_liked": comments_is_liked,
+        "comments_is_disliked": comments_is_disliked,
     }
     return render(request, "articles/article.html", page_data)
 
