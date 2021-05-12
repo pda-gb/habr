@@ -5,8 +5,9 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import transaction
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 
@@ -202,7 +203,32 @@ def draft(request, page=1):
 def edit_password(request):
     title = "Изменить пароль"
     user = HabrUser.objects.get(username=request.user)
+    if request.is_ajax():
 
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
+            old_password = request.POST.get("old_password")
+            new_password = request.POST.get("new_password")
+            if check_password(old_password, user.password):
+                user.password = make_password(new_password)
+                user.save()
+                update_session_auth_hash(request, user)
+                if request.user.is_authenticated:
+                    notifications = notification(request)
+                else:
+                    notifications = None
+                content = {
+                    "title": title,
+                    "edit_form": form,
+                    "notifications": notifications,
+
+                }
+                print('*' * 100)
+                result = render_to_string('account/edit_password.html', content)
+                return JsonResponse({'result': result})
+                # return HttpResponseRedirect(reverse("account:user_articles"))
+            # else:
+            #     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
     if request.method == "POST":
         form = ChangePasswordForm(request.POST)
         if form.is_valid():
@@ -216,13 +242,15 @@ def edit_password(request):
                 return HttpResponseRedirect(reverse("account:user_articles"))
             else:
                 return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
-
-    form = ChangePasswordForm()
+    else:
+        form = ChangePasswordForm()
 
     if request.user.is_authenticated:
         notifications = notification(request)
     else:
         notifications = None
+
+
 
     page_data = {
         "title": title,

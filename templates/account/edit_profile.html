@@ -14,10 +14,14 @@
             <br>
             {{ edit_form.as_table }}
             <br>
-            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <button type="submit" class="btn btn-primary save-changes">Сохранить</button>
             <button type="reset" class="btn btn-danger">Сбросить</button>
         </form>
         <br>
         <a href="{% url 'account:edit_password' %}"><button class="btn btn-primary">Изменить пароль</button></a>
+
+    </div>
+    <div style="display:none;" class="alert alert-success" role="alert">
+        Изменения успешно сохранены!
     </div>
 {% endblock content %}
