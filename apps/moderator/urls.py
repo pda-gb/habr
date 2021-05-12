@@ -11,4 +11,6 @@ urlpatterns = [
     path("add_user_ban/<int:pk>/", moderator.add_user_ban, name='add_user_ban'),
     path("remove_user_ban/<int:pk>/", moderator.remove_user_ban, name='remove_user_ban'),
     path("allow_publishing/<int:pk>/", moderator.allow_publishing, name='allow_publishing'),
+    path("reject_publishing/<int:pk>/", moderator.reject_publishing, name='reject_publishing'),
+    path("return_article/<int:pk>/", moderator.return_article, name='return_article'),
 ]

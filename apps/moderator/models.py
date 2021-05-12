@@ -87,7 +87,8 @@ class VerifyArticle(models.Model):
                                       help_text="None - статья в процессе "
                                                 "проверки,True - одобрение "
                                                 "статьи, False - отказ")
-    remark = models.TextField(blank=True, verbose_name="Замечание модератора")
+    remark = models.TextField(blank=False,
+                              verbose_name="Замечание модератора")
     fixed = models.BooleanField(default=False,
                                 help_text="автор исправил статью")
 
@@ -100,8 +101,7 @@ class VerifyArticle(models.Model):
             VerifyArticle.objects.create(
                 verification=Article.objects.get(id=pk_article)
             )
-            Article.objects.filter(id=pk_article).update(draft=False,
-                                                         published=now())
+            Article.objects.filter(id=pk_article).update(published=now())
             return True
         else:
             return None

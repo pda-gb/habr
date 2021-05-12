@@ -2,13 +2,13 @@ from datetime import datetime
 
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
-from django.urls import reverse, reverse_lazy
+from django.shortcuts import render
+from django.urls import reverse
 from django.utils.timezone import now
 
 from apps.articles.models import Article
 from apps.authorization.models import HabrUser
-from apps.moderator.forms import BannedUserForm
+from apps.moderator.forms import BannedUserForm, RemarkCreateForm
 from apps.moderator.models import BannedUser, VerifyArticle
 
 
@@ -93,3 +93,30 @@ def allow_publishing(request, pk):
     Article.objects.filter(id=pk).update(draft=False)
     Article.objects.filter(id=pk).update(published=now())
     return HttpResponseRedirect(reverse('moderator:review_articles'))
+
+
+def reject_publishing(request, pk):
+    """Отказ модератором на публикацию статьи"""
+    form_remark = RemarkCreateForm(request.POST or None)
+    page_data = {
+        "pk": pk,
+        "form_remark": form_remark,
+    }
+    return render(request, 'moderator/form_return_article.html', page_data)
+
+
+def return_article(request, pk):
+    """отправка на доработку и с обязательной причиной отказа"""
+    if request.method == 'POST':
+        form_remark = RemarkCreateForm(request.POST or None)
+        print(f"{request.POST=}")
+        if form_remark.is_valid():
+            VerifyArticle.objects.filter(verification=pk).update(
+                is_verified=False,
+                remark=request.POST["remark"]
+            )
+            Article.objects.filter(id=pk).update(published=now())
+
+    else:
+        form_remark = RemarkCreateForm()
+    return HttpResponseRedirect(reverse("moderator:review_articles"))
