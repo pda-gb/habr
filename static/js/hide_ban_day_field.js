@@ -1,7 +1,5 @@
 'use strict';
-
-window.onload = function () {
-    $('.checkbox-field').change(function (event) {
+$('.checkbox-field').change(function (event) {
         let is_pressed = event.target.checked
         if (is_pressed) {
             $.ajax({
@@ -18,4 +16,3 @@ window.onload = function () {
         };
         event.preventDefault();
     });
-};

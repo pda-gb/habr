@@ -1,6 +1,5 @@
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
-from django.contrib.auth.forms import UserChangeForm
 from django.forms import CharField
 
 from apps.articles.models import Article
@@ -84,14 +83,6 @@ class ChangePasswordForm(forms.Form):
             field.widget.attrs["class"] = "form-control"
             field.help_text = ""
             field.required = ""
-
-    def clean(self):
-        super().clean()
-        data_1 = self.cleaned_data["new_password"]
-        data_2 = self.cleaned_data["repeat_password"]
-        if data_1 != data_2:
-            raise forms.ValidationError("Ошибка!")
-        return data_1
 
 
 class ArticleEditForm(forms.ModelForm):
