@@ -116,9 +116,6 @@ def article(request, pk=None):
 
         notifications = notification(request)
 
-    for c in comments:
-        print(f'{c=}')
-        print(f'{c.id=}')
     page_data = {
         "article": current_article,
         "last_articles": last_articles,
