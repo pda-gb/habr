@@ -11,7 +11,6 @@ from apps.authorization.models import HabrUser, KarmaPositiveViewed,\
 from apps.authorization.models import HabrUserProfile
 from apps.comments.forms import CommentCreateForm
 from apps.comments.models import Comment, Sorted
-from apps.comments.utils import create_comments_tree
 from apps.moderator.models import BannedUser
 
 
@@ -82,13 +81,18 @@ def article(request, pk=None):
     hub_articles = Article.get_articles()
     last_articles = Article.get_last_articles(hub_articles)
     current_article = get_object_or_404(Article, id=pk)
-    current_comments = Comment.get_comments(pk)
-    notifications = notification(request)
-    comments = create_comments_tree(
-        current_comments, request.user if request.user.is_authenticated else None
-    )
+    comments = Comment.get_comments(pk)
     form_comment = CommentCreateForm(request.POST or None)
+    comments_is_liked = None
+    comments_is_disliked = None
+    notifications = None
     if request.user.is_authenticated:
+        comments_is_liked = Comment.get_liked_comments_by_user(pk,
+                                                               request.user.id)
+        comments_is_disliked = Comment.get_disliked_comments_by_user(
+            pk,
+            request.user.id
+        )
         current_article.views.add(request.user)
         current_article.liked = current_article.likes.filter(
             pk=request.user.pk
@@ -109,13 +113,21 @@ def article(request, pk=None):
                 pk=request.user.pk
             ).exists()
         )
+
+        notifications = notification(request)
+
+    for c in comments:
+        print(f'{c=}')
+        print(f'{c.id=}')
     page_data = {
         "article": current_article,
         "last_articles": last_articles,
         "comments": comments,
         "form_comment": form_comment,
         "media_url": settings.MEDIA_URL,
-        "notifications": notifications
+        "notifications": notifications,
+        "comments_is_liked": comments_is_liked,
+        "comments_is_disliked": comments_is_disliked,
     }
     return render(request, "articles/article.html", page_data)
 
@@ -153,7 +165,8 @@ def change_article_rate(request):
                     rated_article.bookmarks.remove(request.user)
                 else:
                     rated_article.bookmarks.add(request.user)
-            rated_article.rating = rated_article.likes.count() - rated_article.dislikes.count()
+            rated_article.rating = rated_article.likes.count() - \
+                                   rated_article.dislikes.count()
             rated_article.author.habruserprofile.save()
             rated_article.save()
         return JsonResponse(
@@ -161,7 +174,8 @@ def change_article_rate(request):
                 "likes": rated_article.likes.count(),
                 "dislikes": rated_article.dislikes.count(),
                 "author_rating": rated_article.author.habruserprofile.rating,
-                "like": rated_article.likes.filter(pk=request.user.pk).exists(),
+                "like": rated_article.likes.filter(pk=request.user.pk
+                                                   ).exists(),
                 "dislike": rated_article.dislikes.filter(
                     pk=request.user.pk
                 ).exists(),
