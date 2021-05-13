@@ -2,20 +2,81 @@
 {% load static %}
 {% block post-content %}
     {{ block.super }}
-{#    <a class="btn btn-outline-dark mt-1" href="{% url 'articles:article' article.id %}">Перейти к статье</a>#}
-    <a class="btn btn-outline-info blue-word mt-1" href="{% url 'account:edit_article' article.id %}">Редактировать</a>
-    {% if not article.draft %}
-        <a class="btn btn-outline-warning mt-1" href="{% url 'account:draft_article' article.id %}">Снять с
-            публикации</a>
-    {% elif article.draft %}
-        <a class="btn btn-outline-success mt-1" href="{% url 'account:draft_article' article.id %}">Опубликовать</a>
+    {#   === проверка статуса статьи для отображения в ЛК ===    #}
+    {% for status in all_statuses %}
+        {% if article.id in status %}
+
+            {% if article.id == status.0 and status.1 is None %}
+                {#        статья находится на проверке модератора      #}
+                {#        убираем все кнопки до решения модератора    #}
+                <div style="background-color: #fec418"><h1 style="text-align: center">Статья на проверке, ждите</h1>
+                </div>
+
+            {% elif article.id == status.0 and status.1 is False %}
+                {#       статья отклонена модератором        #}
+                <div style="background-color: #cb2027"><h1 style="text-align: center">Статья отклонена модератором,
+                    исправьте замечания</h1>
+                    <hr>
+                    <div style="background-color: #3f6e74"><h1 style="text-align: center">Причина:</h1>
+                        <p>{{ status.2 }}</p>
+                    </div>
+                </div>
+                <div>
+                    <a class="btn btn-outline-info blue-word mt-1"
+                       href="{% url 'account:edit_article' article.id %}">Редактировать</a>
+                    {% if not article.draft %}
+                        <a class="btn btn-outline-warning mt-1" title="отправить в черновик"
+                           href="{% url 'account:draft_article' article.id %}">Снять с
+                            публикации</a>
+                    {% elif article.draft %}
+                        <a class="btn btn-outline-success mt-1" title="Статья будет отправлена на модерацию"
+                           href="{% url 'account:verify_article' article.id %}">Опубликовать</a>
+                    {% endif %}
+                    <a class="btn btn-outline-danger mt-1"
+                       href="{% url 'account:del_article'  article.id %}">Удалить</a>
+                </div>
+
+            {% elif article.id == status.0 and status.1 is True %}
+                {#       статья одобрена модератором        #}
+                <div style="background-color: #5d9c0a"><h1 style="text-align: center">Статья одобрена модератором</h1>
+                </div>
+                <div>
+                    <a class="btn btn-outline-info blue-word mt-1"
+                       href="{% url 'account:edit_article' article.id %}">Редактировать</a>
+                    {% if not article.draft %}
+                        <a class="btn btn-outline-warning mt-1" title="отправить в черновик"
+                           href="{% url 'account:draft_article' article.id %}">Снять с
+                            публикации</a>
+                    {% elif article.draft %}
+                        <a class="btn btn-outline-success mt-1" title="Статья будет отправлена на модерацию"
+                           href="{% url 'account:verify_article' article.id %}">Опубликовать</a>
+                    {% endif %}
+                    <a class="btn btn-outline-danger mt-1"
+                       href="{% url 'account:del_article'  article.id %}">Удалить</a>
+                </div>
+
+            {% endif %}
+
+        {% endif %}
+    {% endfor %}
+
+    {% if article.created|date:"U" == article.updated|date:"U" or article.created|date:"U" == article.published|date:"U" and article.created|date:"U" > article.updated|date:"U" %}
+        {#     если статьи нет на проверке и не проверялась      #}
+        {#        да, знаю, жуткий костыль, но без исправления шаблонов иначе никак    #}
+        <div>
+            <a class="btn btn-outline-info blue-word mt-1"
+               href="{% url 'account:edit_article' article.id %}">Редактировать</a>
+            {% if not article.draft %}
+                <a class="btn btn-outline-warning mt-1" title="отправить в черновик"
+                   href="{% url 'account:draft_article' article.id %}">Снять с
+                    публикации</a>
+            {% elif article.draft %}
+                <a class="btn btn-outline-success mt-1" title="Статья будет отправлена на модерацию"
+                   href="{% url 'account:verify_article' article.id %}">Опубликовать</a>
+            {% endif %}
+            <a class="btn btn-outline-danger mt-1"
+               href="{% url 'account:del_article'  article.id %}">Удалить</a>
+        </div>
     {% endif %}
-    <a class="btn btn-outline-danger mt-1" href="{% url 'account:del_article'  article.id %}">Удалить</a>
 {% endblock post-content %}
 
-{% block post-status %}
-{#    <div class="post-status">#}
-{#        <img src="{% static 'svg/star(white).svg' %}"/><small class="text-muted">{{ article.stars }}</small>#}
-{#        <img src="{% static 'svg/view.svg' %}"/><small class="text-muted">{{ article.views }}</small>#}
-{#    </div>#}
-{% endblock post-status %}

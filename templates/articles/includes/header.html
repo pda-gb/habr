@@ -1,49 +1,91 @@
 {% load static %}
+{% load my_tags %}
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+<nav class="main_nav navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
     <div class="container">
-        <a class="logo" href="{% url 'articles:main_page' %}">Sputnik</a>
-        <button
-                class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarToggler02"
-                aria-controls="navbarToggler02"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-        >
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <a href="{% url 'articles:main_page' %}">
+            <div class="logo_block">
+                <div class="img-logo"><img class="img_in_block" src="{% static 'svg/logo.svg' %}" alt=""/></div>
+                <div class="logo">Sputnik</div>
+            </div>
+        </a>
         {% if not is_banned %}
-            <div class="collapse navbar-collapse" id="navbarToggler02">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 hubs">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 hubs">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.route == 'all/' %} active {% endif %}"
+                       href="{% url 'articles:all_hubs' %}">Все хабы</a>
+                </li>
+                {% for hub in hubs_menu %}
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.route == 'all/' %} active {% endif %}"
-                           href="{% url 'articles:all_hubs' %}">Все хабы</a>
+                        <a class="nav-link {% if request.resolver_match.kwargs.pk == hub.id %} active {% endif %}"
+                           href="{% url 'articles:hub' hub.id %}">{{ hub.hub }}</a>
                     </li>
-                    {% for hub in hubs_menu %}
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.kwargs.pk == hub.id %} active {% endif %}"
-                               href="{% url 'articles:hub' hub.id %}">{{ hub.hub }}</a>
-                        </li>
-                    {% endfor %}
-
-                </ul>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 icon">
+                {% endfor %}
+            </ul>
+            <div class="navbar" id="navbarToggler02">
+                <ul class="navbar-nav me-auto mb-lg-0 icon">
                     <!-- Начало блока поиска --->
                     <li class="icon-item nav-item">
                         <div class="form-search">
                             <form class="search" role="search" id="search-articles-form" method="GET"
                                   action="{% url 'articles:search_articles' 1 %}">
-                                <input class="form-control input-search" type="text" placeholder="Search"
-                                       aria-label="Search" name="search">
-                                <img src="{% static 'svg/magnifier-black.svg' %}" class="magnifier magnifier-in-input"
-                                     alt="">
+
+{#                                <input class="form-control input-search" type="text" placeholder="Search"#}
+{#                                       aria-label="Search" name="search" value="{{ search_query }}">#}
+{#                                <img src="{% static 'svg/magnifier-black.svg' %}" class="magnifier magnifier-in-input"#}
+{#                                     alt="">#}
+{#                                <img class="filter-icon" src="{% static 'svg/filter.svg' %}" alt="">#}
+{#                                <ul class="filter-list">#}
+{#                                    <li class="close-filter-menu">#}
+{#                                        <img class="close-filter-icon" src="{% static 'svg/close.svg' %}" alt="">#}
+{#                                    </li>#}
+{#                                    <li class="filter-el">#}
+{#                                        <p>По дате</p>#}
+{#                                    </li>#}
+{#                                    <li class="filter-el clear-fix">#}
+{#                                        С:<input type="date" name="fromdate">#}
+{#                                    </li>#}
+{#                                    <li class="filter-el clear-fix">#}
+{#                                        По:<input type="date" name="todate">#}
+{#                                        <hr>#}
+{#                                    </li>#}
+{#                                    <li class="filter-el clear-fix">#}
+{#                                        <p>По рейтингу</p>#}
+{#                                    </li>#}
+{#                                    <li class="filter-el clear-fix">#}
+{#                                        С:<input type="text" name="fromrating">#}
+{#                                    </li>#}
+{#                                    <li class="filter-el clear-fix">#}
+{#                                        По:<input type="text" name="torating">#}
+{#                                        <hr>#}
+{#                                    </li>#}
+{#                                    <li class="filter-el clear-fix">#}
+{#                                        <label for="id_hub">Хабы:</label>#}
+{#                                        <select name="hub" class="form-control" id="id_hub">#}
+{#                                            <option value="0">Все</option>#}
+{#                                            <option value="1">Разработка</option>#}
+{#                                            <option value="2">Дизайн</option>#}
+{#                                            <option value="3">Маркетинг</option>#}
+{#                                            <option value="4">Научпоп</option>#}
+{#                                        </select>#}
+{#                                        <hr>#}
+{#                                    </li>#}
+{#                                    <li class="filter-el clear-fix">#}
+{#                                        <p>По именам:</p>#}
+{#                                    </li>#}
+{#                                    <li class="filter-el clear-fix">#}
+{#                                        <p class="notif-search-by-name">Если необходимо указать несколько имеен, то#}
+{#                                            перечислите их через запятую</p>#}
+{#                                        <input class="form-control input-search-by-name" type="text"#}
+{#                                               aria-label="Search-by-name" name="search-by-name">#}
+{#                                    </li>#}
+{#                                </ul>#}
                             </form>
                         </div>
-                        <a id="main-magnifier" href="#"><img src="{% static 'svg/magnifier-white.svg' %}"
-                                                             class="magnifier"
-                                                             alt=""></a>
+                        <button type="button" class="btn btn-secondary me-2 magnifier" data-toggle="modal"
+                                data-target="#search-modal" onclick="setTimeout(focusOnInput, 500)">
+                            <img src="{% static 'svg/magnifier-white.svg' %}" class="img_in_block" alt="">
+                        </button>
                     </li>
                     <!-- Конец блока поиска --->
                 </ul>
@@ -55,47 +97,15 @@
                         </a>
                     {% endif %}
                     <!-- Начало блока уведомлений -->
-                    {% if notifications %}
-                        <a style="color:red">{{ notifications|length }}</a>
-                    {% endif %}
-                    <div class="post-link mini-title" style="padding: 0px 20px 0px 4px">
-                        <a class="bell" type="" id="dropdownMenuLink"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="{% static 'svg/bell-2.ico' %}" width="20" height="20"/>
-                        </a>
-                        <div class="dropdown-menu menu_scroll" aria-labelledby="dropdownMenu2"
-                             style="font-size: small; padding: 5px 20px">
-                            {% for i in notifications %}
-
-                                {% if i.author %}
-                                    <a href="{% url 'articles:author_profile' i.author.id %}" class="post-author">
-                                        {{ i.author }} </a>прокомментировал<br>
-                                    <a href="{% url 'articles:article' i.article.id %}">
-                                        {{ i.article|truncatewords:5 }}</a>
-                                    <hr>
-                                {% elif i.user %}
-                                    <a href="{% url 'articles:author_profile' i.user.id %}" class="post-author">
-                                        {{ i.user }} </a>
-                                    лайкнул<br>
-                                    <a href="{% url 'articles:article' i.article.id %}">{{ i.article|truncatechars:25 }}</a>
-                                    <hr>
-                                {% endif %}
-
-
-                            {% endfor %}
-                            {% if notifications %}
-                                <a href="{% url 'articles:viewed' %}">
-                                    <button type="button" title="отметить все уведомления как просмотренные">закрыть
-                                    </button>
-                                </a>
-                            {% endif %}
-                        </div>
-                    </div>
+                    {% include 'articles/includes/inc_notifications.html' %}
                     <!-- Конец блока уведомдлений -->
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ user.habruserprofile.first_name|default:user.username }}
+                            <div class="author-avatar-menu-text">{{ user.habruserprofile.first_name|default:user.username }}</div>
+                            <div class="author-avatar-menu"><img class="img_in_block"
+                                                                 src="{{ user.habruserprofile.avatar|media_folder_users }}">
+                            </div>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                             {% if user.is_superuser %}
@@ -129,10 +139,10 @@
                     {% if check_verify %}
                         <img class="warning-verify" src="{% static 'img/danger.svg' %}" alt="warning"
                              title="Подтвердите свою учётную запись!">
-                        <a class="btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
+                        <a class="regist btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
                     {% else %}
                         <a class="btn btn-outline-light me-2" href="{% url 'auth:login' %}">Войти</a>
-                        <a class="btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
+                        <a class="regist btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
                     {% endif %}
                 {% endif %}
             </div>
@@ -140,7 +150,24 @@
             <a class="btn btn-outline-light me-2" href="{% url 'auth:logout' %}">Выход</a>
         {% endif %}
     </div>
+    <div class="mobile_hub">
+        {% if not is_banned %}
+            <ul class="navbar-mobile navbar-nav me-auto mb-2">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.route == 'all/' %} active {% endif %}"
+                       href="{% url 'articles:all_hubs' %}">Все</a>
+                </li>
+                {% for hub in hubs_menu %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.kwargs.pk == hub.id %} active {% endif %}"
+                           href="{% url 'articles:hub' hub.id %}">{{ hub.hub }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
 </nav>
 
 {% include 'articles/includes/modals/repeat_send_email.html' %}
 {% include 'articles/includes/modals/success_send_email.html' %}
+{% include 'articles/includes/modals/search_form.html' %}

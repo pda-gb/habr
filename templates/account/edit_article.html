@@ -10,8 +10,12 @@
             <br/>
             <button type="submit" class="btn btn-primary">Сохранить</button>
             {#            <button type="submit" class="btn btn-primary">Сохранить и опубликовать</button>#}
+            <button class="btn btn-danger">
+                <a style="color:white" href="{% url 'account:user_articles' %}">Назад</a>
+            </button>
         </form>
     </div>
+    {% include 'account/includes/inc_notification_of_change_data.html' %}
 {% endblock content %}
 {% block js %}
     {{ block.super }}

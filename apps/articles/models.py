@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 
 class Hub(models.Model):
@@ -61,20 +62,21 @@ class Article(models.Model):
         verbose_name="дата публикации", default=timezone.now
     )
 
-    draft = models.BooleanField(verbose_name="черновик", default=False)
+    draft = models.BooleanField(verbose_name="черновик", default=True)
     is_active = models.BooleanField(verbose_name="удалена", default=True)
 
     likes = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         verbose_name="лайки",
         related_name="likes",
-        through="Like",
-        blank=True
+        through="LikesViewed",
+        blank=True,
     )
     dislikes = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         verbose_name="дизлайки",
         related_name="dislikes",
+        through="DislikesViewed",
         blank=True,
     )
     views = models.ManyToManyField(
@@ -142,24 +144,51 @@ class Article(models.Model):
         return hub_articles
 
     @staticmethod
-    def get_search_articles(search_query):
+    def get_search_articles(search_dic):
+        ''' функция отвечает за поиск соответсвий в бд по имени и содержимого статьи '''
+        articles = Article.get_articles()
         result = Article.get_articles().filter(
-            Q(title__icontains=search_query) | Q(body__icontains=search_query)
+            Q(title__icontains=search_dic['search_query']) | Q(body__icontains=search_dic['search_query'])
         )
         if not result:
             result = Article.get_articles().filter(
-                Q(title__iexact=search_query) | Q(body__iexact=search_query)
+                Q(title__iexact=search_dic) | Q(body__iexact=search_dic)
             )
         if not result:
             result = Article.get_articles()
-            search_query = search_query.lower()
-            articles = Article.get_articles().values()
-            for el in articles:
+            search_query = search_dic['search_query'].lower()
+            for el in articles.values():
                 if search_query in el['title'].lower() or search_query in \
                         el['body'].lower():
                     pass
                 else:
                     result = result.exclude(pk=el['id'])
+                    
+        try:
+            result = result.filter(updated__range=(search_dic['fromdate'], search_dic['todate']))
+        except ValidationError:
+            pass
+
+        try:
+            result = result.filter(rating__range=(search_dic['fromrating'], search_dic['torating']))
+        except (ValidationError, ValueError):
+            pass
+
+        if search_dic['search_hub'] != '0':
+            result = result.filter(hub=search_dic['search_hub'])
+
+        if search_dic['search_by_name']:
+            search_list = search_dic['search_by_name'].replace(' ', '').split(',')
+            for el in articles:
+                name_count = 0
+                for name in search_list:
+                    if name == el.author.username.lower():
+                        continue
+                    else:
+                        name_count += 1
+                if name_count == len(search_list):
+                    result = result.exclude(pk=el.id)
+
         return result
 
     @staticmethod
@@ -250,12 +279,35 @@ class Article(models.Model):
         art.save()
 
 
-class Like(models.Model):
+
+class LikesViewed(models.Model):
+    """
+    Расширение промежуточной таблицы дополнением
+    поля просмотра уведомления
+     """
     article = models.ForeignKey(Article,
                                 on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     viewed = models.BooleanField(default=False, verbose_name='просмотрено')
+    date = models.DateTimeField (verbose_name="дата", auto_now_add=True)
+
+    def get_likes(request):
+        result = LikesViewed.objects.filter(user = request.user)
+        return result
+
+class DislikesViewed(models.Model):
+    """
+    Расширение промежуточной таблицы дополнением
+    поля просмотра уведомления
+     """
+    article = models.ForeignKey(Article,
+                                on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    viewed = models.BooleanField(default=False, verbose_name='просмотрено')
+    date = models.DateTimeField (verbose_name="дата", auto_now_add=True)
+
 
 
 if __name__ == "__main__":

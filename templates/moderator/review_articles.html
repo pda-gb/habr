@@ -1,5 +1,16 @@
-{% extends 'articles/base.html' %}
+{% extends 'moderator/base.html' %}
+{% load static %}
 {% load my_tags %}
 {% block content %}
-  {% include 'moderator/includes/inc_menu.html' %}
+    {% include 'moderator/includes/inc_menu.html' %}
+    <div class='string__container'>
+        <div class="bookmark__row col-12">
+            <div class="col-1 bord">Картинка</div>
+            <div class="col-6 bord">Статья</div>
+            <div class="col-2 bord">Автор</div>
+            <div class="col-1 bord">Хаб</div>
+            <div class="col-1 bord">Создана</div>
+        </div>
+    </div>
+    {% include 'moderator/includes/inc_articles_string_output.html' %}
 {% endblock content %}

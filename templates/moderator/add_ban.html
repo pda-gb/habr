@@ -1,12 +1,14 @@
-{% extends 'articles/base.html' %}
+{% extends 'moderator/base.html' %}
 {% load my_tags %}
 {% block content %}
-    <h1>Блокирование пользователя</h1>
-    <form class="auth-form" action="{% url 'moderator:add_user_ban' current_user_pk %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ ban_form.as_table }}
-        <br>
-        <button type="submit" class="btn btn-primary">Сохранить</button>
-        <button type="reset" class="btn btn-danger"><a href="{% url 'articles:author_profile' 3 %}"></a>Назад</button>
-    </form>
+        <h1 style="text-align:center">Блокирование пользователя</h1>
+        <form class="auth-form" action="{% url 'moderator:add_user_ban' current_user_pk %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ ban_form.as_table }}
+            <br>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </form>
+        <div style="text-align: center; margin-top: 15px;">
+            <a href="{% url 'articles:author_profile' current_user_pk %}"><button style="width:300px" type="reset" class="btn btn-danger">Назад</button></a>
+        </div>
 {% endblock content %}

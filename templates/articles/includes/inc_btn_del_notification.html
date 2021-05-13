@@ -1,0 +1,8 @@
+{% load static %}
+<dev>
+    <a href="{% url 'articles:target_viewed' key value.id %}">
+        <button>
+            <img src="{% static 'svg/tick.svg' %}" width="20" height="20"/>
+        </button>
+    </a>
+</dev>

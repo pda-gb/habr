@@ -1,5 +1,36 @@
-{% extends 'articles/base.html' %}
+{% extends 'moderator/base.html' %}
 {% load my_tags %}
 {% block content %}
   {% include 'moderator/includes/inc_menu.html' %}
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">№</th>
+      <th scope="col">Имя пользователя</th>
+      <th scope="col">Дата блокировки</th>
+      <th scope="col">Причина блокировки</th>
+      <th scope="col">Оставшихся дней блокировки</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for user in banned_users %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td><a href="{% url 'articles:author_profile' user.pk %}">{{ user.offender.username }}</a></td>
+      <td>{{ user.date_ban }}</td>
+      <td>{{ user.reason }}</td>
+      {% if user.is_forever %}
+        <td>Бессрочно</td>
+      {% else %}
+        <td>{{ user.get_remaining_days }}</td>
+      {% endif %}
+      <td>
+        <button class="btn btn-link btn-unlock">
+            <a href="{% url 'moderator:remove_user_ban' user.offender_id %}">Разблокировать</a>
+        </button>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
 {% endblock content %}

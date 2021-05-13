@@ -7,6 +7,9 @@
         <div class="row">
             <div class="col-8">
                 {% for article in articles %}
+                    {% if article.created|date:"U" == article.published|date:"U" %}
+                    {% endif %}
+
                     {% if article.is_active %}
                         {% include 'account/includes/post.html' %}
                     {% endif %}
@@ -14,7 +17,7 @@
                     <p>У вас нет статей.</p>
                 {% endfor %}
                 {% if articles.paginator.count > 5 %}
-                <!-- Начало блока пагинации -->
+                    <!-- Начало блока пагинации -->
                     {% include 'account/includes/paginations/pagination_user_article.html' %}
                 {% endif %}
                 <!-- Конец блока пагинации -->
