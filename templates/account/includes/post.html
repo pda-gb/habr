@@ -58,9 +58,9 @@
             {% endif %}
 
         {% endif %}
-
     {% endfor %}
-    {% if article.created|date:"U" == article.updated|date:"U" %}
+
+    {% if article.created|date:"U" == article.updated|date:"U" or article.created|date:"U" == article.published|date:"U" and article.created|date:"U" > article.updated|date:"U" %}
         {#     если статьи нет на проверке и не проверялась      #}
         {#        да, знаю, жуткий костыль, но без исправления шаблонов иначе никак    #}
         <div>
