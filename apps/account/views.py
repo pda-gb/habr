@@ -11,8 +11,8 @@ from django.utils import timezone
 
 from apps.account.forms import ChangePasswordForm, ArticleEditForm, ArticleCreate
 from apps.account.forms import HabrUserProfileEditForm
-from apps.articles.models import Article, Hub
-from apps.articles.views import notification
+from apps.articles.models import Article, Hub, LikesViewed
+from apps.articles.views import notification, all_notification
 from apps.authorization.models import HabrUser
 
 
@@ -334,3 +334,24 @@ def bookmarks_page(request, page=1):
         "notifications": notifications,
     }
     return render(request, "account/bookmarks.html", page_data)
+
+@login_required
+@transaction.atomic()
+def notifications_page(request):
+    notification_all= all_notification(request)
+    title = f"Все ведомления {request.user}"
+
+    page_data = {
+        "title": title,
+        "notification_all": notification_all,
+    }
+    return render(request, "account/notifications.html", page_data)
+
+
+def my_likes(request):
+    title = f"Понравившиеся статьи"
+    page_data = {
+        "title": title,
+        "all_my_likes": LikesViewed.get_likes(request),
+    }
+    return render (request, "account/my_likes.html", page_data)

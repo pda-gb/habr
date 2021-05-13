@@ -1,0 +1,12 @@
+{% extends 'articles/base.html' %}
+{% load static %}
+{% block content %}
+    {% include 'account/includes/inc_menu.html' %}
+{%for i in all_my_likes%}
+    <table class="table table-striped table-light">
+        <td>
+            {{i.date}} Вам понравилась статья <a href="{% url 'articles:article' i.article.id %}">"{{i.article|truncatechars:80}}"</a>
+        </td>
+    </table>
+{%endfor%}
+{%endblock%}

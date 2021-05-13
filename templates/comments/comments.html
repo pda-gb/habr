@@ -1,27 +1,81 @@
 {% load static %}
-{% load comments_tree %}
-{% block content %}
+{% load my_tags %}
 
-    <div class="comment-row">
-        <h2 class="mb-4">({{ comments|length }}) Комментарии</h2>
-        <hr/>
-        {{ comments|comments_filter }}
-        <div class="container-fluid mt-2">
-            <form method="POST" class="comment-form" action="{% url 'comments:comment_create' pk=article.id %}">
-                {% csrf_token %}
-                {{ form_comment.as_p }}
-                {% if request.user.is_authenticated %}
-                    <input type="submit" value="Отправить" class="btn btn-outline-success">
-                    </form>
-                {% else %}
-                    <button class="btn btn-outline-success"><a href="{% url 'auth:login' %}">Отправить</a></button>
+<div class="comment-row" id="commentArticle">
+    <h2 class="mb-4">({{ comments.count }}) Комментарии</h2>
+    <ul style="list-style-type:none;">
+        <div class="col-md-12 mt-2" id="CommentList">
+            {% for comment in comments %}
+                {% if comment.parent == Null %}
+                    <li class="li-reply-comment">
+                        <div class="main-comment-section col-md-12" id='CommentId-{{ comment.id }}'>
+                            <div>
+                                <a href="{% url 'articles:author_profile' comment.author.id %}"
+                                   class="post-author comment-author">
+                                    <img src="{{ comment.author.habruserprofile.avatar|media_folder_users }}"
+                                         alt=""/>
+                                    <small>{{ comment.author }}</small>
+                                </a>
+                                <span>{{ comment.date }}</span>
+                            </div>
+                            <div class="comment-text">
+                                <div>{{ comment.body }}</div>
+                            </div>
+                            <span class='reply reply-comment' data-id="{{ comment.id }}">Ответить</span>
+                            <form method="POST" class="comment-form" id="createChildCommentForm-{{ comment.id }}"
+                                  data-url="{% url 'comments:comment_child_create' pk=article.id id_parent_comment=comment.id %}"
+                                  style="display:none;">
+                                {% csrf_token %}
+                                {{ form_comment.as_p }}
+                                {% if request.user.is_authenticated %}
+                                    <button type="button" data-id="{{ comment.id }}"
+                                            class="btn btn-outline-success createCommentChildBtn">Отправить
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-outline-success"><a
+                                            href="{% url 'auth:login' %}">Отправить</a></button>
+                                {% endif %}
+                                {#         <button type="button" data-id="{{ comment.id }}"#}
+                                {#             class="btn btn-outline-success createCommentChildBtn">Отправить#}
+                                {#         </button>#}
+                            </form>
+                            <div class="post-status">
+                                {% if comment.id in comments_is_liked %}
+                                    <img src="{% static 'svg/like(filled).svg' %}" alt="" id="like-{{ comment.id }}"
+                                         class="comment_like"/>
+                                {% else %}
+                                    <img src="{% static 'svg/like.svg' %}" alt="" id="like-{{ comment.id }}"
+                                         class="comment_like"/>
+                                {% endif %}
+                                <small class="green" id="likes{{ comment.id }}">{{ comment.likes.count }}</small>
+                                {% if comment.id in comments_is_disliked %}
+                                    <img src="{% static 'svg/dislike(filled).svg' %}" alt=""
+                                         id="dislike-{{ comment.id }}" class="comment_dislike"/>
+                                {% else %}
+                                    <img src="{% static 'svg/dislike.svg' %}" alt="" id="dislike-{{ comment.id }}"
+                                         class="comment_dislike"/>
+                                {% endif %}
+                                <small class="red" id="dislikes{{ comment.id }}">{{ comment.dislikes.count }}</small>
+                            </div>
+                            {% include 'comments/includes/inc_tree_comments.html' %}
+                        </div>
+                    </li>
                 {% endif %}
+            {% endfor %}
         </div>
-    </div>
-    {% block css %}
-        <link href="{% static 'css/comments.css' %}" rel="stylesheet"/>
-    {% endblock css %}
-{#    {% block js %}#}
-        {#        <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>#}
-{#    {% endblock js %}#}
-{% endblock content %}
+    </ul>
+</div>
+<div class="container-fluid mt-2">
+    <form method="POST" class="comment-form" id="createCommentForm"
+          data-url="{% url 'comments:comment_create' pk=article.id %}">
+        {% csrf_token %}
+        {{ form_comment.as_p }}
+        {% if request.user.is_authenticated %}
+            <button type="button" id="createCommentBtn" class="btn btn-outline-success">Отправить</button>
+        {% else %}
+            <button class="btn btn-outline-success"><a
+                    href="{% url 'auth:login' %}">Отправить</a></button>
+        {% endif %}
+        {#        <button type="button" id="createCommentBtn" class="btn btn-outline-success">Отправить</button>#}
+    </form>
+</div>

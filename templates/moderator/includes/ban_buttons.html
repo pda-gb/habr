@@ -1,0 +1,13 @@
+<div class="spam" style="width: 100%; text-align: center; margin-top: 20px;">
+    {% if current_user != user %}
+        {% if author_banned.is_active %}
+            <button class="btn btn-success btn-unlock">
+                <a href="{% url 'moderator:remove_user_ban' current_user.pk %}">Разблокировать пользователя</a>
+            </button>
+        {% else %}
+            <button class="btn btn-danger">
+                <a href="{% url 'moderator:add_user_ban' current_user.pk %}">Заблокировать пользователя</a>
+            </button>
+        {% endif %}
+    {% endif %}
+</div>

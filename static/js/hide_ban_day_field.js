@@ -1,5 +1,7 @@
 'use strict';
-$('.checkbox-field').change(function (event) {
+
+window.onload = function () {
+    $('.checkbox-field').change(function (event) {
         let is_pressed = event.target.checked
         if (is_pressed) {
             $.ajax({

@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("notification","de",{closed:"Benachrichtigung geschlossen."});
+CKEDITOR.plugins.setLang("notification","de",{closed:"Benachrichtigung geschlossen."});

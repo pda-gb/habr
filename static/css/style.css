@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700");
 
+input {
+   text-align:center;
+}
+
 .clear-fix {
     content: "";
     display: block;
@@ -465,8 +469,10 @@ div.scrollup:hover {
 
 .magnifier {
     display: flex;
-    height: 30px;
-    width: 50px;
+    height: 40px;
+    width: 60px;
+    background-color: #212529;
+    border: 1px solid #212529;
 }
 
 .icon-item {
@@ -484,19 +490,21 @@ div.scrollup:hover {
 }
 
 .form-search {
-    display: none;
-    position: relative;
+
 }
 
 .form-search form {
-    display: flex;
+
+}
+
+.search-form-box {
+
 }
 
 .magnifier-in-input {
     position: relative;
     right: 51px;
 }
-
 
 .scrollup, .scrolldown {
     position: fixed;
@@ -634,6 +642,12 @@ div.scrollup:hover {
 
 .col-main {
     width: 68%;
+}
+
+.search-h {
+    display: flex;
+    justify-content: center;
+    margin: 17px 0 12px 0;
 }
 
 @media (max-width: 1200px) {
