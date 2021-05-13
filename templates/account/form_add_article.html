@@ -14,10 +14,13 @@
             {{ article_add }}
             <br/>
             <button type="submit" class="btn btn-primary">Сохранить</button>
-            <a class="btn btn-outline-primary" href="javascript:history.go(-1)">Назад</a>
-            {#            <button type="submit" class="btn btn-danger">Очистить</button>#}
+<!--            <a class="btn btn-outline-primary" href="javascript:history.go(-1)">Go Back</a>-->
+            <button class="btn btn-danger">
+                <a style="color:white" href="{% url 'account:read_profile' %}">Назад</a>
+            </button>
         </form>
     </div>
+    {% include 'account/includes/inc_notification_of_change_data.html' %}
 {% endblock content %}
 {% block js %}
     {{ block.super }}

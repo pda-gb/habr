@@ -1,0 +1,20 @@
+{% load static %}
+<div class="notifications">
+    {% if is_success %}
+        <div class="alert alert-success" role="alert">
+            Данные успешно изменены!
+        </div>
+    {% endif %}
+    {% if is_fail %}
+        <div class="alert alert-danger" role="alert">
+            Ошибка!<br>
+            {% if error_messages %}
+                {% for error in error_messages %}
+                    {{ error }}<br>
+                {% endfor %}
+            {% else %}
+                Попытка сохранения потерпела неудачу.
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
