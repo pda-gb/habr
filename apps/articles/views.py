@@ -426,7 +426,7 @@ def target_mark_as_viewed(request, target, pk):
 
 def all_notification(request):
     current_articles = Article.get_by_author (author_pk=request.user.pk)
-    all_notification = []
+    all_notification, current_all_notification = [], []
     for itm_article in current_articles:
         likes = LikesViewed.objects.filter(article_id=itm_article.id)
         dislikes = DislikesViewed.objects.filter(article_id=itm_article.id)
@@ -457,6 +457,6 @@ def all_notification(request):
             all_notification.append (("comment_like", comment_like))
         for comment_dislike in comment_dislikes:
             all_notification.append (("comment_dislike", comment_dislike))
-        cerrent_all_notification = list(set(all_notification))
-    return cerrent_all_notification
+        current_all_notification = list(set(all_notification))
+    return current_all_notification
 

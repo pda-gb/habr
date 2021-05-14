@@ -96,7 +96,9 @@
                     </td>
                 </tr>
 
-    {%endif%}
-    {%endfor%}
-         </table>
+            {%endif%}
+        {% empty %}
+            <p>Уведомлений нет</p>
+        {%endfor%}
+    </table>
 {%endblock%}
