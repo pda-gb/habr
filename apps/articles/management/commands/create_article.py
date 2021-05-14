@@ -79,7 +79,7 @@ class Command(BaseCommand):
             "Разработка",
             "Дизайн",
             "Маркетинг",
-            "Мобильная разработка",
+            "Научпоп",
         ]
         internet = Internet("ru")
         # Количество создаваемых статей
@@ -116,7 +116,7 @@ class Command(BaseCommand):
         ## Создаем статьи
         # ключевые слова для поиска картинок
         keyword_img = ['it', 'development', 'design', 'marketing',
-                       'mobile']
+                       'science']
         for i in range(number):
             id_hub = randint(1, 4)
             article = Article(

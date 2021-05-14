@@ -51,57 +51,59 @@
                 </div>
             </div>
             <div class="author-row">
-                <div class="author-block">
-                    <img class="author-avatar" src="{{ article.author.habruserprofile.avatar|media_folder_users }}"
-                         alt="avatar"/>
-                    <div class="author-rating"
-                         title="Рейтинг автора на основании лайков и дизлайков его статей и комментариев">
-                        <div class="author-rating-num
+                <div class="flex-column">
+                    <div class="author-block">
+                        <img class="author-avatar" src="{{ article.author.habruserprofile.avatar|media_folder_users }}"
+                             alt="avatar"/>
+                        <div class="author-rating"
+                             title="Рейтинг автора на основании лайков и дизлайков его статей и комментариев">
+                            <div class="author-rating-num
                                 {% if article.author.habruserprofile.rating > 0 %}green
                                 {% elif article.author.habruserprofile.rating < 0 %}red{% endif %}"
-                             id="author_rating">
-                            {{ article.author.habruserprofile.rating }}</div>
-                        <div class="author-rating-text">
-                            Рейтинг
+                                 id="author_rating">
+                                {{ article.author.habruserprofile.rating }}</div>
+                            <div class="author-rating-text">
+                                Рейтинг
+                            </div>
                         </div>
-                    </div>
-                    <div class="author-rating karma"
-                         title="Рейтинг (карма) автора на основании его оценки другими авторами">
-                        <div class="author-karma-num
+                        <div class="author-rating karma"
+                             title="Рейтинг (карма) автора на основании его оценки другими авторами">
+                            <div class="author-karma-num
                                 {% if article.author.habruserprofile.karma > 0 %}pink
                                 {% elif article.author.habruserprofile.karma < 0 %}dark{% endif %}"
-                             id="author_karma">
-                            {{ article.author.habruserprofile.karma }}</div>
-                        <div class="author-karma-text">
-                            Карма
+                                 id="author_karma">
+                                {{ article.author.habruserprofile.karma }}</div>
+                            <div class="author-karma-text">
+                                Карма
+                            </div>
                         </div>
                     </div>
-                    {% if article.author.pk != request.user.pk %}
-                        <div class="author-rating">
-                            <div class="mt-1">
-                                Оцени автора
-                            </div>
-                            <div class="choose-karma post-status">
-                                {% if article.author_liked is True %}
-                                    <img src="{% static 'svg/like(filled).svg' %}" alt="" id="karma_like"/>
-                                {% else %}
-                                    <img src="{% static 'svg/like.svg' %}" alt="" id="karma_like"/>
-                                {% endif %}
-                                <div class="separator"></div>
-                                {% if article.author_disliked is True %}
-                                    <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="karma_dislike"/>
-                                {% else %}
-                                    <img src="{% static 'svg/dislike.svg' %}" alt="" id="karma_dislike"/>
-                                {% endif %}
-                            </div>
+                    <div class="author-block" style="justify-content: center">
+                        <a href="{% url 'articles:author_profile' article.author_id %}">
+                            <div class="author-username">{{ article.author.username }}</div>
+                        </a>
+                    </div>
+                </div>
+                {% if article.author.pk != request.user.pk %}
+                    <div class="author-rating">
+                        <div class="mt-1">
+                            Оцени автора
                         </div>
-                    {% endif %}
-                </div>
-                <div class="author-block">
-                    <a href="{% url 'articles:author_profile' article.author_id %}">
-                        <div class="author-username">{{ article.author.username }}</div>
-                    </a>
-                </div>
+                        <div class="choose-karma post-status">
+                            {% if article.author_liked is True %}
+                                <img src="{% static 'svg/like(filled).svg' %}" alt="" id="karma_like"/>
+                            {% else %}
+                                <img src="{% static 'svg/like.svg' %}" alt="" id="karma_like"/>
+                            {% endif %}
+                            <div class="separator"></div>
+                            {% if article.author_disliked is True %}
+                                <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="karma_dislike"/>
+                            {% else %}
+                                <img src="{% static 'svg/dislike.svg' %}" alt="" id="karma_dislike"/>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
             </div>
             <!-- Начало блока модератора -->
             {% if is_moderator %}
