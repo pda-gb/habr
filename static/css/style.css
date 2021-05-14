@@ -404,7 +404,7 @@ body {
     color: #990000;
 }
 
-div.scrollup {
+.scrollup {
     position: fixed;
     color: gray;
     background-color: white;
@@ -626,23 +626,23 @@ div.scrollup {
     justify-content: center;
 }
 
+.bell {
+    padding: 0 20px 0 4px;
+}
+
 @media (max-width: 1200px) {
     .col-space {
         width: 4%;
     }
-
     .col-right {
         width: 32%;
     }
-
     .col-main {
         width: 64%;
     }
-
     .regist, .author-avatar-menu-text {
         display: none;
     }
-
     .author-avatar-menu {
         display: flex;
     }
@@ -658,32 +658,24 @@ div.scrollup {
 
 @media (max-width: 992px) {
     .logo {
-        font-size: 28px;
+        font-size: 27px;
+        margin-right: 0;
     }
-
-    .hubs, .notific_block, .mobile-hide {
-        display: none;
-    }
-
     .mobile_hub {
         display: flex;
     }
-
     .navbar-mobile {
         flex-direction: row;
         justify-content: space-around;
         width: 100%;
         font-size: 14px;
     }
-
     .col-space {
         display: none;
     }
-
     .col-right {
         display: none;
     }
-
     .col-main {
         width: 100%;
     }
@@ -696,5 +688,8 @@ div.scrollup {
     }
     .featured-menu div {
         margin-bottom: 4px;
+    }
+    .hubs, .notific_block, .mobile-hide, .bell {
+        display: none;
     }
 }
