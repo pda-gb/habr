@@ -177,7 +177,7 @@ if DEBUG:
 # Запуск локального smtp сервера: python3 -m smtpd -n -c DebuggingServer localhost:25
 # Настройки для вывода сообщений о подтверждении регистрации в лог-файл\консоль
 EMAIL_HOST = 'localhost'
-EMAIL_PORT = 7725
+EMAIL_PORT = 25
 EMAIL_HOST_USER = None
 EMAIL_HOST_PASSWORD = None
 EMAIL_USE_SSL = False

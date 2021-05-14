@@ -163,7 +163,7 @@ class Article(models.Model):
                     pass
                 else:
                     result = result.exclude(pk=el['id'])
-                    
+
         try:
             result = result.filter(updated__range=(search_dic['fromdate'], search_dic['todate']))
         except ValidationError:
@@ -241,8 +241,8 @@ class Article(models.Model):
         Returns articles with the set author
         """
         if draft is None:
-            return Article.objects.filter(author_id__pk=author_pk
-                                          ).order_by("-updated")
+            return Article.objects.filter(
+                author_id__pk=author_pk).order_by("-updated")
         return (
             Article.objects.filter(author_id__pk=author_pk)
                 .filter(draft=draft)

@@ -293,48 +293,48 @@
             });
         </script>
     {% endif %}
-<script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
-<script>
-            function sendCommentAjax(fieldName, id) {
-                $.ajax({
-                    data: {field: fieldName, comment: id},
-                    url: "{% url 'comments:ajax_comment' %}",
-                    success: function (response) {
-                        $("#likes" + response.id).text(response.likes)
-                        $("#dislikes" + response.id).text(response.dislikes)
-                        if (response.like === true) {
-                            $('#like-' + response.id).attr('src', likeFUrl);
-                        } else {
-                            $('#like-' + response.id).attr('src', likeUrl);
-                        }
-                        if (response.dislike === true) {
-                            $('#dislike-' + response.id).attr('src', dislikeFUrl);
-                        } else {
-                            $('#dislike-' + response.id).attr('src', dislikeUrl);
-                        }
-                    }
-                });
-            };
-
-            $(document).ready(function () {
-                $('.comment_like').click(function () {
-                    sendCommentAjax('like', $(this).attr('id'))
-                    if ($(this).attr('src') == likeFUrl) {
-                        $(this).attr('src', likeUrl);
+    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+    <script>
+        function sendCommentAjax(fieldName, id) {
+            $.ajax({
+                data: {field: fieldName, comment: id},
+                url: "{% url 'comments:ajax_comment' %}",
+                success: function (response) {
+                    $("#likes" + response.id).text(response.likes)
+                    $("#dislikes" + response.id).text(response.dislikes)
+                    if (response.like === true) {
+                        $('#like-' + response.id).attr('src', likeFUrl);
                     } else {
-                        $(this).attr('src', likeFUrl);
+                        $('#like-' + response.id).attr('src', likeUrl);
                     }
-                });
-
-                $('.comment_dislike').click(function () {
-                    sendCommentAjax('dislike', $(this).attr('id'))
-                    if ($(this).attr('src') == dislikeFUrl) {
-                        $(this).attr('src', dislikeUrl);
+                    if (response.dislike === true) {
+                        $('#dislike-' + response.id).attr('src', dislikeFUrl);
                     } else {
-                        $(this).attr('src', dislikeFUrl);
+                        $('#dislike-' + response.id).attr('src', dislikeUrl);
                     }
-                });
+                }
             });
+        };
+
+        $(document).ready(function () {
+            $('.comment_like').click(function () {
+                sendCommentAjax('like', $(this).attr('id'))
+                if ($(this).attr('src') == likeFUrl) {
+                    $(this).attr('src', likeUrl);
+                } else {
+                    $(this).attr('src', likeFUrl);
+                }
+            });
+
+            $('.comment_dislike').click(function () {
+                sendCommentAjax('dislike', $(this).attr('id'))
+                if ($(this).attr('src') == dislikeFUrl) {
+                    $(this).attr('src', dislikeUrl);
+                } else {
+                    $(this).attr('src', dislikeFUrl);
+                }
+            });
+        });
     </script>
     <script>
         $(document).ready(function () {

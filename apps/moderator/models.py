@@ -1,5 +1,6 @@
 import datetime
 
+from django.core.mail import send_mail
 from django.db import models, transaction
 from django.utils.timezone import now
 
@@ -7,7 +8,6 @@ from apps.articles.models import Article
 from apps.authorization.models import HabrUser
 from apps.comments.models import Comment
 from habr import settings
-from django.core.mail import send_mail
 
 
 class Moderator(models.Model):
@@ -143,23 +143,46 @@ class VerifyArticle(models.Model):
         else:
             return None
 
+    # @staticmethod
+    # def get_status_verification_articles(pk_author):
+    #     """
+    #     запрос статуса проверки всех статей и причин отказов
+    #     в публикации автора
+    #     """
+    #     status = []
+    #     if VerifyArticle.objects.filter(
+    #             verification__author_id=pk_author).exists():
+    #         for itm in VerifyArticle.objects.filter(
+    #                 verification__author_id=pk_author):
+    #             status.append(
+    #                 (itm.verification_id, itm.is_verified, itm.remark)
+    #             )
+    #     else:
+    #         status = None
+    #     return status
+
     @staticmethod
-    def get_status_verification_articles(pk_author):
+    def get_articles_with_statuses(pk_author, draft=None):
         """
-        запрос статуса проверки всех статей и причин отказов
-        в публикации автора
+        Формирование объекта из статьи и текущего статуса модерации
         """
-        status = []
-        if VerifyArticle.objects.filter(
-                verification__author_id=pk_author).exists():
-            for itm in VerifyArticle.objects.filter(
-                    verification__author_id=pk_author):
-                status.append(
-                    (itm.verification_id, itm.is_verified, itm.remark)
+        articles_with_statuses = []
+        articles = Article.get_by_author(pk_author, draft)
+        for article in articles:
+            if VerifyArticle.objects.filter(verification=article.pk).exists():
+                articles_with_statuses.append(
+                    (
+                        article,
+                        VerifyArticle.objects.get(
+                            verification=article.pk).is_verified,
+                        VerifyArticle.objects.get(
+                            verification=article.pk).remark)
+
                 )
-        else:
-            status = None
-        return status
+            else:
+                # если статья не отправлялась на проверку и отредактирована
+                articles_with_statuses.append((article, 'not_checked'))
+        return articles_with_statuses
 
     @staticmethod
     def get_all_articles_for_verifications():
@@ -170,6 +193,24 @@ class VerifyArticle(models.Model):
         for itm in verif_articles:
             articles_to_review.append(itm.verification)
         return articles_to_review
+
+    @staticmethod
+    def allow_publishing(id_article):
+        """Разрешение модератором публикации статьи"""
+        VerifyArticle.objects.filter(
+            verification=id_article).update(is_verified=True)
+        Article.objects.filter(id=id_article).update(draft=False)
+        Article.objects.filter(id=id_article).update(published=now(),
+                                                     updated=now())
+
+    @staticmethod
+    def return_article(text_remark, id_article):
+        """отправка на доработку и с обязательной причиной отказа"""
+        VerifyArticle.objects.filter(verification=id_article).update(
+            is_verified=False,
+            remark=text_remark
+        )
+        Article.objects.filter(id=id_article)
 
     class Meta:
         verbose_name = "статья"
