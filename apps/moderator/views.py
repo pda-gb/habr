@@ -1,13 +1,10 @@
-from django.contrib import messages
-from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
-from django.template.loader import render_to_string
-from django.urls import reverse
-from django.utils.timezone import now
-from apps.articles.models import Article
 from datetime import datetime
-from apps.moderator.forms import BannedUserForm
-from apps.moderator.models import VerifyArticle, BannedUser
+
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import reverse
+
 from apps.authorization.models import HabrUser
 from apps.moderator.forms import BannedUserForm, RemarkCreateForm
 from apps.moderator.models import BannedUser, VerifyArticle
@@ -52,13 +49,17 @@ def add_user_ban(request, pk):
                 banned_user.date_ban = datetime.today()
                 banned_user.save()
             else:
-                banned_user = BannedUser.objects.create(offender=current_user,
-                                          reason=request.POST["reason"],
-                                          num_days=request.POST["num_days"],
-                                          is_active=True,
-                                          is_forever=True if request.POST.get("is_forever") else False)
+                banned_user = BannedUser.objects.create(
+                    offender=current_user,
+                    reason=request.POST["reason"],
+                    num_days=request.POST["num_days"],
+                    is_active=True,
+                    is_forever=True if request.POST.get("is_forever")
+                    else False
+                )
             banned_user.set_ban_email()
-            return HttpResponseRedirect(reverse("articles:author_profile", args=[pk]))
+            return HttpResponseRedirect(reverse("articles:author_profile",
+                                                args=[pk]))
         else:
             messages.error(request, 'ошибка')
     else:
@@ -76,6 +77,7 @@ def remove_user_ban(request, pk):
     current_user.delete()
     current_user.unset_ban_email()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 # def remove_user_ban(request, pk):
 #     if request.is_ajax():
@@ -102,9 +104,7 @@ def banned_users(request):
 
 def allow_publishing(request, pk):
     """Разрешение модератором публикации статьи"""
-    VerifyArticle.objects.filter(verification=pk).update(is_verified=True)
-    Article.objects.filter(id=pk).update(draft=False)
-    Article.objects.filter(id=pk).update(published=now(), updated=now())
+    VerifyArticle.allow_publishing(pk)
     return HttpResponseRedirect(reverse('moderator:review_articles'))
 
 
@@ -123,12 +123,7 @@ def return_article(request, pk):
     if request.method == 'POST':
         form_remark = RemarkCreateForm(request.POST or None)
         if form_remark.is_valid():
-            VerifyArticle.objects.filter(verification=pk).update(
-                is_verified=False,
-                remark=request.POST["remark"]
-            )
-            Article.objects.filter(id=pk).update(updated=now())
-
+            VerifyArticle.return_article(request.POST["remark"], pk)
     else:
         form_remark = RemarkCreateForm()
     return HttpResponseRedirect(reverse("moderator:review_articles"))

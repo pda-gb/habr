@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-lg-10 col-12">
                 {% for article in articles %}
-                    {% if article.is_active %}
+                    {% if article.0.is_active %}
                         {% include 'account/includes/post.html' %}
                     {% endif %}
                 {% empty %}

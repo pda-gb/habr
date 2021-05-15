@@ -53,7 +53,9 @@ def add_article(request):
         else:
             is_fail = True
             for error in article_add.errors:
-                error_messages.append(f'Поле {article_add[error].label}: {article_add.errors.errors[error].as_text()}')
+                error_messages.append(
+                    f'Поле {article_add[error].label}: '
+                    f'{article_add.errors.errors[error].as_text()}')
             # return HttpResponseRedirect(reverse("account:user_articles"))
         # return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
@@ -108,7 +110,10 @@ def edit_profile(request):
         else:
             is_fail = True
             for error in profile_edit_form.errors:
-                error_messages.append(f'Поле {profile_edit_form[error].label}: {profile_edit_form.errors[error].as_text()}')
+                error_messages.append(
+                    f'Поле {profile_edit_form[error].label}:'
+                    f' {profile_edit_form.errors[error].as_text()}'
+                )
     profile_edit_form = HabrUserProfileEditForm(
         instance=request.user.habruserprofile)
 
@@ -135,28 +140,30 @@ def user_articles(request, page=1):
     функция отвечает за Мои статьи
     """
     title = "Мои статьи"
-    articles = Article.get_by_author(author_pk=request.user.id)
-    paginator = Paginator(articles, 5)
+
+    if request.user.is_authenticated:
+        notifications = notification(request)
+        articles_with_statuses = \
+            VerifyArticle.get_articles_with_statuses(request.user.id)
+    else:
+        notifications = None
+        articles_with_statuses = None
+    # articles = Article.get_by_author(request.user.id)
+
+    paginator = Paginator(articles_with_statuses, 5)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:
         articles_paginator = paginator.page(1)
     except EmptyPage:
         articles_paginator = paginator.page(paginator.num_pages)
-
-    if request.user.is_authenticated:
-        notifications = notification(request)
-        all_statuses = \
-            VerifyArticle.get_status_verification_articles(request.user.id)
-    else:
-        notifications = None
-        all_statuses = None
+    print(f'{articles_paginator.object_list=}')
 
     page_data = {
         "title": title,
         "articles": articles_paginator,
         "notifications": notifications,
-        "all_statuses": all_statuses,
+        # "articles_with_statuses": articles_with_statuses,
     }
     return render(request, "account/user_articles.html", page_data)
 
@@ -167,8 +174,17 @@ def publications(request, page=1):
     функция отвечает за мои публикации
     """
     title = "Мои публикации"
-    articles = Article.get_by_author(author_pk=request.user.id, draft=0)
-    paginator = Paginator(articles, 5)
+    # articles = Article.get_by_author(author_pk=request.user.id, draft=0)
+
+    if request.user.is_authenticated:
+        notifications = notification(request)
+        articles_with_statuses = \
+            VerifyArticle.get_articles_with_statuses(request.user.id, draft=0)
+    else:
+        notifications = None
+        articles_with_statuses = None
+
+    paginator = Paginator(articles_with_statuses, 5)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:
@@ -176,20 +192,11 @@ def publications(request, page=1):
     except EmptyPage:
         articles_paginator = paginator.page(paginator.num_pages)
 
-    if request.user.is_authenticated:
-        notifications = notification(request)
-        all_statuses = \
-            VerifyArticle.get_status_verification_articles(request.user.id)
-
-    else:
-        notifications = None
-        all_statuses = None
-
     page_data = {
         "title": title,
         "articles": articles_paginator,
         "notifications": notifications,
-        "all_statuses": all_statuses,
+        # "articles_with_statuses": articles_with_statuses,
 
     }
     return render(request, "account/user_articles_publications.html",
@@ -202,8 +209,17 @@ def draft(request, page=1):
     функция отвечает за Черновик
     """
     title = "Черновик"
-    articles = Article.get_by_author(author_pk=request.user.id, draft=1)
-    paginator = Paginator(articles, 5)
+    # articles = Article.get_by_author(author_pk=request.user.id, draft=1)
+    if request.user.is_authenticated:
+        notifications = notification(request)
+        articles_with_statuses = \
+            VerifyArticle.get_articles_with_statuses(request.user.id, draft=1)
+
+    else:
+        notifications = None
+        articles_with_statuses = None
+
+    paginator = Paginator(articles_with_statuses, 5)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:
@@ -211,20 +227,11 @@ def draft(request, page=1):
     except EmptyPage:
         articles_paginator = paginator.page(paginator.num_pages)
 
-    if request.user.is_authenticated:
-        notifications = notification(request)
-        all_statuses = \
-            VerifyArticle.get_status_verification_articles(request.user.id)
-
-    else:
-        notifications = None
-        all_statuses = None
-
     page_data = {
         "title": title,
         "articles": articles_paginator,
         "notifications": notifications,
-        "all_statuses": all_statuses,
+        # "articles_with_statuses": articles_with_statuses,
 
     }
     return render(request, "account/user_articles_draft.html", page_data)
@@ -297,8 +304,12 @@ def edit_article(request, pk):
             edit_article.updated = timezone.now()
             edit_article.save()
             edit_form.save()
-            # снимаем с публикации
+            # снимаем с публикации и удаляем из табл. модерации
             edit_article.draft = True
+            if VerifyArticle.objects.filter(
+                    verification=edit_article.pk).exists():
+                VerifyArticle.objects.get(
+                    verification=edit_article.pk).delete()
             edit_article.save()
             is_success = True
             # return HttpResponseRedirect(reverse("account:user_articles"))
