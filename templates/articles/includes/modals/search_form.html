@@ -23,17 +23,17 @@
                         </div>
                     </div>
                     <div class="btn-group mx-md-4" role="group" aria-label="Basic radio toggle button group">
-                        <input type="radio" class="btn-check" name="searchdate" id="searchdate1" autocomplete="off"
+                        <input type="radio" class="btn-check" name="searchdate" value="all" id="searchdate1" autocomplete="off"
                                checked>
                         <label class="btn btn-outline-secondary" for="searchdate1">Все</label>
 
-                        <input type="radio" class="btn-check" name="searchdate" id="searchdate2" autocomplete="off">
+                        <input type="radio" class="btn-check" name="searchdate" value="month" id="searchdate2" autocomplete="off">
                         <label class="btn btn-outline-primary" for="searchdate2">Месяц</label>
 
-                        <input type="radio" class="btn-check" name="searchdate" id="searchdate3" autocomplete="off">
+                        <input type="radio" class="btn-check" name="searchdate" value="week" id="searchdate3" autocomplete="off">
                         <label class="btn btn-outline-primary" for="searchdate3">Неделя</label>
 
-                        <input type="radio" class="btn-check" name="searchdate" id="searchdate4" autocomplete="off">
+                        <input type="radio" class="btn-check" name="searchdate" value="today" id="searchdate4" autocomplete="off">
                         <label class="btn btn-outline-primary" for="searchdate4">Сегодня</label>
                     </div>
                     <div class="search-h">
@@ -42,11 +42,11 @@
                         </div>
                     </div>
                     <div class="btn-group mx-5" role="group" aria-label="Basic radio toggle button group">
-                        <input type="radio" class="btn-check" name="searchrate" id="searchrate1" autocomplete="off"
+                        <input type="radio" class="btn-check" name="searchrate" value="any" id="searchrate1" autocomplete="off"
                                checked>
                         <label class="btn btn-outline-secondary" for="searchrate1">Любые</label>
 
-                        <input type="radio" class="btn-check" name="searchrate" id="searchrate2" autocomplete="off">
+                        <input type="radio" class="btn-check" name="searchrate" value="positive" id="searchrate2" autocomplete="off">
                         <label class="btn btn-outline-success" for="searchrate2">Положительные</label>
                     </div>
                     <div class="search-h">
@@ -55,20 +55,20 @@
                         </div>
                     </div>
                     <div class="btn-group mx-md-3" role="group" aria-label="Basic checkbox toggle button group">
-                        <input type="checkbox" class="btn-check" id="hubcheck1" autocomplete="off">
+                        <input type="checkbox" class="btn-check" name="hubscheck" value="Разработка" id="hubcheck1" autocomplete="off">
                         <label class="btn btn-outline-dark" for="hubcheck1">Разработка</label>
 
-                        <input type="checkbox" class="btn-check" id="hubcheck2" autocomplete="off">
+                        <input type="checkbox" class="btn-check" name="hubscheck" value="Дизайн" id="hubcheck2" autocomplete="off">
                         <label class="btn btn-outline-dark" for="hubcheck2">Дизайн</label>
 
-                        <input type="checkbox" class="btn-check" id="hubcheck3" autocomplete="off">
+                        <input type="checkbox" class="btn-check" name="hubscheck" value="Маркетинг" id="hubcheck3" autocomplete="off">
                         <label class="btn btn-outline-dark" for="hubcheck3">Маркетинг</label>
 
-                        <input type="checkbox" class="btn-check" id="hubcheck4" autocomplete="off">
+                        <input type="checkbox" class="btn-check" name="hubscheck" value="Научпоп" id="hubcheck4" autocomplete="off">
                         <label class="btn btn-outline-dark" for="hubcheck4">Научпоп</label>
                     </div>
                     <br>
-                    <button type="button" class="btn btn-dark" style="margin: 20px 100px">Поиск</button>
+                    <button type="submit" class="btn btn-dark" style="margin: 20px 100px">Поиск</button>
                 </form>
             </div>
         </div>

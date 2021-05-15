@@ -146,6 +146,19 @@ class Article(models.Model):
     @staticmethod
     def get_search_articles(search_dic):
         ''' функция отвечает за поиск соответсвий в бд по имени и содержимого статьи '''
+        searchdate = search_dic.get('searchdate')
+        current_date = datetime.date.today()
+        if searchdate == 'month':
+            fromdate = current_date - datetime.timedelta(days=30)
+        elif searchdate == 'week':
+            fromdate = current_date - datetime.timedelta(days=7)
+        elif searchdate == 'today':
+            fromdate = datetime.datetime(current_date.year, current_date.month, current_date.day)
+        else:
+            fromdate = datetime.datetime(1, 1, 1)
+
+        hubscheck = search_dic.get('searchdate')
+
         articles = Article.get_articles()
         result = Article.get_articles().filter(
             Q(title__icontains=search_dic['search_query']) | Q(body__icontains=search_dic['search_query'])
@@ -165,7 +178,7 @@ class Article(models.Model):
                     result = result.exclude(pk=el['id'])
                     
         try:
-            result = result.filter(updated__range=(search_dic['fromdate'], search_dic['todate']))
+            result = result.filter(updated__range=(search_dic['fromdate'], datetime.datetime.now()))
         except ValidationError:
             pass
 
