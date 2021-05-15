@@ -15,9 +15,11 @@
                 <div class="post-head">
                     <h1>{{ article.title }}</h1>
                     {#            загрузка заглавной картинки    #}
-                    <div class="main-image-box">
-                        <img class="main-image" src="{{ article.image|media_folder_images }}" alt="main-image"/>
-                    </div>
+                    {% if article.image %}
+                        <div class="main-image-box">
+                            <img class="main-image" src="{{ article.image|media_folder_images }}" alt="main-image"/>
+                        </div>
+                    {% endif %}
                     <div>
                         <a href="{% url 'articles:author_profile' article.author_id %}" class="post-author">
                             {#            загрузка аваттарки    #}
