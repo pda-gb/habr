@@ -157,7 +157,6 @@ def user_articles(request, page=1):
         articles_paginator = paginator.page(1)
     except EmptyPage:
         articles_paginator = paginator.page(paginator.num_pages)
-    print(f'{articles_paginator.object_list=}')
 
     page_data = {
         "title": title,
