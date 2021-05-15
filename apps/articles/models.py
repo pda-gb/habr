@@ -188,7 +188,7 @@ class Article(models.Model):
         # проверяем по временному интервалу
         if fromdate:
             try:
-                result = result.filter(updated__gte=fromdate)
+                result = result.filter(published__gte=fromdate)
             except ValidationError:
                 pass
         # проверяем на положительный рейтинг
