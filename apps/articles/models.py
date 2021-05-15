@@ -144,64 +144,65 @@ class Article(models.Model):
         return hub_articles
 
     @staticmethod
-    def get_search_articles(search_dic):
+    def get_search_articles(request_dict):
         ''' функция отвечает за поиск соответсвий в бд по имени и содержимого статьи '''
-        searchdate = search_dic.get('searchdate')
-        current_date = datetime.date.today()
-        if searchdate == 'month':
-            fromdate = current_date - datetime.timedelta(days=30)
-        elif searchdate == 'week':
-            fromdate = current_date - datetime.timedelta(days=7)
-        elif searchdate == 'today':
-            fromdate = datetime.datetime(current_date.year, current_date.month, current_date.day)
+        search_string = request_dict.get('search')
+
+        by_date = request_dict.get('searchdate')
+        if by_date == 'month':
+            fromdate = datetime.date.today() - datetime.timedelta(days=30)
+        elif by_date == 'week':
+            fromdate = datetime.date.today() - datetime.timedelta(days=7)
+        elif by_date == 'today':
+            fromdate = datetime.datetime(datetime.date.today().year,
+                                         datetime.date.today().month,
+                                         datetime.date.today().day)
         else:
-            fromdate = datetime.datetime(1, 1, 1)
+            fromdate = None
 
-        hubscheck = search_dic.get('searchdate')
+        by_rate = request_dict.get('searchrate')
+        if by_rate == 'any':
+            by_rate = False
 
-        articles = Article.get_articles()
-        result = Article.get_articles().filter(
-            Q(title__icontains=search_dic['search_query']) | Q(body__icontains=search_dic['search_query'])
-        )
-        if not result:
+        hubs_list = request_dict.getlist('hubscheck')
+
+        result = Article.get_articles()
+        # проверяем по искомому слову
+        if search_string:
             result = Article.get_articles().filter(
-                Q(title__iexact=search_dic) | Q(body__iexact=search_dic)
+                Q(title__icontains=search_string) | Q(body__icontains=search_string)
             )
-        if not result:
-            result = Article.get_articles()
-            search_query = search_dic['search_query'].lower()
-            for el in articles.values():
-                if search_query in el['title'].lower() or search_query in \
-                        el['body'].lower():
-                    pass
-                else:
-                    result = result.exclude(pk=el['id'])
-                    
-        try:
-            result = result.filter(updated__range=(search_dic['fromdate'], datetime.datetime.now()))
-        except ValidationError:
-            pass
-
-        try:
-            result = result.filter(rating__range=(search_dic['fromrating'], search_dic['torating']))
-        except (ValidationError, ValueError):
-            pass
-
-        if search_dic['search_hub'] != '0':
-            result = result.filter(hub=search_dic['search_hub'])
-
-        if search_dic['search_by_name']:
-            search_list = search_dic['search_by_name'].replace(' ', '').split(',')
-            for el in articles:
-                name_count = 0
-                for name in search_list:
-                    if name == el.author.username.lower():
-                        continue
+            if not result:
+                result = Article.get_articles().filter(
+                    Q(title__iexact=search_string) | Q(body__iexact=search_string)
+                )
+            if not result:
+                result = Article.get_articles()
+                search_query = search_string.lower()
+                for el in result.values():
+                    if search_query in el['title'].lower() or search_query in \
+                            el['body'].lower():
+                        pass
                     else:
-                        name_count += 1
-                if name_count == len(search_list):
-                    result = result.exclude(pk=el.id)
-
+                        result = result.exclude(pk=el['id'])
+        # проверяем по временному интервалу
+        if fromdate:
+            try:
+                result = result.filter(updated__gte=fromdate)
+            except ValidationError:
+                pass
+        # проверяем на положительный рейтинг
+        if by_rate:
+            try:
+                result = result.filter(rating__gt=0)
+            except (ValidationError, ValueError):
+                pass
+        # проверяем по указанным хабам
+        if hubs_list:
+            try:
+                result = result.filter(hub_id__in=[item.pk for item in Hub.objects.filter(hub__in=hubs_list)])
+            except (ValidationError, ValueError):
+                pass
         return result
 
     @staticmethod

@@ -241,50 +241,11 @@ def show_author_profile(request, pk=None):
 def search_articles(request, page=1):
     """рендер главной страницы после поиска"""
     title = "главная страница"
-    print('*'*100)
-    print(request.GET)
-    print(request.GET.get('search'))
-    print(request.GET.get('searchdate'))
-    print(request.GET.get('searchrate'))
-    print(request.GET.getlist('hubcheck'))
-    searchdate = request.GET.get('searchdate')
-    current_date = datetime.date.today()
-    if searchdate == 'month':
-        fromdate = current_date - datetime.timedelta(days=30)
-    elif searchdate == 'week':
-        fromdate = current_date - datetime.timedelta(days=7)
-    elif searchdate == 'today':
-        fromdate = datetime.datetime(current_date.year, current_date.month, current_date.day)
-    else:
-        fromdate = datetime.datetime(1, 1, 1)
 
-    search_dic = {
-        'search_query': request.GET.get('search', ''),
-    }
-    if search_dic['search_query']:
-        search_dic['searchdate'] = fromdate
-        search_dic['searchrate'] = request.GET.get('searchrate')
-        search_dic['hubscheck'] = request.GET.get('hubscheck')
-        hub_articles = Article.get_search_articles(search_dic)
-    else:
-        hub_articles = Article.get_articles()
+    found_articles = Article.get_search_articles(request.GET)
 
-    # if search_dic['search_query']:
-    #     # if fromdate:
-    #     #     search_dic['fromdate'] = fromdate
-    #     # search_dic['todate'] = request.GET.get('todate')
-    #     search_dic['searchdate'] = fromdate
-    #     # search_dic['fromrating'] = request.GET.get('fromrating')
-    #     # search_dic['torating'] = request.GET.get('torating')
-    #     search_dic['searchrate'] = request.GET.get('searchrate')
-    #     search_dic['search_hub'] = request.GET.get('hubcheck')
-    #     search_dic['search_by_name'] = request.GET.get('search-by-name')
-    #     hub_articles = Article.get_search_articles(search_dic)
-    # else:
-    #     hub_articles = Article.get_articles()
-
-    last_articles = Article.get_last_articles(hub_articles)
-    paginator = Paginator(hub_articles, 20)
+    last_articles = Article.get_last_articles(found_articles)
+    paginator = Paginator(found_articles, 20)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:
@@ -296,7 +257,7 @@ def search_articles(request, page=1):
         "last_articles": last_articles,
         "current_user": request.user,
         "articles": articles_paginator,
-        "value_search": search_dic['search_query'],
+        "value_search": request.GET.get('search', ''),
     }
     return render(request, "articles/includes/search_articles.html", page_data)
 
