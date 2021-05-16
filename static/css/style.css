@@ -660,6 +660,22 @@ body {
     padding: 0 20px 0 4px;
 }
 
+.add_art .errorlist {
+    display: none;
+}
+
+.sorted-menu {
+    display: flex;
+    justify-content: center;
+}
+
+.sorted-menu label {
+    width: 110px;
+    margin: 0 10px;
+    font-size: 14px !important;
+    padding: 4px;
+}
+
 @media (max-width: 1200px) {
     .container {
         max-width: 100%;
@@ -756,5 +772,38 @@ body {
     }
     .magnifier {
     margin-right: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .sorted-menu label {
+    width: 85px;
+    margin: 0 3px;
+    font-size: 11px !important;
+    padding: 2px;
+    }
+}
+
+@media (max-width: 330px) {
+    .logo {
+        font-size: 22px;
+    }
+    .img-logo {
+    height: 35px;
+    width: 35px;
+    margin-right: 6px;
+    }
+    .comment-form p textarea {
+    width: 250px;
+    height: 130px;
+    }
+    .magnifier {
+    margin-right: 0;
+    }
+    .sorted-menu label {
+    width: 75px;
+    margin: 0 2px;
+    font-size: 10px !important;
+    padding: 2px;
     }
 }

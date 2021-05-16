@@ -1,25 +1,20 @@
 {% load static %}
 
 <nav class="sorted-menu">
-    <img class="sorted-icon" src="{% static 'svg/sorted.svg' %}" alt="">
-    <form role="sorted" method="GET" id="form-sorted" data-url="{% url 'articles:sorted_articles_hub' 1 pk %}">
-        <ul class="sorted-list">
-            <li class="sorted-elem">
-                <input class="sorted-input" type="radio" name="sorted" value="-date">
-                <label class="sorted-label"  for="-date">По дате</label>
-            </li>
-            <li class="sorted-elem">
-                <input class="sorted-input" type="radio" name="sorted" value="like">
-                <label class="sorted-label" for="like">По лайкам</label>
-            </li>
-            <li class="sorted-elem">
-                <input class="sorted-input" type="radio" name="sorted" value="comments">
-                <label class="sorted-label" for="comments">По комментариям</label>
-            </li >
-            <li class="sorted-elem">
-                <input class="sorted-input" type="radio" name="sorted" value="view">
-                <label class="sorted-label" for="view">По просмотрам</label>
-            </li>  
-        </ul>
+    <form role="sorted" method="GET" id="form-sorted" data-url=
+            "{% url 'articles:sorted_articles_hub' 1 pk %}" style="display: block">
+        <div class="btn-group mx-md-4" role="group" aria-label="Basic radio toggle button group">
+            <input class="btn-check sorted-input" type="radio" name="sorted" value="-date" id="-date" autocomplete="off">
+            <label class="btn btn-outline-secondary btn-sm"  for="-date">По дате</label>
+
+            <input class="btn-check sorted-input" type="radio" name="sorted" value="like" id="like" autocomplete="off">
+            <label class="btn btn-outline-secondary btn-sm" for="like">Рейтингу</label>
+
+            <input class="btn-check sorted-input" type="radio" name="sorted" value="comments" id="comments" autocomplete="off">
+            <label class="btn btn-outline-secondary btn-sm" for="comments">Комментам</label>
+
+            <input class="btn-check sorted-input" type="radio" name="sorted" value="view" id="view" autocomplete="off">
+            <label class="btn btn-outline-secondary btn-sm" for="view">Просмотрам</label>
+        </div>
     </form>
 </nav>
