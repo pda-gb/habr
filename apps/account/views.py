@@ -50,14 +50,13 @@ def add_article(request):
             article_add.instance.author = request.user
             article_add.save()
             is_success = True
+            return HttpResponseRedirect(reverse("account:user_articles"))
         else:
             is_fail = True
             for error in article_add.errors:
                 error_messages.append(
                     f'Поле {article_add[error].label}: '
-                    f'{article_add.errors.errors[error].as_text()}')
-            # return HttpResponseRedirect(reverse("account:user_articles"))
-        # return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+                    f'{article_add.errors[error].as_text()}')
 
     if request.user.is_authenticated:
         notifications = notification(request)
