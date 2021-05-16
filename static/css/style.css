@@ -405,6 +405,8 @@ body {
 .main-image-box {
     margin: 15px 0;
     width: 100%;
+    /*height: 600px;*/
+    max-height: 1000px;
     overflow: hidden;
 }
 
@@ -696,13 +698,16 @@ body {
         display: flex;
     }
     .scrollup, .scrolldown {
-    left: auto;
-    right: 5px;
-    bottom: 5px;
+        left: auto;
+        right: 5px;
+        bottom: 5px;
     }
     .featured-menu {
-    font-size: 18.5px;
+        font-size: 18.5px;
     }
+    /*.main-image-box {*/
+    /*    height: 500px;*/
+    /*}*/
 }
 
 @media (max-width: 992px) {
@@ -740,48 +745,36 @@ body {
     .hubs, .notific_block, .mobile-hide, .bell {
         display: none;
     }
-    .comment-form p textarea {
-    width: 280px;
-    height: 130px;
+        .comment-form p textarea {
+        width: 280px;
+        height: 130px;
     }
-    .author-username {
+        .author-username {
     font-size: 24px;
     }
     .magnifier {
-    margin-right: 10px;
+        margin-right: 10px;
     }
     .search-head {
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 3px !important;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 3px !important;
     }
-}
-
-@media (max-width: 330px) {
-    .logo {
-        font-size: 22px;
-    }
-    .img-logo {
-    height: 35px;
-    width: 35px;
-    margin-right: 6px;
-    }
-    .comment-form p textarea {
-    width: 250px;
-    height: 130px;
-    }
-    .magnifier {
-    margin-right: 0;
-    }
+    /*.main-image-box {*/
+    /*    height: 600px;*/
+    /*}*/
 }
 
 @media (max-width: 600px) {
     .sorted-menu label {
-    width: 85px;
-    margin: 0 3px;
-    font-size: 11px !important;
-    padding: 2px;
+        width: 85px;
+        margin: 0 3px;
+        font-size: 11px !important;
+        padding: 2px;
     }
+    /*.main-image-box {*/
+    /*    height: 300px;*/
+    /*}*/
 }
 
 @media (max-width: 330px) {
@@ -789,21 +782,24 @@ body {
         font-size: 22px;
     }
     .img-logo {
-    height: 35px;
-    width: 35px;
-    margin-right: 6px;
+        height: 35px;
+        width: 35px;
+        margin-right: 6px;
     }
     .comment-form p textarea {
-    width: 250px;
-    height: 130px;
+        width: 250px;
+        height: 130px;
     }
     .magnifier {
-    margin-right: 0;
+        margin-right: 0;
     }
     .sorted-menu label {
-    width: 75px;
-    margin: 0 2px;
-    font-size: 10px !important;
-    padding: 2px;
+        width: 75px;
+        margin: 0 2px;
+        font-size: 10px !important;
+        padding: 2px;
     }
+    /*.main-image-box {*/
+    /*    height: 200px;*/
+    /*}*/
 }
