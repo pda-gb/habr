@@ -2,7 +2,7 @@
 
 <nav class="sorted-menu">
     <form role="sorted" method="GET" id="form-sorted" data-url=
-            "{% url 'articles:sorted_articles_hub' 1 pk %}" style="display: block">
+            "{% url 'articles:sorted_articles_hub' pk 1 %}" style="display: block">
         <div class="btn-group mb-2" role="group" aria-label="Basic radio toggle button group">
             <input class="btn-check sorted-input" type="radio" name="sorted" value="-date" id="-date" autocomplete="off">
             <label class="btn btn-outline-secondary btn-sm"  for="-date">По дате</label>
