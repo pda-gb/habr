@@ -14,7 +14,7 @@ from apps.authorization.models import HabrUserProfile
 from apps.comments.forms import CommentCreateForm
 from apps.comments.models import Comment, Sorted, CommentLikesViewed, \
     CommentDislikesViewed
-from apps.moderator.models import BannedUser, Moderator
+from apps.moderator.models import BannedUser, Moderator, VerifyArticle
 
 
 def main_page(request, pk=None, page=1):
@@ -90,6 +90,7 @@ def article(request, pk=None):
     comments_is_disliked = None
     notifications = None
     is_moderator = False
+    status = False
     if request.user.is_authenticated:
         notifications = notification(request)
 
@@ -120,6 +121,8 @@ def article(request, pk=None):
             ).exists()
         )
         is_moderator = Moderator.is_moderator(request.user.id)
+        if is_moderator:
+            status = VerifyArticle.get_status_verification_article(pk)
 
     page_data = {
         "article": current_article,
@@ -131,6 +134,7 @@ def article(request, pk=None):
         "comments_is_liked": comments_is_liked,
         "comments_is_disliked": comments_is_disliked,
         "is_moderator": is_moderator,
+        "status": status,
     }
     return render(request, "articles/article.html", page_data)
 

@@ -143,6 +143,20 @@ class VerifyArticle(models.Model):
         else:
             return None
 
+    @staticmethod
+    def get_status_verification_article(pk_article):
+        """
+        запрос статуса проверки текущей статьи
+        """
+        status = False
+        if VerifyArticle.objects.filter(verification=pk_article).exists():
+            is_verified = VerifyArticle.objects.get(verification=pk_article
+                                                       ).is_verified
+            if is_verified is None:
+                status = True
+
+        return status
+
     # @staticmethod
     # def get_status_verification_articles(pk_author):
     #     """
@@ -160,6 +174,7 @@ class VerifyArticle(models.Model):
     #     else:
     #         status = None
     #     return status
+
 
     @staticmethod
     def get_articles_with_statuses(pk_author, draft=None):
@@ -184,6 +199,7 @@ class VerifyArticle(models.Model):
                 articles_with_statuses.append((article, 'not_checked'))
         return articles_with_statuses
 
+
     @staticmethod
     def get_all_articles_for_verifications():
         """получение всех статей на проверку"""
@@ -194,6 +210,7 @@ class VerifyArticle(models.Model):
             articles_to_review.append(itm.verification)
         return articles_to_review
 
+
     @staticmethod
     def allow_publishing(id_article):
         """Разрешение модератором публикации статьи"""
@@ -203,6 +220,7 @@ class VerifyArticle(models.Model):
         Article.objects.filter(id=id_article).update(published=now(),
                                                      updated=now())
 
+
     @staticmethod
     def return_article(text_remark, id_article):
         """отправка на доработку и с обязательной причиной отказа"""
@@ -211,6 +229,7 @@ class VerifyArticle(models.Model):
             remark=text_remark
         )
         Article.objects.filter(id=id_article)
+
 
     class Meta:
         verbose_name = "статья"
