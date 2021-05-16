@@ -8,7 +8,7 @@
                 <div class="post mb-4">
                     <div class="post-head">
                         <a href="{% url 'articles:article' itm_article.id %}"
-                           class="post-link mini-title">{{ itm_article.title }}</a>
+                           class="post-link mini-title">{{ itm_article.title|truncatewords:10 }}</a>
                     </div>
                     <div class="post-content mt-3">
                         <div class="mini-time">
