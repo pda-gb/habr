@@ -64,20 +64,6 @@
                 });
             })
             $('.sorted-input').click(function(e){
-                {#e.preventDefault()#}
-                let content = $('#form-sorted').serialize();
-                $(this).prop('checked', true);
-
-                $.ajax({
-                    url: $('#form-sorted').data('url'),
-                    data: content,
-                    type: 'GET',
-                    success: function(response) {
-                        $('.post-list').html(response.result);
-                    }
-                })
-            })
-            $('.sorted-input-search').click(function(e){
                 e.preventDefault()
                 let content = $('#form-sorted').serialize();
                 content = content.split('=')[1];

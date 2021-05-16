@@ -292,7 +292,7 @@ def post_list_search(request, page=1):
     if request.is_ajax():
         search_query = request.GET['search_value']
         sorted_query = request.GET['content']
-        hub_articles = Article.get_search_articles(search_query)
+        hub_articles = Article.get_search_articles(request.GET)
         hub_articles = Sorted.sort(sorted_query, search_query=hub_articles).get_data()
 
         paginator = Paginator(hub_articles, 5)
