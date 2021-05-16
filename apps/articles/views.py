@@ -265,7 +265,7 @@ def search_articles(request, page=1):
 def post_list(request, pk=None, page=1):
     '''функция используется для сортировке всех статей или сортировки статей по хабу'''
     if request.is_ajax():
-        sorted_query = request.GET['sorted']
+        sorted_query = request.GET['content']
         if pk is None:
             hub_articles = Sorted.sort(sorted_query).get_data()
         else:
