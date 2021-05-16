@@ -17,7 +17,10 @@ def media_folder_users(string):
 @register.filter(name="media_folder_images")
 def media_folder_images(string):
     if str(string).startswith("http"):
-        return f"{settings.MEDIA_URL}{string}"
+        return string
+    elif not string:
+        string = "img_articles/default.jpg"
+    return f"{settings.MEDIA_URL}{string}"
 
 
 @register.filter(name="no_data_specified")
