@@ -64,7 +64,7 @@
                 });
             })
             $('.sorted-input').click(function(e){
-                e.preventDefault()
+                {#e.preventDefault()#}
                 let content = $('#form-sorted').serialize();
                 content = content.split('=')[1];
                 $(this).attr('checked', true);
