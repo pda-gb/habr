@@ -10,8 +10,9 @@
                     <li class="li-reply-comment">
                         <div class="main-comment-section col-md-12" id='CommentId-{{ comment.id }}'>
                             <div>
-                                <div style="display: inline-block"><a href="{% url 'articles:author_profile' comment.author.id %}"
-                                      class="post-author comment-author">
+                                <div style="display: inline-block"><a
+                                        href="{% url 'articles:author_profile' comment.author.id %}"
+                                        class="post-author comment-author">
                                     <img src="{{ comment.author.habruserprofile.avatar|media_folder_users }}"
                                          alt=""/>
                                     <small>{{ comment.author }}</small>
@@ -56,6 +57,14 @@
                                          class="comment_dislike"/>
                                 {% endif %}
                                 <small class="red" id="dislikes{{ comment.id }}">{{ comment.dislikes.count }}</small>
+                                <!-- Начало блока жалобы -->
+                                <div>
+                                    <div>
+                                        <a class="btn btn-outline-warning mt-1" title="Жалоба"
+                                           href="">Жалоба</a>
+                                    </div>
+                                </div>
+                                <!-- Конец блока жалобы -->
                             </div>
                             {% include 'comments/includes/inc_tree_comments.html' %}
                         </div>

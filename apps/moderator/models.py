@@ -175,7 +175,6 @@ class VerifyArticle(models.Model):
     #         status = None
     #     return status
 
-
     @staticmethod
     def get_articles_with_statuses(pk_author, draft=None):
         """
