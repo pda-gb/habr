@@ -72,18 +72,19 @@ TEMPLATES = [
 WSGI_APPLICATION = "habr.wsgi.application"
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    },
-    # "postgresql": {
-    #     "ENGINE": "django.db.backends.postgresql_psycopg2",
-    #     "NAME": secret_value["DATABASE_NAME"],
-    #     "USER": secret_value["DATABASE_USER"],
-    #     "PASSWORD": secret_value["DATABASE_PASSWORD"],
-    #     "HOST": secret_value["DATABASE_HOST"],
-    #     "PORT": secret_value["DATABASE_PORT"],
+    # "default": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     # },
+
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": secret_value["DATABASE_NAME"],
+        "USER": secret_value["DATABASE_USER"],
+        "PASSWORD": secret_value["DATABASE_PASSWORD"],
+        # "HOST": secret_value["DATABASE_HOST"],
+        # "PORT": secret_value["DATABASE_PORT"],
+    },
 }
 # переключение настроек на postgresql
 # DATABASES["default"] = DATABASES["postgresql"]
