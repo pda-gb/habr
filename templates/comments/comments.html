@@ -3,20 +3,20 @@
 
 <div class="comment-row" id="commentArticle">
     <h2 class="mb-4">({{ comments.count }}) Комментарии</h2>
-    <ul style="list-style-type:none;">
+    <ul class="comment-start" style="list-style-type:none;">
         <div class="col-md-12 mt-2" id="CommentList">
             {% for comment in comments %}
                 {% if comment.parent == Null %}
                     <li class="li-reply-comment">
                         <div class="main-comment-section col-md-12" id='CommentId-{{ comment.id }}'>
                             <div>
-                                <a href="{% url 'articles:author_profile' comment.author.id %}"
-                                   class="post-author comment-author">
+                                <div style="display: inline-block"><a href="{% url 'articles:author_profile' comment.author.id %}"
+                                      class="post-author comment-author">
                                     <img src="{{ comment.author.habruserprofile.avatar|media_folder_users }}"
                                          alt=""/>
                                     <small>{{ comment.author }}</small>
-                                </a>
-                                <span>{{ comment.date }}</span>
+                                </a></div>
+                                <div style="display: inline-block"><span>{{ comment.date }}</span></div>
                             </div>
                             <div class="comment-text">
                                 <div>{{ comment.body }}</div>

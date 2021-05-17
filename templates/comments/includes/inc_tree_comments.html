@@ -7,13 +7,13 @@
                 <li class="li-reply-comment">
                     <div class="main-comment-section col-md-12" id='CommentId-{{ child_comment.id }}'>
                         <div>
-                            <a href="{% url 'articles:author_profile' child_comment.author.id %}"
-                               class="post-author comment-author">
+                            <div style="display: inline-block"><a href="{% url 'articles:author_profile' child_comment.author.id %}"
+                                  class="post-author comment-author">
                                 <img src="{{ child_comment.author.habruserprofile.avatar|media_folder_users }}"
                                      alt=""/>
                                 <small>{{ child_comment.author }}</small>
-                            </a>
-                            <span>{{ child_comment.date }}</span>
+                            </a></div>
+                            <div style="display: inline-block"><span>{{ comment.date }}</span></div>
                         </div>
                         <div class="comment-text">
                             <div>{{ child_comment.body }}</div>

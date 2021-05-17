@@ -256,12 +256,17 @@ def search_articles(request, page=1):
         articles_paginator = paginator.page(1)
     except EmptyPage:
         articles_paginator = paginator.page(paginator.num_pages)
+    if request.user.is_authenticated:
+        notifications = notification(request)
+    else:
+        notifications = None
     page_data = {
         "title": title,
         "last_articles": last_articles,
         "current_user": request.user,
         "articles": articles_paginator,
         "value_search": request.GET.get('search', ''),
+        "notifications": notifications,
     }
     return render(request, "articles/includes/search_articles.html", page_data)
 

@@ -1,7 +1,7 @@
 {% load static %}
 {% load my_tags %}
 
-<nav class="main_nav navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+<nav class="main-nav navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
     <div class="container">
         <a href="{% url 'articles:main_page' %}">
             <div class="logo_block">
@@ -29,57 +29,6 @@
                         <div class="form-search">
                             <form class="search" role="search" id="search-articles-form" method="GET"
                                   action="{% url 'articles:search_articles' 1 %}">
-
-{#                                <input class="form-control input-search" type="text" placeholder="Search"#}
-{#                                       aria-label="Search" name="search" value="{{ search_query }}">#}
-{#                                <img src="{% static 'svg/magnifier-black.svg' %}" class="magnifier magnifier-in-input"#}
-{#                                     alt="">#}
-{#                                <img class="filter-icon" src="{% static 'svg/filter.svg' %}" alt="">#}
-{#                                <ul class="filter-list">#}
-{#                                    <li class="close-filter-menu">#}
-{#                                        <img class="close-filter-icon" src="{% static 'svg/close.svg' %}" alt="">#}
-{#                                    </li>#}
-{#                                    <li class="filter-el">#}
-{#                                        <p>По дате</p>#}
-{#                                    </li>#}
-{#                                    <li class="filter-el clear-fix">#}
-{#                                        С:<input type="date" name="fromdate">#}
-{#                                    </li>#}
-{#                                    <li class="filter-el clear-fix">#}
-{#                                        По:<input type="date" name="todate">#}
-{#                                        <hr>#}
-{#                                    </li>#}
-{#                                    <li class="filter-el clear-fix">#}
-{#                                        <p>По рейтингу</p>#}
-{#                                    </li>#}
-{#                                    <li class="filter-el clear-fix">#}
-{#                                        С:<input type="text" name="fromrating">#}
-{#                                    </li>#}
-{#                                    <li class="filter-el clear-fix">#}
-{#                                        По:<input type="text" name="torating">#}
-{#                                        <hr>#}
-{#                                    </li>#}
-{#                                    <li class="filter-el clear-fix">#}
-{#                                        <label for="id_hub">Хабы:</label>#}
-{#                                        <select name="hub" class="form-control" id="id_hub">#}
-{#                                            <option value="0">Все</option>#}
-{#                                            <option value="1">Разработка</option>#}
-{#                                            <option value="2">Дизайн</option>#}
-{#                                            <option value="3">Маркетинг</option>#}
-{#                                            <option value="4">Научпоп</option>#}
-{#                                        </select>#}
-{#                                        <hr>#}
-{#                                    </li>#}
-{#                                    <li class="filter-el clear-fix">#}
-{#                                        <p>По именам:</p>#}
-{#                                    </li>#}
-{#                                    <li class="filter-el clear-fix">#}
-{#                                        <p class="notif-search-by-name">Если необходимо указать несколько имеен, то#}
-{#                                            перечислите их через запятую</p>#}
-{#                                        <input class="form-control input-search-by-name" type="text"#}
-{#                                               aria-label="Search-by-name" name="search-by-name">#}
-{#                                    </li>#}
-{#                                </ul>#}
                             </form>
                         </div>
                         <button type="button" class="btn btn-secondary magnifier" data-toggle="modal"
