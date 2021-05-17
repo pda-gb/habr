@@ -702,6 +702,59 @@ body {
     padding: 4px;
 }
 
+.artbox-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.artbox-unit {
+    display: flex;
+    flex: 0 1 340px;
+    border: 1px solid #000;
+    flex-direction: column;
+    height: 270px;
+    margin-bottom: 30px;
+}
+
+.artbox-info {
+    display: flex;
+}
+
+.artbox__row {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.artbox__image {
+    margin: 3px;
+    width: 170px;
+    height: 120px;
+    overflow: hidden;
+}
+
+.artbox__body {
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+}
+
+.artbox-title {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.artbox-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+
 @media (max-width: 1200px) {
     .container {
         max-width: 98%;

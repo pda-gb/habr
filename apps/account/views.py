@@ -149,7 +149,7 @@ def user_articles(request, page=1):
         articles_with_statuses = None
     # articles = Article.get_by_author(request.user.id)
 
-    paginator = Paginator(articles_with_statuses, 5)
+    paginator = Paginator(articles_with_statuses, 15)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:
