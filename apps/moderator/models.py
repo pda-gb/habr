@@ -97,6 +97,7 @@ class ComplainToComment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              verbose_name="Пожаловался",
                              on_delete=models.DO_NOTHING)
+    created = models.DateTimeField(verbose_name="дата", auto_now_add=True)
 
     @staticmethod
     def send_complain_to_comment(id_comment, text, id_user):
@@ -109,6 +110,10 @@ class ComplainToComment(models.Model):
                 text_complain=text,
                 user=HabrUser.objects.get(id=id_user)
             )
+
+    @staticmethod
+    def get_all_complaints():
+        return ComplainToComment.objects.filter(status=None)
 
     class Meta:
         verbose_name = "Жалоба на комментарий"
@@ -129,6 +134,7 @@ class ComplainToArticle(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              verbose_name="Пожаловался",
                              on_delete=models.DO_NOTHING)
+    created = models.DateTimeField(verbose_name="дата", auto_now_add=True)
 
     @staticmethod
     def send_complain_to_article(id_article, text, id_user):
@@ -141,6 +147,10 @@ class ComplainToArticle(models.Model):
                 text_complain=text,
                 user=HabrUser.objects.get(id=id_user)
             )
+
+    @staticmethod
+    def get_all_complaints():
+        return ComplainToArticle.objects.filter(status=None)
 
     class Meta:
         verbose_name = "Жалоба на статью"

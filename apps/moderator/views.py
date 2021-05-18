@@ -12,8 +12,12 @@ from apps.moderator.models import BannedUser, VerifyArticle, ComplainToArticle, 
 
 def complaints(request):
     title = "Жалобы"
+    complaints_to_article = ComplainToArticle.get_all_complaints()
+    complaints_to_comments = ComplainToComment.get_all_complaints()
     page_data = {
-        'title': title,
+        "title": title,
+        "articles": complaints_to_article,
+        "comments": complaints_to_comments,
     }
     return render(request, "moderator/complaints.html", page_data)
 

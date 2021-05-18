@@ -2,4 +2,13 @@
 {% load my_tags %}
 {% block content %}
     {% include 'moderator/includes/inc_menu.html' %}
+        <div class='string__container'>
+        <div class="bookmark__row col-12">
+            <div class="col-6 bord">Объект жалобы</div>
+            <div class="col-2 bord">Автор объекта</div>
+            <div class="col-2 bord">Отправитель</div>
+            <div class="col-1 bord">Создана</div>
+        </div>
+    </div>
+    {% include 'moderator/includes/inc_complaints_string_output.html' %}
 {% endblock content %}
