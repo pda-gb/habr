@@ -110,6 +110,7 @@
                 {% include 'articles/includes/inc_moderatos_panel.html' %}
             {% endif %}
             <!-- Конец блока модерации статьи -->
+
             <!-- Начало блока комментариев -->
             {% if comments.count == 0 and is_moderator %}
                 {#    не показывать на проверке статье блок комментариев, если их нет    #}

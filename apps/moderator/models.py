@@ -2,6 +2,7 @@ import datetime
 
 from django.core.mail import send_mail
 from django.db import models, transaction
+from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 
 from apps.articles.models import Article
@@ -123,6 +124,7 @@ class ComplainToComment(models.Model):
 class ComplainToArticle(models.Model):
     """Жалоба на статью"""
     article = models.ForeignKey(Article, help_text="удалённая статья",
+                                related_name="ban_article",
                                 on_delete=models.CASCADE)
     status = models.BooleanField(null=True,
                                  verbose_name="статус проверки",
@@ -152,9 +154,36 @@ class ComplainToArticle(models.Model):
     def get_all_complaints():
         return ComplainToArticle.objects.filter(status=None)
 
+    @staticmethod
+    def allow_article(id_complain):
+        """отклонить жалобу"""
+        if ComplainToArticle.objects.filter(id=id_complain).exists():
+            ComplainToArticle.objects.filter(id=id_complain)\
+                .update(status=False)
+
+    @staticmethod
+    @transaction.atomic()
+    def reject_article(id_complain):
+        """забанить"""
+        if ComplainToArticle.objects.filter(id=id_complain).exists():
+            ComplainToArticle.objects.filter(id=id_complain)\
+                .update(status=True)
+            Article.objects.filter(ban_article=id_complain)\
+                .update(is_active=False)
+
     class Meta:
         verbose_name = "Жалоба на статью"
         verbose_name_plural = "Жалобы на статьи"
+
+    @staticmethod
+    def article_is_complained(id_article):
+        """Возвращает жалобу или False"""
+        complain = False
+        if ComplainToArticle.objects.filter(article_id=id_article,
+                                            status=None).exists():
+            complain = ComplainToArticle.objects.get(article_id=id_article,
+                                                     status=None)
+        return complain
 
 
 class VerifyArticle(models.Model):

@@ -13,7 +13,7 @@
         {% for article in articles %}
             <a href="{% url 'articles:article' article.article.id %}" class="bookmark__row" style="min-height: 60px !important;">
                 <div class="col-lg-3 col-4 bord"><span style="font-weight: 700">Статья</span>: {{ article.article.title|truncatechars:45 }}</div>
-                <div class="col-lg-3 col-4 bord">{{ article.text_complain|truncatechars:60 }}</div>
+                <div class="col-lg-3 col-4 bord" title="{{ article.text_complain }}">{{ article.text_complain|truncatechars:60 }}</div>
                 <div class="col-lg-2 mobile-hide bord">
                     <p style="font-weight: 700; margin: 0">{{ article.article.author }}</p>
                 </div>

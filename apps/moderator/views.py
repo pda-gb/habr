@@ -183,3 +183,23 @@ def send_complain_to_comment(request, pk):
     else:
         form_complain = ComplainCreateForm()
     return HttpResponseRedirect(reverse("articles:main_page"))
+
+
+def ban_article(request, pk):
+    ComplainToArticle.reject_article(pk)
+    return HttpResponseRedirect(reverse("moderator:complaints"))
+
+
+def no_ban_article(request, pk):
+    ComplainToArticle.allow_article(pk)
+    return HttpResponseRedirect(reverse("moderator:complaints"))
+
+
+def ban_comment(request, pk):
+
+    return HttpResponseRedirect(reverse("moderator:complaints"))
+
+
+def no_ban_comment(request, pk):
+
+    return HttpResponseRedirect(reverse("moderator:complaints"))
