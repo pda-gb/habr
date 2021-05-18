@@ -263,8 +263,11 @@ class Article(models.Model):
         )
 
     @staticmethod
-    def get_bookmarks(id):
-        objects = Article.bookmarks.through.objects.filter(habruser_id=id)
+    def get_bookmarks(id_user):
+        objects = Article.bookmarks.through.objects.filter(
+            habruser_id=id_user,
+            article_id__is_active=True  # удалённые и забаненные не показывать
+        )
         bookmarks = []
         for i in objects:
             bookmarks.append(Article.get_article(i.article_id))
