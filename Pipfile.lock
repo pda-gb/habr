@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "5e27d7c51eed9dcb9b974a9865300a77dc9e001b18c079a3cdd656806b50fefa"
+            "sha256": "50db0f89da8f4cc0daa3c0c5c2b288ab16d0c41c9a88da79fe80f029f345a938"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -248,11 +248,6 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==2.1.0"
-        },
-        "python-social-auth": {
-            "editable": true,
-            "git": "https://github.com/python-social-auth/social-app-django.git",
-            "ref": "b6e791adf96c3f13c3e499669e50093f8dc23461"
         },
         "python3-openid": {
             "hashes": [
