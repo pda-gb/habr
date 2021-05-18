@@ -9,8 +9,8 @@ pillow = "*"
 mimesis = "*"
 django-ckeditor = "*"
 requests = "*"
-python-social-auth = {editable = true, git = "https://github.com/python-social-auth/social-app-django.git"}
 social-auth-app-django = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 flake8 = "*"
