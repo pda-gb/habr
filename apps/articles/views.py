@@ -348,7 +348,7 @@ def post_list_user(request, user_pk, page=1):
 
 
 def notification(request):
-    current_notifications = []
+    result_notification, current_notifications = [], []
     current_articles = Article.get_by_author(author_pk=request.user.pk)
     for itm_article in current_articles:
         likes = LikesViewed.objects.filter(article_id=itm_article.id,
@@ -392,7 +392,12 @@ def notification(request):
             current_notifications.append(("like_karma", like_karma))
         for dislike_karma in dislikes_karma:
             current_notifications.append(("dislike_karma", dislike_karma))
-    return current_notifications
+        for comment_like in comment_likes:
+            current_notifications.append (("comment_like", comment_like))
+        for comment_dislike in comment_dislikes:
+            current_notifications.append (("comment_dislike", comment_dislike))
+        result_notification = list(set(current_notifications))
+    return result_notification
 
 
 def mark_all_as_viewed(request):
@@ -402,10 +407,18 @@ def mark_all_as_viewed(request):
         LikesViewed.objects.filter(article_id=i.id).update(viewed=True)
         DislikesViewed.objects.filter(article_id=i.id).update(viewed=True)
         Comment.get_comments(i.id).update(viewed=True)
+        Comment.get_comments (i.id).filter (parent__author_id=request.user.pk
+                     ).update(viewed=True)
         CommentLikesViewed.objects.filter(
             comment__article_id = i.id).update(viewed=True)
         CommentDislikesViewed.objects.filter(
             comment__article_id = i.id).update(viewed=True)
+        KarmaPositiveViewed.objects.filter (
+            profile_author=request.user.pk).update(viewed=True)
+        KarmaNegativeViewed.objects.filter (
+            profile_author=request.user.pk).update (viewed=True)
+
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -418,6 +431,10 @@ def target_mark_as_viewed(request, target, pk):
         LikesViewed.objects.filter(id=pk).update(viewed=True)
     elif target == 'dislike':
         DislikesViewed.objects.filter(id=pk).update(viewed=True)
+    elif target == 'comment_like':
+        CommentLikesViewed.objects.filter(id=pk).update(viewed=True)
+    elif target == 'comment_dislike':
+        CommentDislikesViewed.objects.filter(id=pk).update(viewed=True)
     elif target == 'like_karma':
         KarmaPositiveViewed.objects.filter(id=pk).update(viewed=True)
     elif target == 'dislike_karma':
@@ -458,5 +475,6 @@ def all_notification(request):
         for comment_dislike in comment_dislikes:
             all_notification.append (("comment_dislike", comment_dislike))
         current_all_notification = list(set(all_notification))
+
     return current_all_notification
 
