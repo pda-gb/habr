@@ -58,11 +58,11 @@
                                 {% endif %}
                                 <small class="red" id="dislikes{{ comment.id }}">{{ comment.dislikes.count }}</small>
                                 <!-- Начало блока жалобы -->
-                                <div>
-                                    <div>
-                                        <a class="btn btn-outline-warning mt-1" title="Жалоба"
-                                           href="{% url 'moderator:complain_to_comment' comment.id %}">Жалоба</a>
-                                    </div>
+                                <div style="margin: -5px 0 0 5px;">
+                                    {#    вместо кнопки с текстом, надо сделать что-то сочетающееся с соседними значками    #}
+                                    <a title="Жалоба на комментарий" href="{% url 'moderator:complain_to_comment' article.pk %}">
+                                        <img src="{% static 'svg/complaints.svg' %}" alt=""/>
+                                    </a>
                                 </div>
                                 <!-- Конец блока жалобы -->
                             </div>

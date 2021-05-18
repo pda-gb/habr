@@ -11,7 +11,7 @@
                         {% include 'account/includes/post.html' %}
                     {% endif %}
                 {% empty %}
-                    <p>У вас нет статей.</p>
+                    <p style="text-align: center;">У вас нет статей</p>
                 {% endfor %}
                 {% if articles.paginator.count > 5 %}
                 <!-- Начало блока пагинации -->
