@@ -41,7 +41,8 @@ class Tag(models.Model):
 
 
 class Article(models.Model):
-    title = models.CharField(max_length=240, verbose_name="заголовок")
+    # title = models.CharField(max_length=240, verbose_name="заголовок")
+    title = models.TextField(verbose_name="заголовок")
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
                                related_name='author_article',
                                on_delete=models.CASCADE)
