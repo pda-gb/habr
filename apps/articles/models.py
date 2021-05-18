@@ -41,7 +41,7 @@ class Tag(models.Model):
 
 
 class Article(models.Model):
-    title = models.CharField(max_length=120, verbose_name="заголовок")
+    title = models.CharField(max_length=240, verbose_name="заголовок")
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
                                related_name='author_article',
                                on_delete=models.CASCADE)
@@ -327,18 +327,3 @@ if __name__ == "__main__":
     hub = Hub(hub="development")
 
 
-[Unit]
-Description=gunicorn for Habr
-Requires=gunicorn.socket
-After=network.target
-
-[Service]
-User=root
-Group=www-data
-WorkingDirectory=/home/django/habr
-ExecStart=/home/django/geekshop/django2/bin/gunicorn --access-logfile - --workers 3 --bind unix:/home/django/geekshop/geekshop.sock geekshop.wsgi
-
-[Install]
-WantedBy=multi-user.target
-
-https://coderoad.ru/54375834/%D0%97%D0%B0%D0%BF%D1%83%D1%81%D1%82%D0%B8%D1%82%D0%B5-%D0%BD%D0%B5%D1%81%D0%BA%D0%BE%D0%BB%D1%8C%D0%BA%D0%BE-%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%BE%D0%B2-django-%D1%81-nginx-%D0%B8-gunicorn
