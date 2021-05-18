@@ -12,7 +12,7 @@ class HabrUser(AbstractUser):
     first_name = None
     last_name = None
     username = models.CharField(
-        max_length=16,
+        max_length=100,
         unique=True,
         help_text='Required. 150 characters or fewer. Letters, '
                   'digits and @/./+/-/_ only.',
