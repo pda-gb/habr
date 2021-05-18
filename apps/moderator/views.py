@@ -3,11 +3,11 @@ from datetime import datetime
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from apps.authorization.models import HabrUser
-from apps.moderator.forms import BannedUserForm, RemarkCreateForm
-from apps.moderator.models import BannedUser, VerifyArticle
+from apps.moderator.forms import BannedUserForm, RemarkCreateForm, ComplainCreateForm
+from apps.moderator.models import BannedUser, VerifyArticle, ComplainToArticle, ComplainToComment
 
 
 def complaints(request):
@@ -127,3 +127,55 @@ def return_article(request, pk):
     else:
         form_remark = RemarkCreateForm()
     return HttpResponseRedirect(reverse("moderator:review_articles"))
+
+
+def complain_to_article(request, pk):
+    """Жалоба на статью"""
+    form_complain = ComplainCreateForm(request.POST or None)
+    page_data = {
+        "pk": pk,
+        "form_complain": form_complain,
+    }
+    return render(request, 'moderator/form_complain_article.html',
+                  page_data)
+
+
+def complain_to_comment(request, pk):
+    """Жалоба на комментарий"""
+    form_complain = ComplainCreateForm(request.POST or None)
+    page_data = {
+        "pk": pk,
+        "form_complain": form_complain,
+    }
+    return render(request, 'moderator/form_complain_comment.html',
+                  page_data)
+
+
+def send_complain_to_article(request, pk):
+    """отправка жалобы на статью на модерацию"""
+    if request.method == 'POST':
+        form_complain = ComplainCreateForm(request.POST or None)
+        if form_complain.is_valid():
+            ComplainToArticle.send_complain_to_article(
+                pk,
+                request.POST["text_complain"],
+                request.user.pk
+                )
+    else:
+        form_complain = ComplainCreateForm()
+    return HttpResponseRedirect(reverse("articles:main_page"))
+
+
+def send_complain_to_comment(request, pk):
+    """отправка жалобы на комментарий на модерацию"""
+    if request.method == 'POST':
+        form_complain = ComplainCreateForm(request.POST or None)
+        if form_complain.is_valid():
+            ComplainToComment.send_complain_to_comment(
+                pk,
+                request.POST["text_complain"],
+                request.user.pk
+                )
+    else:
+        form_complain = ComplainCreateForm()
+    return HttpResponseRedirect(reverse("articles:main_page"))

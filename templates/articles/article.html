@@ -117,8 +117,9 @@
                 <!-- Начало блока жалобы -->
                 <div>
                     <div>
+{#    вместо кнопки с текстом, надо сделать что-то сочетающееся с соседними значками    #}
                         <a class="btn btn-outline-warning mt-1" title="Жалоба"
-                           href="">Жалоба</a>
+                           href="{% url 'moderator:complain_to_article' article.pk %}">Жалоба</a>
                     </div>
                 </div>
                 <!-- Конец блока жалобы -->

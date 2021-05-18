@@ -13,4 +13,8 @@ urlpatterns = [
     path("allow_publishing/<int:pk>/", moderator.allow_publishing, name='allow_publishing'),
     path("reject_publishing/<int:pk>/", moderator.reject_publishing, name='reject_publishing'),
     path("return_article/<int:pk>/", moderator.return_article, name='return_article'),
+    path("complain_to_article/<int:pk>/", moderator.complain_to_article, name='complain_to_article'),
+    path("complain_to_comment/<int:pk>/", moderator.complain_to_comment, name='complain_to_comment'),
+    path("send_complain_to_article/<int:pk>/", moderator.send_complain_to_article, name='send_complain_to_article'),
+    path("send_complain_to_comment/<int:pk>/", moderator.send_complain_to_comment, name='send_complain_to_comment'),
 ]

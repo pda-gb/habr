@@ -1,0 +1,16 @@
+<h1> форма для написания жалобы на статью</h1>
+
+<div>
+    <form class="" action="{% url 'moderator:send_complain_to_article' pk %}" method="post"
+          enctype="multipart/form-data">
+        {% csrf_token %}
+            {{ form_complain.as_p }}
+        <br>
+        <input type="submit" value="Отправить" class="btn btn-outline-success">
+    </form>
+    <div style="text-align: center; margin-top: 15px;">
+        <a href="#">
+            <button style="width:300px" type="reset" class="btn btn-danger">Назад</button>
+        </a>
+    </div>
+</div>
