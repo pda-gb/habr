@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-    <div class="container">
+    <div class="container" style="padding-left: 0 !important; padding-right: 0 !important;">
         {% include 'account/includes/inc_menu.html' %}
         <div class="row">
             <div class="artbox-content">
@@ -14,7 +14,7 @@
                     <p>У вас нет статей.</p>
                 {% endfor %}
             </div>
-            {% if articles.paginator.count > 15 %}
+            {% if articles.paginator.count > 20 %}
                 <!-- Начало блока пагинации -->
                 <br><br>
                 {% include 'account/includes/paginations/pagination_user_article.html' %}
