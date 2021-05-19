@@ -716,10 +716,10 @@ body {
 
 .artbox-unit {
     display: flex;
-    flex: 0 1 340px;
-    border: 1px solid #000;
+    border: 2px outset rgba(30,17,79,0.7);
     flex-direction: column;
-    height: 270px;
+    width: 310px;
+    height: 280px;
     margin-bottom: 30px;
 }
 
@@ -727,20 +727,22 @@ body {
     display: flex;
 }
 
-.artbox__row {
+.artbox-row {
     display: flex;
     align-items: center;
     flex-grow: 1;
 }
 
-.artbox__image {
+.artbox-image {
     margin: 3px;
-    width: 170px;
-    height: 120px;
+    width: 150px;
+    height: 100px;
     overflow: hidden;
+    border: 1px solid rgba(9,59,29,0.7);
+
 }
 
-.artbox__body {
+.artbox-body {
     margin: 5px;
     display: flex;
     flex-direction: column;
@@ -750,7 +752,7 @@ body {
 
 .artbox-title {
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 500;
     margin-bottom: 10px;
 }
@@ -768,6 +770,63 @@ body {
 
 .complains label {
     display: none;
+}
+.artbox-buttons a {
+    font-size: 14px;
+    padding: 4px !important;
+}
+
+.artbox-unit div h1 {
+    font-size: 14px;
+}
+
+.artbox-moder-message {
+    display: flex;
+    justify-content: space-around;
+    font-size: 13px;
+    text-align: center;
+}
+
+.moder-draft {
+    opacity: 1 !important;
+    background-color: grey;
+    font-weight: 500;
+}
+
+.moder-reject {
+    opacity: 1 !important;
+    background-color: orangered;
+    font-weight: 500;
+}
+
+.moder-check {
+    opacity: 1 !important;
+    background-color: #a19530;
+    font-weight: 500;
+}
+
+.moder-accept {
+    opacity: 1 !important;
+    background-color: green;
+    font-weight: 500;
+}
+
+.moder-message-box {
+    width: 72px;
+    height: 23px;
+    border: 1px solid #000;
+    border-radius: 8px;
+    opacity: 0.4;
+}
+
+.moder-reason {
+    width: 100%;
+    height: 54px;
+    font-size: 12px;
+    margin: 5px;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 @media (max-width: 1200px) {
