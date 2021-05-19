@@ -19,7 +19,7 @@
                         <a href="{% url 'articles:author_profile' value.author.id %}" class="post-author">
                             {{ value.author }}
                         </a>
-                        &nbsp;прокомментировал&nbsp;
+                        &nbsp;коммент к статье&nbsp;
                         <a href="{% url 'articles:article' value.article.id %}">
                             {{ value.article|truncatechars:30 }}</a>
                     </div>
@@ -46,7 +46,7 @@
                         <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
                             {{ value.user }}
                         </a>
-                        &nbsp; &#128077; &nbsp;
+                        &nbsp; <img class ="img-notif" src="{% static 'svg/like(filled).svg' %}"/> &nbsp;
                         <a href="{% url 'articles:article' value.article.id %}">{{ value.article|truncatechars:30 }}</a>
                     </div>
                     {% include 'articles/includes/inc_btn_del_notification.html' %}
@@ -58,7 +58,7 @@
                         <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
                             {{ value.user }}
                         </a>
-                        &nbsp; &#128078; &nbsp;
+                        &nbsp; <img class ="img-notif" src="{% static 'svg/dislike(filled).svg' %}"/> %} &nbsp;
                         <a href="{% url 'articles:article' value.article.id %}">{{ value.article|truncatechars:30 }}</a>
                     </div>
                     {% include 'articles/includes/inc_btn_del_notification.html' %}
@@ -71,7 +71,7 @@
                         <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
                             {{ value.user }}
                         </a>
-                        &nbsp; &#128077; карму&nbsp;
+                        &nbsp; <img class ="img-notif" src="{% static 'svg/like(filled).svg' %}"/> карму&nbsp;
                     </div>
                     {% include 'articles/includes/inc_btn_del_notification.html' %}
                 </div>
@@ -82,7 +82,7 @@
                         <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
                             {{ value.user }}
                         </a>
-                        &nbsp; &#128078; карму&nbsp;
+                        &nbsp; <img class ="img-notif" src="{% static 'svg/dislike(filled).svg' %}"/> карму&nbsp;
                     </div>
                     {% include 'articles/includes/inc_btn_del_notification.html' %}
                 </div>
@@ -93,7 +93,7 @@
                         <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
                             {{ value.user }}
                         </a>
-                        &nbsp; &#128077; комментарий&nbsp;
+                        &nbsp; <img class ="img-notif" src="{% static 'svg/like(filled).svg' %}"/> комментарий&nbsp;
                         <a >{{ value.comment.body|truncatechars:30 }}</a>
                     </div>
                     {% include 'articles/includes/inc_btn_del_notification.html' %}
@@ -105,7 +105,7 @@
                         <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
                             {{ value.user }}
                         </a>
-                        &nbsp; &#128078; комментарий&nbsp;
+                        &nbsp; <img class ="img-notif" src="{% static 'svg/dislike(filled).svg' %}"/> комментарий&nbsp;
                         <a >{{ value.comment.body|truncatechars:30 }}</a>
                     </div>
                     {% include 'articles/includes/inc_btn_del_notification.html' %}

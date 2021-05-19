@@ -829,6 +829,11 @@ body {
     flex-wrap: wrap;
 }
 
+.img-notif {
+    width: 15px;
+    margin: -5px 3px 0 3px;
+}
+
 @media (max-width: 1200px) {
     .container {
         max-width: 98%;

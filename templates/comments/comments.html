@@ -8,14 +8,10 @@
             {% for comment in comments %}
                 {% if comment.parent == Null %}
                     {#     якорь      #}
-                    <span id="c.{{ comment.id }}"></span>
+                    <span id="id{{ comment.id }}"></span>
                     <li class="li-reply-comment">
                         <div class="main-comment-section col-md-12" id='CommentId-{{ comment.id }}'>
                             <div>
-                                <div style="display: inline-block; color: #457102">
-                                    <a title="комментарий #{{ comment.id }}" style="color: #457102"
-                                       href="#c.{{ comment.id }}"># |</a>
-                                </div>
                                 <div style="display: inline-block"><a
                                         href="{% url 'articles:author_profile' comment.author.id %}"
                                         class="post-author comment-author">
@@ -24,6 +20,12 @@
                                     <small>{{ comment.author }}</small>
                                 </a></div>
                                 <div style="display: inline-block"><span>{{ comment.date }}</span></div>
+                                <div style="display: inline-block">
+                                    <a title="Ссылка на данный комментарий #{{ comment.id }}" style="color: #192801"
+                                       href="#id{{ comment.id }}">  < --
+{#                                        <img src="{% static 'svg/arrow-address-back_icon-icons.com_54065.svg' %}" alt="">#}
+                                    </a>
+                                </div>
                             </div>
                             <div class="comment-text">
                                 {% if comment.is_active %}
