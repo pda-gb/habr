@@ -20,21 +20,21 @@
                                     <small>{{ comment.author }}</small>
                                 </a></div>
                                 <div style="display: inline-block"><span>{{ comment.date }}</span></div>
-{#                                <div style="display: inline-block">#}
-{#                                    <a title="Ссылка на данный комментарий #{{ comment.id }}" style="color: #192801"#}
-{#                                       href="#id{{ comment.id }}">  < --#}
-{#                                        <img src="{% static 'svg/arrow-address-back_icon-icons.com_54065.svg' %}" alt="">#}
-{#                                    </a>#}
-{#                                </div>#}
+                                {#                                <div style="display: inline-block">#}
+                                {#                                    <a title="Ссылка на данный комментарий #{{ comment.id }}" style="color: #192801"#}
+                                {#                                       href="#id{{ comment.id }}">  < --#}
+                                {#                                        <img src="{% static 'svg/arrow-address-back_icon-icons.com_54065.svg' %}" alt="">#}
+                                {#                                    </a>#}
+                                {#                                </div>#}
                             </div>
                             <div class="comment-text">
                                 {% if comment.is_active %}
                                     <div>{{ comment.body }}</div>
                                 {% else %}
-                                    <div style="background-color: rgba(93,101,116,0.6)">
-                                        <h1>Комментарий удалён модератором</h1>
-                                        <h4>Причина:</h4>
-                                        {{ comment.related_comment.all.0.text_reason }}
+                                    <div>
+                                        <h6 style="color: darkred">Комментарий удалён модератором</h6>
+                                        <span style="color: #6c6c6c">
+                                            {{ comment.related_comment.all.0.text_reason|truncatechars:60 }}</span>
                                     </div>
                                 {% endif %}
                             </div>
@@ -79,32 +79,36 @@
                                     {% for foo in comment.related_comment.all %}
                                         {% if foo.status == None %}
                                             <div>
-                                                <br>
-                                                <div><h4 style="background-color: #ff9933">Жалоба на статью в процессе
-                                                    рассмотрения</h4></div>
+                                                <div style="margin-left: 5px; display: flex; color: #990000">
+                                                    <img src="{% static 'svg/complaints_push.svg' %}" alt=""/>
+                                                    <div style="font-size: 13px">Жалоба оставлена</div>
+                                                </div>
                                             </div>
 
                                             <!-- Начало блока жалобы для модератора -->
                                             {% if is_moderator %}
-                                                <hr><br>
-                                                <div>
-                                                    <div>
-                                                        <h4 style="background-color: #cb2027">Блок модератора</h4>
+                                                <hr>
+                                                <div class="moderator-block">
+                                                    <div class="mt-4 mb-2">
+                                                        <h5>Блок модератора</h5>
                                                     </div>
-                                                    <div style="background-color: rgba(50,146,208,0.44)">
-                                                        <h4>Жалоба:</h4>
-                                                        {{ comment.related_comment.all.0.text_complain }}
+                                                    <div style="text-align: center">
+                                                        <h6 style="opacity: 0.7">жалоба:</h6>
+                                                        <div CLASS="moderator-text-compl">
+                                                            {{ comment.related_comment.all.0.text_complain|truncatechars:100 }}
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <a class="btn btn-outline-danger mt-1" title=""
-                                                           href="{% url 'moderator:ban_comment' comment.related_comment.all.0.id %}">Забанить
-                                                        </a>
-                                                    </div>
-                                                    <div>
-                                                        <a class="btn btn-outline-success mt-1" title=""
-                                                           href="{% url 'moderator:no_ban_comment' comment.related_comment.all.0.id %}">Отклонить
-                                                            жалобу
-                                                        </a>
+                                                    <div class="moderator-block-buttons mt-1">
+                                                        <div>
+                                                            <a class="btn btn-sm mt-1 bcgrnd bcgrnd_green" title=""
+                                                               href="{% url 'moderator:no_ban_comment' comment.related_comment.all.0.id %}">Отклонить
+                                                            </a>
+                                                        </div>
+                                                        <div>
+                                                            <a class="btn btn-sm mt-1 bcgrnd bcgrnd_red" title=""
+                                                               href="{% url 'moderator:ban_comment' comment.related_comment.all.0.id %}">Забанить
+                                                            </a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <hr>
