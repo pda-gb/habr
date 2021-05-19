@@ -5,9 +5,12 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 
+from apps.articles.models import Article
 from apps.authorization.models import HabrUser
-from apps.moderator.forms import BannedUserForm, RemarkCreateForm, ComplainCreateForm
-from apps.moderator.models import BannedUser, VerifyArticle, ComplainToArticle, ComplainToComment
+from apps.moderator.forms import BannedUserForm, RemarkCreateForm,\
+    ComplainCreateForm
+from apps.moderator.models import BannedUser, VerifyArticle,\
+    ComplainToArticle, ComplainToComment
 
 
 def complaints(request):
@@ -144,12 +147,13 @@ def complain_to_article(request, pk):
                   page_data)
 
 
-def complain_to_comment(request, pk):
+def complain_to_comment(request, pk, pk_article=None):
     """Жалоба на комментарий"""
     form_complain = ComplainCreateForm(request.POST or None)
     page_data = {
         "pk": pk,
         "form_complain": form_complain,
+        "pk_article": pk_article,
     }
     return render(request, 'moderator/form_complain_comment.html',
                   page_data)
@@ -170,7 +174,7 @@ def send_complain_to_article(request, pk):
     return HttpResponseRedirect(reverse("articles:main_page"))
 
 
-def send_complain_to_comment(request, pk):
+def send_complain_to_comment(request, pk, pk_article=None):
     """отправка жалобы на комментарий на модерацию"""
     if request.method == 'POST':
         form_complain = ComplainCreateForm(request.POST or None)
@@ -182,7 +186,10 @@ def send_complain_to_comment(request, pk):
                 )
     else:
         form_complain = ComplainCreateForm()
-    return HttpResponseRedirect(reverse("articles:main_page"))
+    if pk_article is None:
+        return HttpResponseRedirect(reverse("articles:main_page"))
+    return HttpResponseRedirect(reverse("articles:article",
+                                        args=(pk_article,)))
 
 
 def ban_article(request, pk):
@@ -196,10 +203,10 @@ def no_ban_article(request, pk):
 
 
 def ban_comment(request, pk):
-
+    ComplainToComment.reject_comment(pk)
     return HttpResponseRedirect(reverse("moderator:complaints"))
 
 
 def no_ban_comment(request, pk):
-
+    ComplainToComment.allow_comment(pk)
     return HttpResponseRedirect(reverse("moderator:complaints"))

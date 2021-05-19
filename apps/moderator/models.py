@@ -2,7 +2,6 @@ import datetime
 
 from django.core.mail import send_mail
 from django.db import models, transaction
-from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 
 from apps.articles.models import Article
@@ -85,7 +84,7 @@ class BannedUser(models.Model):
 
 class ComplainToComment(models.Model):
     """Жалоба на комментарий"""
-    comment = models.ForeignKey(Comment,
+    comment = models.ForeignKey(Comment, related_name="related_comment",
                                 on_delete=models.DO_NOTHING)
     status = models.BooleanField(null=True,
                                  verbose_name="статус проверки",
@@ -115,6 +114,30 @@ class ComplainToComment(models.Model):
     @staticmethod
     def get_all_complaints():
         return ComplainToComment.objects.filter(status=None)
+
+    @staticmethod
+    def get_complaints_of_article(id_article):
+        """жалобы на комментарии текущей статьи"""
+
+        return ComplainToComment.objects.filter(status=None,
+                                                comment__article=id_article)
+
+    @staticmethod
+    def allow_comment(id_complain):
+        """отклонить жалобу"""
+        if ComplainToComment.objects.filter(id=id_complain).exists():
+            ComplainToComment.objects.filter(id=id_complain) \
+                .delete()
+
+    @staticmethod
+    @transaction.atomic()
+    def reject_comment(id_complain):
+        """забанить"""
+        if ComplainToComment.objects.filter(id=id_complain).exists():
+            ComplainToComment.objects.filter(id=id_complain) \
+                .update(status=True)
+            Comment.objects.filter(related_comment=id_complain) \
+                .update(is_active=False)
 
     class Meta:
         verbose_name = "Жалоба на комментарий"
@@ -158,7 +181,7 @@ class ComplainToArticle(models.Model):
     def allow_article(id_complain):
         """отклонить жалобу"""
         if ComplainToArticle.objects.filter(id=id_complain).exists():
-            ComplainToArticle.objects.filter(id=id_complain)\
+            ComplainToArticle.objects.filter(id=id_complain) \
                 .update(status=False)
 
     @staticmethod
@@ -166,9 +189,9 @@ class ComplainToArticle(models.Model):
     def reject_article(id_complain):
         """забанить"""
         if ComplainToArticle.objects.filter(id=id_complain).exists():
-            ComplainToArticle.objects.filter(id=id_complain)\
+            ComplainToArticle.objects.filter(id=id_complain) \
                 .update(status=True)
-            Article.objects.filter(ban_article=id_complain)\
+            Article.objects.filter(ban_article=id_complain) \
                 .update(is_active=False)
 
     class Meta:

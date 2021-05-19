@@ -5,7 +5,7 @@
         <div style="max-width: 400px">
             <h1 style="text-align: center">Причина жалобы на комментарий</h1>
             <br>
-            <form class="" action="{% url 'moderator:send_complain_to_comment' pk %}" method="post"
+            <form class="" action="{% url 'moderator:send_complain_to_comment' pk pk_article %}" method="post"
                   enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form_complain.as_p }}

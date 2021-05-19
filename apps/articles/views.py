@@ -15,8 +15,8 @@ from apps.authorization.models import HabrUserProfile
 from apps.comments.forms import CommentCreateForm
 from apps.comments.models import Comment, Sorted, CommentLikesViewed, \
     CommentDislikesViewed
-from apps.moderator.models import BannedUser, Moderator, VerifyArticle,\
-    ComplainToArticle
+from apps.moderator.models import BannedUser, Moderator, VerifyArticle, \
+    ComplainToArticle, ComplainToComment
 
 
 def main_page(request, pk=None, page=1):
@@ -94,6 +94,7 @@ def article(request, pk=None):
     is_moderator = False
     status = False
     is_complained = None
+    is_complained_comments = None
     if current_article is None:
         return HttpResponseRedirect(reverse("articles:main_page"))
     if request.user.is_authenticated:
@@ -129,6 +130,8 @@ def article(request, pk=None):
         if is_moderator:
             status = VerifyArticle.get_status_verification_article(pk)
         is_complained = ComplainToArticle.article_is_complained(pk)
+        # is_complained_comments = ComplainToComment\
+        #     .get_complaints_of_article(pk)
 
     page_data = {
         "article": current_article,
@@ -142,6 +145,7 @@ def article(request, pk=None):
         "is_moderator": is_moderator,
         "status": status,
         "is_complained": is_complained,
+        # "is_complained_comments": is_complained_comments,
     }
     return render(request, "articles/article.html", page_data)
 
