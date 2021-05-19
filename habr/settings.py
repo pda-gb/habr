@@ -174,6 +174,8 @@ LOGOUT_REDIRECT_URL = '/'
 
 if DEBUG:
     DOMAIN_NAME = 'http://localhost:8000'
+else:
+    DOMAIN_NAME = 'http://185.20.227.181'
 
 # Запуск локального smtp сервера: python3 -m smtpd -n -c DebuggingServer localhost:25
 # Настройки для вывода сообщений о подтверждении регистрации в лог-файл\консоль
