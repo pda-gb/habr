@@ -69,7 +69,8 @@ class BannedUser(models.Model):
         subject = f'Блокировка пользователя {user.username}'
         message = f'Здравствуйте!\nВаш аккаунт был заблокирован' \
                   f' {"навсегда" if self.is_forever else f"на {self.num_days} дней"}\n' \
-                  f'по причине: {self.reason}'
+                  f'по причине: {self.reason}\n' \
+                  f'Есть жалобы и замечания? Отправляйте их по адресу: sputnik-seven@yandex.ru'
         return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
 
     def unset_ban_email(self):
