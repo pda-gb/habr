@@ -9,7 +9,7 @@ with open(BASE_DIR.joinpath("secret.json"), "r") as secret_file:
 
 SECRET_KEY = secret_value["SECRET_KEY"]
 
-DEBUG = secret_value.get("DEBUG", True)
+DEBUG = secret_value.get("DEBUG", False)
 
 ALLOWED_HOSTS = ["*"]
 
@@ -72,19 +72,19 @@ TEMPLATES = [
 WSGI_APPLICATION = "habr.wsgi.application"
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    },
-
     # "default": {
-    #     "ENGINE": "django.db.backends.postgresql",
-    #     "NAME": secret_value["DATABASE_NAME"],
-    #     "USER": secret_value["DATABASE_USER"],
-    #     "PASSWORD": secret_value["DATABASE_PASSWORD"],
-    #     # "HOST": secret_value["DATABASE_HOST"],
-    #     # "PORT": secret_value["DATABASE_PORT"],
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     # },
+
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": secret_value["DATABASE_NAME"],
+        "USER": secret_value["DATABASE_USER"],
+        "PASSWORD": secret_value["DATABASE_PASSWORD"],
+        # "HOST": secret_value["DATABASE_HOST"],
+        # "PORT": secret_value["DATABASE_PORT"],
+    },
 }
 # переключение настроек на postgresql
 # DATABASES["default"] = DATABASES["postgresql"]
@@ -116,7 +116,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-STATIC_ROOT = os.path.join(BASE_DIR, "static_dev")
+# STATIC_ROOT = os.path.join(BASE_DIR, "static_dev")
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
