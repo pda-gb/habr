@@ -4,19 +4,38 @@
     {% for child_comment in comment.comment_parent.all %}
         <ul style="list-style-type:none;">
             <div class="col-md-12 mt-2">
+                {#     якорь      #}
+                <span id="c.{{ child_comment.id }}"></span>
                 <li class="li-reply-comment">
                     <div class="main-comment-section col-md-12" id='CommentId-{{ child_comment.id }}'>
                         <div>
-                            <a href="{% url 'articles:author_profile' child_comment.author.id %}"
-                               class="post-author comment-author">
+                            <div style="display: inline-block; color: #457102FF">
+                                <a title="комментарий #{{ child_comment.id }}" style="color: #457102"
+                                   href="#c.{{ child_comment.id }}"># |</a>
+                            </div>
+                            <div style="display: inline-block"><a
+                                    href="{% url 'articles:author_profile' child_comment.author.id %}"
+                                    class="post-author comment-author">
                                 <img src="{{ child_comment.author.habruserprofile.avatar|media_folder_users }}"
                                      alt=""/>
                                 <small>{{ child_comment.author }}</small>
-                            </a>
-                            <span>{{ child_comment.date }}</span>
+                            </a></div>
+                            <div style="display: inline-block"><span>{{ child_comment.date }}</span></div>
+                        </div>
+                        <div>
+                            <span>Ответ на:
+                            <a href="#c.{{ child_comment.parent_id }}" style="color: #80db00"
+                               title="#{{ child_comment.parent_id }}">#</a>
+                                </span>
                         </div>
                         <div class="comment-text">
-                            <div>{{ child_comment.body }}</div>
+                            {% if child_comment.is_active %}
+                                <div>{{ child_comment.body }}</div>
+                            {% else %}
+                                <div style="background-color: rgba(93,101,116,0.6)">
+                                    <h1>Комментарий удалён модератором</h1>
+                                </div>
+                            {% endif %}
                         </div>
                         <span class='reply reply-comment' data-id="{{ child_comment.id }}">Ответить</span>
                         <form method="POST" class="comment-form" id="createChildCommentForm-{{ child_comment.id }}"
@@ -36,7 +55,8 @@
                                 <img src="{% static 'svg/like.svg' %}" alt="" id="like-{{ child_comment.id }}"
                                      class="comment_like"/>
                             {% endif %}
-                            <small class="green" id="likes{{ child_comment.id }}">{{ child_comment.likes.count }}</small>
+                            <small class="green"
+                                   id="likes{{ child_comment.id }}">{{ child_comment.likes.count }}</small>
                             {% if child_comment.id in comments_is_disliked %}
                                 <img src="{% static 'svg/dislike(filled).svg' %}" alt=""
                                      id="dislike-{{ child_comment.id }}" class="comment_dislike"/>
@@ -44,8 +64,62 @@
                                 <img src="{% static 'svg/dislike.svg' %}" alt="" id="dislike-{{ child_comment.id }}"
                                      class="comment_dislike"/>
                             {% endif %}
-                            <small class="red" id="dislikes{{ child_comment.id }}">{{ child_comment.dislikes.count }}</small>
-                        </div>  
+                            <small class="red"
+                                   id="dislikes{{ child_comment.id }}">{{ child_comment.dislikes.count }}</small>
+
+                            <!-- Начало блока статуса жалобы -->
+                            {% if child_comment.id == child_comment.related_comment.all.0.comment_id %}
+                                {% for foo in child_comment.related_comment.all %}
+                                    {% if foo.status == None %}
+                                        <div>
+                                            <br>
+                                            <div><h4 style="background-color: #ff9933">Жалоба на статью в процессе
+                                                рассмотрения</h4></div>
+                                        </div>
+
+                                        <!-- Начало блока жалобы для модератора -->
+                                        {% if is_moderator %}
+                                            <hr><br>
+                                            <div>
+                                                <div>
+                                                    <h4 style="background-color: #cb2027">Блок модератора</h4>
+                                                </div>
+                                                <div style="background-color: rgba(50,146,208,0.44)">
+                                                    <h4>Жалоба:</h4>
+                                                    {{ child_comment.related_comment.all.0.text_complain }}
+                                                </div>
+                                                <div>
+                                                    <a class="btn btn-outline-danger mt-1" title=""
+                                                       href="{% url 'moderator:ban_comment' child_comment.related_comment.all.0.id %}">Забанить
+                                                    </a>
+                                                </div>
+                                                <div>
+                                                    <a class="btn btn-outline-success mt-1" title=""
+                                                       href="{% url 'moderator:no_ban_comment' child_comment.related_comment.all.0.id %}">Отклонить
+                                                        жалобу
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        {% endif %}
+                                        <!-- Конец блока жалобы для модератора -->
+
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <!-- Начало блока кнопки жалобы -->
+                                <div style="margin: -5px 0 0 5px;">
+                                    <a title="Жалоба на комментарий"
+                                       href="{% url 'moderator:complain_to_comment' child_comment.id article.pk %}">
+                                        <img src="{% static 'svg/complaints.svg' %}" alt=""/>
+                                    </a>
+                                </div>
+                                <!-- Конец блока кнопки жалобы -->
+                            {% endif %}
+                            <!-- Конец блока статуса жалобы -->
+
+
+                        </div>
                         {% with comment=child_comment template_name='comments/includes/inc_tree_comments.html' %}
                             {% include template_name %}
                         {% endwith %}

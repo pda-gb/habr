@@ -1,0 +1,28 @@
+{#{% load static %}#}
+{#<div class='string__container'>#}
+{#    {% for article in articles %}#}
+{#        {{ article }}#}
+{#        <a href="{% url 'articles:article' article.article.id %}" class="bookmark__row col-12">#}
+{#            <div class="col-6 bord">{{ article.article.title|truncatewords:15 }}</div>#}
+{#            <div class="col-2 bord">#}
+{#                <p style="font-weight: 700; margin: 0">{{ article.article.author }}</p>#}
+                {#                                <img src="{{ article.author.habruserprofile.avatar }}" alt="ava"/>#}
+{#            </div>#}
+{#            <div class="col-1 bord">{{ article.user }}</div>#}
+{#            <div class="col-1">{{ article.created }}</div>#}
+{#        </a>#}
+{#    {% endfor %}#}
+{##}
+{#    {% for comment in comments %}#}
+{#        {{ comment.comment.id }}#}
+{#        <a href="#" class="bookmark__row col-12">#}
+{#            <div class="col-6 bord">{{ comment.comment|truncatewords:15 }}</div>#}
+{#            <div class="col-2 bord">#}
+{#                <p style="font-weight: 700; margin: 0">{{ comment.comment.author }}</p>#}
+                {#                                <img src="{{ article.author.habruserprofile.avatar }}" alt="ava"/>#}
+{#            </div>#}
+{#            <div class="col-1 bord">{{ comment.user }}</div>#}
+{#            <div class="col-1">{{ comment.created }}</div>#}
+{#        </a>#}
+{#    {% endfor %}#}
+{#</div>#}

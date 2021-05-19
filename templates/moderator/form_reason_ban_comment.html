@@ -3,12 +3,12 @@
 {% block content %}
     <div class="complains">
         <div style="max-width: 400px">
-            <h1 style="text-align: center">Комментарий для возврата статьи на доработку</h1>
+            <h1 style="text-align: center">Причина бана комментария</h1>
             <br>
-            <form class="" action="{% url 'moderator:return_article' pk %}" method="post"
+            <form class="" action="{% url 'moderator:send_ban_comment' pk %}" method="post"
                   enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ form_remark.as_p }}
+                {{ form_reason.as_p }}
                 <br>
                 <div style="display: flex; justify-content: space-around">
                     <div>

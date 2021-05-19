@@ -11,7 +11,7 @@
                 <div class="heading search-head mb-4">
                     <h4>По вашему запросу&nbsp;</h4>
                     <p class="search-text">"{{ value_search|truncatechars:20 }}"</p>
-                    <h4>&nbsp;найдено:</h4>
+                    <h4 style="color: green">&nbsp;найдено:</h4>
                 </div>
                 {% include 'articles/includes/string_output.html' %}
                 <!-- Начало блока пагинации -->
@@ -23,7 +23,7 @@
                 <div class="heading search-head mb-4">
                     <h4>По вашему запросу&nbsp;</h4>
                     <p class="search-text">"{{ value_search|truncatechars:20 }}"</p>
-                    <h4>&nbsp;ничего не найдено</h4>
+                    <h4 style="color: darkred">&nbsp;ничего не найдено</h4>
                 </div>
             {% endif %}
             

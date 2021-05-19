@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
+from django.urls import reverse
 
 from apps.articles.models import Article, LikesViewed, DislikesViewed
 from apps.authorization.models import HabrUser, KarmaPositiveViewed,\
@@ -14,7 +15,8 @@ from apps.authorization.models import HabrUserProfile
 from apps.comments.forms import CommentCreateForm
 from apps.comments.models import Comment, Sorted, CommentLikesViewed, \
     CommentDislikesViewed
-from apps.moderator.models import BannedUser, Moderator, VerifyArticle
+from apps.moderator.models import BannedUser, Moderator, VerifyArticle, \
+    ComplainToArticle, ComplainToComment
 
 
 def main_page(request, pk=None, page=1):
@@ -83,7 +85,7 @@ def hub(request, pk=None, page=1):
 def article(request, pk=None):
     hub_articles = Article.get_articles()
     last_articles = Article.get_last_articles(hub_articles)
-    current_article = get_object_or_404(Article, id=pk)
+    current_article = Article.get_article(pk)
     comments = Comment.get_comments(pk)
     form_comment = CommentCreateForm(request.POST or None)
     comments_is_liked = None
@@ -91,6 +93,10 @@ def article(request, pk=None):
     notifications = None
     is_moderator = False
     status = False
+    is_complained = None
+    is_complained_comments = None
+    if current_article is None:
+        return HttpResponseRedirect(reverse("articles:main_page"))
     if request.user.is_authenticated:
         notifications = notification(request)
 
@@ -123,6 +129,9 @@ def article(request, pk=None):
         is_moderator = Moderator.is_moderator(request.user.id)
         if is_moderator:
             status = VerifyArticle.get_status_verification_article(pk)
+        is_complained = ComplainToArticle.article_is_complained(pk)
+        # is_complained_comments = ComplainToComment\
+        #     .get_complaints_of_article(pk)
 
     page_data = {
         "article": current_article,
@@ -135,6 +144,8 @@ def article(request, pk=None):
         "comments_is_disliked": comments_is_disliked,
         "is_moderator": is_moderator,
         "status": status,
+        "is_complained": is_complained,
+        # "is_complained_comments": is_complained_comments,
     }
     return render(request, "articles/article.html", page_data)
 
@@ -256,12 +267,17 @@ def search_articles(request, page=1):
         articles_paginator = paginator.page(1)
     except EmptyPage:
         articles_paginator = paginator.page(paginator.num_pages)
+    if request.user.is_authenticated:
+        notifications = notification(request)
+    else:
+        notifications = None
     page_data = {
         "title": title,
         "last_articles": last_articles,
         "current_user": request.user,
         "articles": articles_paginator,
         "value_search": request.GET.get('search', ''),
+        "notifications": notifications,
     }
     return render(request, "articles/includes/search_articles.html", page_data)
 
@@ -343,7 +359,7 @@ def post_list_user(request, user_pk, page=1):
 
 
 def notification(request):
-    current_notifications = []
+    result_notification, current_notifications = [], []
     current_articles = Article.get_by_author(author_pk=request.user.pk)
     for itm_article in current_articles:
         likes = LikesViewed.objects.filter(article_id=itm_article.id,
@@ -387,7 +403,12 @@ def notification(request):
             current_notifications.append(("like_karma", like_karma))
         for dislike_karma in dislikes_karma:
             current_notifications.append(("dislike_karma", dislike_karma))
-    return current_notifications
+        for comment_like in comment_likes:
+            current_notifications.append (("comment_like", comment_like))
+        for comment_dislike in comment_dislikes:
+            current_notifications.append (("comment_dislike", comment_dislike))
+        result_notification = list(set(current_notifications))
+    return result_notification
 
 
 def mark_all_as_viewed(request):
@@ -397,10 +418,18 @@ def mark_all_as_viewed(request):
         LikesViewed.objects.filter(article_id=i.id).update(viewed=True)
         DislikesViewed.objects.filter(article_id=i.id).update(viewed=True)
         Comment.get_comments(i.id).update(viewed=True)
+        Comment.get_comments (i.id).filter (parent__author_id=request.user.pk
+                     ).update(viewed=True)
         CommentLikesViewed.objects.filter(
             comment__article_id = i.id).update(viewed=True)
         CommentDislikesViewed.objects.filter(
             comment__article_id = i.id).update(viewed=True)
+        KarmaPositiveViewed.objects.filter (
+            profile_author=request.user.pk).update(viewed=True)
+        KarmaNegativeViewed.objects.filter (
+            profile_author=request.user.pk).update (viewed=True)
+
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -413,6 +442,10 @@ def target_mark_as_viewed(request, target, pk):
         LikesViewed.objects.filter(id=pk).update(viewed=True)
     elif target == 'dislike':
         DislikesViewed.objects.filter(id=pk).update(viewed=True)
+    elif target == 'comment_like':
+        CommentLikesViewed.objects.filter(id=pk).update(viewed=True)
+    elif target == 'comment_dislike':
+        CommentDislikesViewed.objects.filter(id=pk).update(viewed=True)
     elif target == 'like_karma':
         KarmaPositiveViewed.objects.filter(id=pk).update(viewed=True)
     elif target == 'dislike_karma':
@@ -453,5 +486,6 @@ def all_notification(request):
         for comment_dislike in comment_dislikes:
             all_notification.append (("comment_dislike", comment_dislike))
         current_all_notification = list(set(all_notification))
+
     return current_all_notification
 

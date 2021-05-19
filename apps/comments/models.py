@@ -7,7 +7,8 @@ from apps.authorization.models import HabrUser, HabrUserProfile
 
 
 class Comment(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE,
+                                related_name="article")
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
                                on_delete=models.CASCADE)
     parent = models.ForeignKey("self", null=True, blank=True,
@@ -16,6 +17,7 @@ class Comment(models.Model):
                                )
     body = models.TextField(verbose_name="текст комментария")
     date = models.DateTimeField(verbose_name="дата", auto_now_add=True)
+    is_active = models.BooleanField(verbose_name="удален", default=True)
 
     likes = models.ManyToManyField(
         settings.AUTH_USER_MODEL,

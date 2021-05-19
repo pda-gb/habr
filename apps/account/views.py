@@ -149,7 +149,7 @@ def user_articles(request, page=1):
         articles_with_statuses = None
     # articles = Article.get_by_author(request.user.id)
 
-    paginator = Paginator(articles_with_statuses, 5)
+    paginator = Paginator(articles_with_statuses, 20)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:
@@ -367,19 +367,29 @@ def bookmarks_page(request, page=1):
 def notifications_page(request):
     notification_all= all_notification(request)
     title = f"Все ведомления {request.user}"
+    if request.user.is_authenticated:
+        notifications = notification(request)
+    else:
+        notifications = None
 
     page_data = {
         "title": title,
         "notification_all": notification_all,
+        "notifications": notifications,
     }
     return render(request, "account/notifications.html", page_data)
 
 
 def my_likes(request):
     title = f"Понравившиеся статьи"
+    if request.user.is_authenticated:
+        notifications = notification(request)
+    else:
+        notifications = None
     page_data = {
         "title": title,
         "all_my_likes": LikesViewed.get_likes(request),
+        "notifications": notifications,
     }
     return render (request, "account/my_likes.html", page_data)
 

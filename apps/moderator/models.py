@@ -83,24 +83,133 @@ class BannedUser(models.Model):
         return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
 
 
-class BannedComment(models.Model):
-    """Забаненный комментарий"""
-    wrong = models.ForeignKey(Comment,
-                              on_delete=models.DO_NOTHING)
+class ComplainToComment(models.Model):
+    """Жалоба на комментарий"""
+    comment = models.ForeignKey(Comment, related_name="related_comment",
+                                on_delete=models.DO_NOTHING)
+    status = models.BooleanField(null=True,
+                                 verbose_name="статус проверки",
+                                 help_text="None - комментарий в процессе "
+                                           "проверки,True - одобрение(бан) "
+                                           "комментария,"
+                                           " False - отказ(оставить)")
+    text_complain = models.TextField(blank=False,
+                                     verbose_name="Текст жалобы")
+    text_reason = models.TextField(default=False,
+                                   verbose_name="Текст причины бана")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             verbose_name="Пожаловался",
+                             on_delete=models.DO_NOTHING)
+    created = models.DateTimeField(verbose_name="дата", auto_now_add=True)
+
+    @staticmethod
+    def send_complain_to_comment(id_comment, text, id_user):
+        """отправка комментария на модерацию"""
+        if not ComplainToComment.objects.filter(comment=id_comment,
+                                                status=None).exists():
+            ComplainToComment.objects.create(
+                comment=Comment.objects.get(id=id_comment),
+                status=None,
+                text_complain=text,
+                user=HabrUser.objects.get(id=id_user)
+            )
+
+    @staticmethod
+    def get_all_complaints():
+        return ComplainToComment.objects.filter(status=None)
+
+    @staticmethod
+    def get_complaints_of_article(id_article):
+        """жалобы на комментарии текущей статьи"""
+
+        return ComplainToComment.objects.filter(status=None,
+                                                comment__article=id_article)
+
+    @staticmethod
+    def allow_comment(id_complain):
+        """отклонить жалобу"""
+        if ComplainToComment.objects.filter(id=id_complain).exists():
+            ComplainToComment.objects.filter(id=id_complain) \
+                .delete()
+
+    @staticmethod
+    @transaction.atomic()
+    def reject_comment(id_complain):
+        """забанить"""
+        if ComplainToComment.objects.filter(id=id_complain).exists():
+            ComplainToComment.objects.filter(id=id_complain) \
+                .update(status=True)
+            Comment.objects.filter(related_comment=id_complain) \
+                .update(is_active=False)
 
     class Meta:
-        verbose_name = "удалённый комментарий"
-        verbose_name_plural = "удалённые комментарии"
+        verbose_name = "Жалоба на комментарий"
+        verbose_name_plural = "Жалобы на  комментарии"
 
 
-class BannedArticle(models.Model):
-    """Забаненная статья"""
-    delete = models.ForeignKey(Article, help_text="удалённая статья",
-                               on_delete=models.CASCADE)
+class ComplainToArticle(models.Model):
+    """Жалоба на статью"""
+    article = models.ForeignKey(Article, help_text="удалённая статья",
+                                related_name="ban_article",
+                                on_delete=models.CASCADE)
+    status = models.BooleanField(null=True,
+                                 verbose_name="статус проверки",
+                                 help_text="None - статьи в процессе "
+                                           "проверки,True - одобрение(бан) "
+                                           "статьи, False - отказ(оставить)")
+    text_complain = models.TextField(blank=False,
+                                     verbose_name="Текст жалобы")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             verbose_name="Пожаловался",
+                             on_delete=models.DO_NOTHING)
+    created = models.DateTimeField(verbose_name="дата", auto_now_add=True)
+
+    @staticmethod
+    def send_complain_to_article(id_article, text, id_user):
+        """отправка жалобы на модерацию"""
+        if not ComplainToArticle.objects.filter(article=id_article,
+                                                status=None).exists():
+            ComplainToArticle.objects.create(
+                article=Article.objects.get(id=id_article),
+                status=None,
+                text_complain=text,
+                user=HabrUser.objects.get(id=id_user)
+            )
+
+    @staticmethod
+    def get_all_complaints():
+        return ComplainToArticle.objects.filter(status=None)
+
+    @staticmethod
+    def allow_article(id_complain):
+        """отклонить жалобу"""
+        if ComplainToArticle.objects.filter(id=id_complain).exists():
+            ComplainToArticle.objects.filter(id=id_complain) \
+                .update(status=False)
+
+    @staticmethod
+    @transaction.atomic()
+    def reject_article(id_complain):
+        """забанить"""
+        if ComplainToArticle.objects.filter(id=id_complain).exists():
+            ComplainToArticle.objects.filter(id=id_complain) \
+                .update(status=True)
+            Article.objects.filter(ban_article=id_complain) \
+                .update(is_active=False)
 
     class Meta:
-        verbose_name = "удалённая статья"
-        verbose_name_plural = "удалённые статьи"
+        verbose_name = "Жалоба на статью"
+        verbose_name_plural = "Жалобы на статьи"
+
+    @staticmethod
+    def article_is_complained(id_article):
+        """Возвращает жалобу или False"""
+        complain = False
+        if ComplainToArticle.objects.filter(article_id=id_article,
+                                            status=None).exists():
+            complain = ComplainToArticle.objects.get(article_id=id_article,
+                                                     status=None)
+        return complain
 
 
 class VerifyArticle(models.Model):
@@ -152,7 +261,7 @@ class VerifyArticle(models.Model):
         status = False
         if VerifyArticle.objects.filter(verification=pk_article).exists():
             is_verified = VerifyArticle.objects.get(verification=pk_article
-                                                       ).is_verified
+                                                    ).is_verified
             if is_verified is None:
                 status = True
 
@@ -175,7 +284,6 @@ class VerifyArticle(models.Model):
     #     else:
     #         status = None
     #     return status
-
 
     @staticmethod
     def get_articles_with_statuses(pk_author, draft=None):
@@ -200,7 +308,6 @@ class VerifyArticle(models.Model):
                 articles_with_statuses.append((article, 'not_checked'))
         return articles_with_statuses
 
-
     @staticmethod
     def get_all_articles_for_verifications():
         """получение всех статей на проверку"""
@@ -211,7 +318,6 @@ class VerifyArticle(models.Model):
             articles_to_review.append(itm.verification)
         return articles_to_review
 
-
     @staticmethod
     def allow_publishing(id_article):
         """Разрешение модератором публикации статьи"""
@@ -221,7 +327,6 @@ class VerifyArticle(models.Model):
         Article.objects.filter(id=id_article).update(published=now(),
                                                      updated=now())
 
-
     @staticmethod
     def return_article(text_remark, id_article):
         """отправка на доработку и с обязательной причиной отказа"""
@@ -230,7 +335,6 @@ class VerifyArticle(models.Model):
             remark=text_remark
         )
         Article.objects.filter(id=id_article)
-
 
     class Meta:
         verbose_name = "статья"
