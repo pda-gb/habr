@@ -106,7 +106,7 @@ a:hover {
 
 .post-content span p {
     display: flex;
-    justify-content: center;
+    /*justify-content: center;*/
 }
 
 .post-content img {
