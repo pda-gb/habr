@@ -1,0 +1,26 @@
+{% extends 'moderator/base.html' %}
+{% load my_tags %}
+{% block content %}
+    <div class="complains">
+        <div style="max-width: 400px">
+            <h1 style="text-align: center">Причина бана комментария</h1>
+            <br>
+            <form class="" action="{% url 'moderator:send_ban_comment' pk %}" method="post"
+                  enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form_reason.as_p }}
+                <br>
+                <div style="display: flex; justify-content: space-around">
+                    <div>
+                        <a href="#">
+                            <button style="width:104px" type="reset" class="btn btn-danger">Назад</button>
+                        </a>
+                    </div>
+                    <div>
+                        <input type="submit" value="Отправить" class="btn btn-outline-success">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

@@ -94,6 +94,8 @@ class ComplainToComment(models.Model):
                                            " False - отказ(оставить)")
     text_complain = models.TextField(blank=False,
                                      verbose_name="Текст жалобы")
+    text_reason = models.TextField(default=False,
+                                   verbose_name="Текст причины бана")
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              verbose_name="Пожаловался",
                              on_delete=models.DO_NOTHING)

@@ -31,6 +31,8 @@
                                 {% else %}
                                     <div style="background-color: rgba(93,101,116,0.6)">
                                         <h1>Комментарий удалён модератором</h1>
+                                        <h4>Причина:</h4>
+                                        {{ comment.related_comment.all.0.text_reason }}
                                     </div>
                                 {% endif %}
                             </div>

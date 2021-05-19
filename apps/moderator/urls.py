@@ -20,5 +20,6 @@ urlpatterns = [
     path("ban_article/<int:pk>/", moderator.ban_article, name='ban_article'),
     path("no_ban_article/<int:pk>/", moderator.no_ban_article, name='no_ban_article'),
     path("ban_comment/<int:pk>/", moderator.ban_comment, name='ban_comment'),
+    path("send_ban_comment/<int:pk>/", moderator.send_ban_comment, name='send_ban_comment'),
     path("no_ban_comment/<int:pk>/", moderator.no_ban_comment, name='no_ban_comment'),
 ]

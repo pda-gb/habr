@@ -3,13 +3,12 @@ from datetime import datetime
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 
-from apps.articles.models import Article
 from apps.authorization.models import HabrUser
-from apps.moderator.forms import BannedUserForm, RemarkCreateForm,\
-    ComplainCreateForm
-from apps.moderator.models import BannedUser, VerifyArticle,\
+from apps.moderator.forms import BannedUserForm, RemarkCreateForm, \
+    ComplainCreateForm, ReasonCreateForm
+from apps.moderator.models import BannedUser, VerifyArticle, \
     ComplainToArticle, ComplainToComment
 
 
@@ -168,7 +167,7 @@ def send_complain_to_article(request, pk):
                 pk,
                 request.POST["text_complain"],
                 request.user.pk
-                )
+            )
     else:
         form_complain = ComplainCreateForm()
     return HttpResponseRedirect(reverse("articles:main_page"))
@@ -183,7 +182,7 @@ def send_complain_to_comment(request, pk, pk_article=None):
                 pk,
                 request.POST["text_complain"],
                 request.user.pk
-                )
+            )
     else:
         form_complain = ComplainCreateForm()
     if pk_article is None:
@@ -203,7 +202,25 @@ def no_ban_article(request, pk):
 
 
 def ban_comment(request, pk):
+    form_reason = ReasonCreateForm(request.POST or None)
+    page_data = {
+        "pk": pk,
+        "form_reason": form_reason,
+    }
+    return render(request, 'moderator/form_reason_ban_comment.html',
+                  page_data)
+
+
+def send_ban_comment(request, pk):
     ComplainToComment.reject_comment(pk)
+    if request.method == 'POST':
+        form_reason = ReasonCreateForm(request.POST or None)
+        if form_reason.is_valid():
+            ComplainToComment.objects.filter(pk=pk).update(
+                text_reason=request.POST["text_reason"]
+            )
+    else:
+        form_reason = ReasonCreateForm()
     return HttpResponseRedirect(reverse("moderator:complaints"))
 
 
