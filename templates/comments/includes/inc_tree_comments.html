@@ -9,10 +9,10 @@
                 <li class="li-reply-comment">
                     <div class="main-comment-section col-md-12" id='CommentId-{{ child_comment.id }}'>
                         <div>
-                            <div style="display: inline-block; color: #457102FF; opacity: 0">
-                                <a title="комментарий #{{ child_comment.id }}" style="color: #457102"
-                                   href="#c.{{ child_comment.id }}">.</a>
-                            </div>
+                            {#                            <div style="display: inline-block; color: #457102FF; opacity: 0">#}
+                            {#                                <a title="комментарий #{{ child_comment.id }}" style="color: #457102"#}
+                            {#                                   href="#c.{{ child_comment.id }}">.</a>#}
+                            {#                            </div>#}
                             <div style="display: inline-block"><a
                                     href="{% url 'articles:author_profile' child_comment.author.id %}"
                                     class="post-author comment-author">
@@ -21,11 +21,19 @@
                                 <small>{{ child_comment.author }}</small>
                             </a></div>
                             <div style="display: inline-block"><span>{{ child_comment.date }}</span></div>
+                            <div style="display: inline-block">
+                                <a title="Ссылка на данный комментарий #{{ child_comment.id }}" style="color: #192801"
+                                   href="#id{{ child_comment.id }}"> < --
+                                    {#                                        <img src="{% static 'svg/arrow-address-back_icon-icons.com_54065.svg' %}" alt="">#}
+                                </a>
+                            </div>
                         </div>
                         <div>
                             <div style="display: flex; font-size: 10px; margin-top: -9px; margin-bottom: 5px">
                                 <div>в ответ &ensp;</div>
-                                <div style="color: darkgreen">{{ child_comment.parent.author }}</div>
+                                <a href="#id{{ child_comment.parent.id }}">
+                                    <div style="color: darkgreen">{{ child_comment.parent.author }}</div>
+                                </a>
                             </div>
                         </div>
                         <div class="comment-text">
