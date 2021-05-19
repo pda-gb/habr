@@ -22,8 +22,7 @@ def create_img_body(keyword_img):
         keywords=[keyword_img[0], keyword_img[randint(1, 4)]],
         writable=False
     )
-    img = f'<img alt=\"\" src=\"{img_link}\" style=\"height:500px; ' \
-          f'width:500px\" />\n'
+    img = f'<img alt=\"\" src=\"{img_link}\" style=\"height:500px\" />\n'
     return choice([img, None, None])
 
 

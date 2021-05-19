@@ -3,7 +3,7 @@
     <div class="me-2">
         {% if article.liked is True %}
             <img src="{% static 'svg/like(filled).svg' %}" alt="" id="like"/>
-        {% else  %}
+        {% else %}
             <img src="{% static 'svg/like.svg' %}" alt="" id="like"/>
         {% endif %}
         <small class="green" id="likes_count">{{ article.likes.count }}</small>
@@ -29,4 +29,46 @@
         <img src="{% static 'svg/comment.svg' %}" alt=""/>
         <small class="text-muted">{{ comments|length }}</small>
     </div>
+    <!-- Начало блока жалобы -->
+    {% if is_complained %}
+        <div>
+            <br>
+            <div><h4 style="background-color: #ff9933">Жалоба на статью в процессе рассмотрения</h4></div>
+        </div>
+    {% else %}
+        <div>
+            <div style="margin-left: 5px;">
+                <a title="Жалоба на статью" href="{% url 'moderator:complain_to_article' article.pk %}">
+                    <img src="{% static 'svg/complaints.svg' %}" alt=""/>
+                </a>
+            </div>
+        </div>
+    {% endif %}
+    <!-- Конец блока жалобы -->
 </div>
+
+<!-- Начало блока жалобы для модератора -->
+{% if is_moderator and is_complained %}
+    <hr>
+    <div>
+        <div>
+            <h4 style="background-color: #cb2027">Блок модератора</h4>
+        </div>
+        <div style="background-color: rgba(50,146,208,0.44)">
+            <h4>Жалоба:</h4>
+            {{ is_complained.text_complain }}
+        </div>
+        <div>
+            <a class="btn btn-outline-danger mt-1" title=""
+               href="{% url 'moderator:ban_article' is_complained.id %}">Забанить
+            </a>
+        </div>
+        <div>
+            <a class="btn btn-outline-success mt-1" title=""
+               href="{% url 'moderator:no_ban_article' is_complained.id %}">Отклонить жалобу
+            </a>
+        </div>
+    </div>
+    <hr>
+{% endif %}
+<!-- Конец блока жалобы для модератора -->

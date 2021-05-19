@@ -15,9 +15,9 @@
                 <div class="post-head">
                     <h1>{{ article.title }}</h1>
                     {#            загрузка заглавной картинки    #}
-                        <div class="main-image-box">
-                            <img class="main-image" src="{{ article.image|media_folder_images }}" alt="main-image"/>
-                        </div>
+                    <div class="main-image-box">
+                        <img class="main-image" src="{{ article.image|media_folder_images }}" alt="main-image"/>
+                    </div>
                     <div>
                         <a href="{% url 'articles:author_profile' article.author_id %}" class="post-author">
                             {#            загрузка аваттарки    #}
@@ -110,6 +110,7 @@
                 {% include 'articles/includes/inc_moderatos_panel.html' %}
             {% endif %}
             <!-- Конец блока модерации статьи -->
+
             <!-- Начало блока комментариев -->
             {% if comments.count == 0 and is_moderator %}
                 {#    не показывать на проверке статье блок комментариев, если их нет    #}
@@ -295,7 +296,7 @@
             });
         </script>
     {% endif %}
-    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+    {#    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>#}
     <script>
         function sendCommentAjax(fieldName, id) {
             $.ajax({

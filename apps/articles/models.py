@@ -4,6 +4,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
@@ -209,7 +210,11 @@ class Article(models.Model):
         """
         Returns article
         """
-        return Article.objects.get(id=id_article)
+        article = get_object_or_404(Article, id=id_article)
+        # если удалена
+        if article.is_active is False:
+            article = None
+        return article
 
     @staticmethod
     def get_annotation(word_count: int) -> tuple:
@@ -263,28 +268,31 @@ class Article(models.Model):
         )
 
     @staticmethod
-    def get_bookmarks(id):
-        objects = Article.bookmarks.through.objects.filter(habruser_id=id)
+    def get_bookmarks(id_user):
+        objects = Article.bookmarks.through.objects.filter(
+            habruser_id=id_user,
+            article_id__is_active=True  # удалённые и забаненные не показывать
+        )
         bookmarks = []
         for i in objects:
             bookmarks.append(Article.get_article(i.article_id))
         return bookmarks
 
     @staticmethod
-    def del_article(id):
+    def del_article(id_article):
         """
         delete(is_active = False) article
         """
-        art = Article.objects.get(id=id)
+        art = Article.objects.get(id=id_article)
         art.is_active = False
         art.save()
 
     @staticmethod
-    def draft_article(id):
+    def draft_article(id_article):
         """
         turn draft article(True/False)
         """
-        art = Article.objects.get(id=id)
+        art = Article.objects.get(id=id_article)
         if art.draft is False:
             art.draft = True
         else:

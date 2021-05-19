@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
+from django.urls import reverse
 
 from apps.articles.models import Article, LikesViewed, DislikesViewed
 from apps.authorization.models import HabrUser, KarmaPositiveViewed,\
@@ -14,7 +15,8 @@ from apps.authorization.models import HabrUserProfile
 from apps.comments.forms import CommentCreateForm
 from apps.comments.models import Comment, Sorted, CommentLikesViewed, \
     CommentDislikesViewed
-from apps.moderator.models import BannedUser, Moderator, VerifyArticle
+from apps.moderator.models import BannedUser, Moderator, VerifyArticle, \
+    ComplainToArticle, ComplainToComment
 
 
 def main_page(request, pk=None, page=1):
@@ -83,7 +85,7 @@ def hub(request, pk=None, page=1):
 def article(request, pk=None):
     hub_articles = Article.get_articles()
     last_articles = Article.get_last_articles(hub_articles)
-    current_article = get_object_or_404(Article, id=pk)
+    current_article = Article.get_article(pk)
     comments = Comment.get_comments(pk)
     form_comment = CommentCreateForm(request.POST or None)
     comments_is_liked = None
@@ -91,6 +93,10 @@ def article(request, pk=None):
     notifications = None
     is_moderator = False
     status = False
+    is_complained = None
+    is_complained_comments = None
+    if current_article is None:
+        return HttpResponseRedirect(reverse("articles:main_page"))
     if request.user.is_authenticated:
         notifications = notification(request)
 
@@ -123,6 +129,9 @@ def article(request, pk=None):
         is_moderator = Moderator.is_moderator(request.user.id)
         if is_moderator:
             status = VerifyArticle.get_status_verification_article(pk)
+        is_complained = ComplainToArticle.article_is_complained(pk)
+        # is_complained_comments = ComplainToComment\
+        #     .get_complaints_of_article(pk)
 
     page_data = {
         "article": current_article,
@@ -135,6 +144,8 @@ def article(request, pk=None):
         "comments_is_disliked": comments_is_disliked,
         "is_moderator": is_moderator,
         "status": status,
+        "is_complained": is_complained,
+        # "is_complained_comments": is_complained_comments,
     }
     return render(request, "articles/article.html", page_data)
 

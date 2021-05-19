@@ -4,12 +4,12 @@
 {% block content %}
     {% include 'moderator/includes/inc_menu.html' %}
     <div class='string__container'>
-        <div class="bookmark__row col-12">
-            <div class="col-1 bord">Картинка</div>
-            <div class="col-6 bord">Статья</div>
-            <div class="col-2 bord">Автор</div>
-            <div class="col-1 bord">Хаб</div>
-            <div class="col-1 bord">Создана</div>
+        <div class="moder-article-row" style="min-height: 35px !important; font-weight: 500">
+            <div class="col-lg-2 col-4 bord">Создана</div>
+            <div class="col-4 bord">Статья</div>
+            <div class="col-lg-2 col-4 bord">Автор</div>
+            <div class="col-lg-3 mobile-hide bord">Хаб</div>
+            <div class="col-lg-1 mobile-hide">Картинка</div>
         </div>
     </div>
     {% include 'moderator/includes/inc_articles_string_output.html' %}

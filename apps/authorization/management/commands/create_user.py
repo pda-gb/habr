@@ -24,7 +24,7 @@ class Command(BaseCommand):
         number = options["number"]
         for i in range(number):
             user = HabrUser(
-                username=person.username(template="UU_d"),
+                username=person.username(template="U_d"),
                 email=person.email(domains=("yandex.ru", "gmail.com")),
                 password=person.password(length=8, hashed=False),
             )
