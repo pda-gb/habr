@@ -9,9 +9,9 @@
                 <li class="li-reply-comment">
                     <div class="main-comment-section col-md-12" id='CommentId-{{ child_comment.id }}'>
                         <div>
-                            <div style="display: inline-block; color: #457102FF">
+                            <div style="display: inline-block; color: #457102FF; opacity: 0">
                                 <a title="комментарий #{{ child_comment.id }}" style="color: #457102"
-                                   href="#c.{{ child_comment.id }}"># |</a>
+                                   href="#c.{{ child_comment.id }}">.</a>
                             </div>
                             <div style="display: inline-block"><a
                                     href="{% url 'articles:author_profile' child_comment.author.id %}"
@@ -23,10 +23,10 @@
                             <div style="display: inline-block"><span>{{ child_comment.date }}</span></div>
                         </div>
                         <div>
-                            <span>Ответ на:
-                            <a href="#c.{{ child_comment.parent_id }}" style="color: #80db00"
-                               title="#{{ child_comment.parent_id }}">#</a>
-                                </span>
+                            <div style="display: flex; font-size: 10px; margin-top: -9px; margin-bottom: 5px">
+                                <div>в ответ &ensp;</div>
+                                <div style="color: darkgreen">{{ child_comment.parent.author }}</div>
+                            </div>
                         </div>
                         <div class="comment-text">
                             {% if child_comment.is_active %}

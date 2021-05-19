@@ -12,9 +12,9 @@
                     <li class="li-reply-comment">
                         <div class="main-comment-section col-md-12" id='CommentId-{{ comment.id }}'>
                             <div>
-                                <div style="display: inline-block; color: #457102">
+                                <div style="display: inline-block; color: #457102FF; opacity: 0">
                                     <a title="комментарий #{{ comment.id }}" style="color: #457102"
-                                       href="#c.{{ comment.id }}"># |</a>
+                                       href="#c.{{ comment.id }}">.</a>
                                 </div>
                                 <div style="display: inline-block"><a
                                         href="{% url 'articles:author_profile' comment.author.id %}"
