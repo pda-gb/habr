@@ -149,7 +149,7 @@ def user_articles(request, page=1):
         articles_with_statuses = None
     # articles = Article.get_by_author(request.user.id)
 
-    paginator = Paginator(articles_with_statuses, 20)
+    paginator = Paginator(articles_with_statuses, 12)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:
@@ -310,7 +310,7 @@ def edit_article(request, pk):
                     verification=edit_article.pk).delete()
             edit_article.save()
             is_success = True
-            # return HttpResponseRedirect(reverse("account:user_articles"))
+            return HttpResponseRedirect(reverse("account:user_articles"))
         else:
             is_fail = True
             for error in edit_form.errors:

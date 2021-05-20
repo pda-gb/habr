@@ -1,137 +1,140 @@
 {% load my_tags %}
 {% load static %}
 
-<div class="artbox-unit">
-    <div class="artbox-info">
-        <div class="artbox-row">
-            <div class="artbox-image">
-                <img class="main-image" src="{{ article.0.image|media_folder_images }}" alt="main-image"/>
-            </div>
-            <div class="artbox-body">
-                <div><span class="text-muted" style="font-size: 12px !important;">{{ article.0.published }}</span></div>
-                <div class="mt-2">
-                    <p style="margin-bottom: 1px !important">Хаб:
-                        <a href="{% url 'articles:hub' article.0.hub.id %}"
-                           class="post-author">{{ article.0.hub }}</a>
-                    </p>
+<div class="artbox-unit-container">
+    <div class="artbox-unit">
+        <div class="artbox-info">
+            <div class="artbox-row">
+                <div class="artbox-image">
+                    <img class="main-image" src="{{ article.0.image|media_folder_images }}" alt="main-image"/>
                 </div>
-                <div class="post-status" style="margin-top: 3px !important; padding: 0; font-size: 0.9rem">
-                    <div class="me-2"
-                         title="Рейтинг статьи  &#128077; {{ article.0.likes.count }}  &#128078; {{ article.0.dislikes.count }}">
-                        <img src="{% static 'svg/star(white).svg' %}"/>
-                        {% if article.0.rating > 0 %}
-                            <small class="green">{{ article.0.rating }}</small>
-                        {% elif article.0.rating < 0 %}
-                            <small class="red">{{ article.0.rating }}</small>
-                        {% else %}
-                            <small>{{ article.0.rating }}</small>
-                        {% endif %}</div>
-                    <div class="me-2" title="Сколько пользователей добавили в закладки">
-                        <img src="{% static 'svg/bookmark.svg' %}"/>
-                        <small class="text-muted">{{ article.0.bookmarks.count }}</small>
+                <div class="artbox-body">
+                    <div><span class="text-muted" style="font-size: 12px !important;">{{ article.0.published }}</span>
                     </div>
-                    <div class="me-2" title="Сколько зарегистрированных пользователей прочитали статью">
-                        <img src="{% static 'svg/view.svg' %}"/>
-                        <small class="text-muted">{{ article.0.views.count }}</small>
+                    <div class="mt-2">
+                        <p style="margin-bottom: 1px !important">Хаб:
+                            <a href="{% url 'articles:hub' article.0.hub.id %}"
+                               class="post-author">{{ article.0.hub }}</a>
+                        </p>
+                    </div>
+                    <div class="post-status" style="margin-top: 3px !important; padding: 0; font-size: 0.9rem">
+                        <div class="me-2"
+                             title="Рейтинг статьи  &#128077; {{ article.0.likes.count }}  &#128078; {{ article.0.dislikes.count }}">
+                            <img src="{% static 'svg/star(white).svg' %}"/>
+                            {% if article.0.rating > 0 %}
+                                <small class="green">{{ article.0.rating }}</small>
+                            {% elif article.0.rating < 0 %}
+                                <small class="red">{{ article.0.rating }}</small>
+                            {% else %}
+                                <small>{{ article.0.rating }}</small>
+                            {% endif %}</div>
+                        <div class="me-2" title="Сколько пользователей добавили в закладки">
+                            <img src="{% static 'svg/bookmark.svg' %}"/>
+                            <small class="text-muted">{{ article.0.bookmarks.count }}</small>
+                        </div>
+                        <div class="me-2" title="Сколько зарегистрированных пользователей прочитали статью">
+                            <img src="{% static 'svg/view.svg' %}"/>
+                            <small class="text-muted">{{ article.0.views.count }}</small>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="artbox-title mb-3">
+            <a href="{% url 'articles:article' article.0.id %}">{{ article.0.title|truncatechars:30 }}</a>
+        </div>
+        {% if article.1 == None %}
+            {#        статья находится на проверке модератора      #}
+            {#        убираем все кнопки до решения модератора    #}
+            <div class="artbox-moder-message">
+                <div class="moder-message-box">Отклонена</div>
+                <div class="moder-message-box">Черновик</div>
+                <div class="moder-message-box  moder-check">Проверка</div>
+                <div class="moder-message-box">Одобрена</div>
+            </div>
+            <div class="artbox-title mt-5" style="color: #af3c81">
+                Ждите ответа от модератора
+            </div>
+        {% elif article.1 == False %}
+            {#       статья отклонена модератором        #}
+            <div class="artbox-moder-message">
+                <div class="moder-message-box  moder-reject">Отклонена</div>
+                <div class="moder-message-box">Черновик</div>
+                <div class="moder-message-box">Проверка</div>
+                <div class="moder-message-box">Одобрена</div>
+            </div>
+            <div style="opacity: 1; margin-right: 10px">
+                <div class="moder-reason">Причина: {{ article.2|truncatechars:300 }}</div>
+            </div>
+            <div class="artbox-buttons">
+                <a class="btn btn-outline-info blue-word mt-1"
+                   href="{% url 'account:edit_article' article.0.id %}">Редактировать</a>
+                {% if not article.0.draft %}
+                    <a class="btn btn-outline-warning mt-1" title="отправить в черновик"
+                       href="{% url 'account:draft_article' article.0.id %}" style="font-size: 13px !important;">Снять
+                        публикацию</a>
+                {% elif article.0.draft %}
+                    <a class="btn btn-outline-success mt-1" title="Статья будет отправлена на модерацию"
+                       href="{% url 'account:verify_article' article.0.id %}">Опубликовать</a>
+                {% endif %}
+                <a class="btn btn-outline-danger mt-1"
+                   href="{% url 'account:del_article'  article.0.id %}">Удалить</a>
+            </div>
+        {% elif article.1 == True %}
+            {#       статья одобрена модератором        #}
+            <div class="artbox-moder-message">
+                <div class="moder-message-box">Отклонена</div>
+                <div class="moder-message-box">Черновик</div>
+                <div class="moder-message-box">Проверка</div>
+                <div class="moder-message-box  moder-accept">Одобрена</div>
+            </div>
+            <div style="opacity: 0">
+                <div class="moder-reason">Причина: {{ article.2 }}</div>
+            </div>
+            <div class="artbox-buttons">
+                <a class="btn btn-outline-info blue-word mt-1"
+                   href="{% url 'account:edit_article' article.0.id %}">Редактировать</a>
+                {% if not article.0.draft %}
+                    <a class="btn btn-outline-warning mt-1" title="отправить в черновик"
+                       href="{% url 'account:draft_article' article.0.id %}" style="font-size: 13px !important;">Снять
+                        публикацию</a>
+                {% elif article.0.draft %}
+                    <a class="btn btn-outline-success mt-1" title="Статья будет отправлена на модерацию"
+                       href="{% url 'account:verify_article' article.0.id %}">Опубликовать</a>
+                {% endif %}
+                <a class="btn btn-outline-danger mt-1"
+                   href="{% url 'account:del_article'  article.0.id %}">Удалить</a>
+            </div>
+        {% endif %}
+        {% if article.1 == 'not_checked' %}
+            {#     если статьи нет на проверке и не проверялась      #}
+            {#        да, знаю, жуткий костыль, но без исправления шаблонов иначе никак    #}
+            {#            <div style="background-color: gray"><h1 style="text-align: center">Черновик</h1></div>#}
+            <div class="artbox-moder-message">
+                <div class="moder-message-box">Отклонена</div>
+                <div class="moder-message-box moder-draft">Черновик</div>
+                <div class="moder-message-box">Проверка</div>
+                <div class="moder-message-box">Одобрена</div>
+            </div>
+            <div style="opacity: 0">
+                <div class="moder-reason" style=" margin-right: 12px">Причина: {{ article.2 }}</div>
+            </div>
+            <div class="artbox-buttons">
+                <a class="btn btn-outline-info blue-word mt-1"
+                   href="{% url 'account:edit_article' article.0.id %}">Редактировать</a>
+                {% if not article.0.draft %}
+                    <a class="btn btn-outline-warning mt-1" title="отправить в черновик"
+                       href="{% url 'account:draft_article' article.0.id %}" style="font-size: 13px !important;">Снять
+                        публикацию</a>
+                {% elif article.0.draft %}
+                    <a class="btn btn-outline-success mt-1" title="Статья будет отправлена на модерацию"
+                       href="{% url 'account:verify_article' article.0.id %}">Опубликовать</a>
+                {% endif %}
+                <a class="btn btn-outline-danger mt-1"
+                   href="{% url 'account:del_article'  article.0.id %}">Удалить</a>
+            </div>
+        {% endif %}
     </div>
-    <div class="artbox-title mb-3">
-        <a href="{% url 'articles:article' article.0.id %}">{{ article.0.title|truncatechars:30 }}</a>
-    </div>
-    {% if article.1 == None %}
-        {#        статья находится на проверке модератора      #}
-        {#        убираем все кнопки до решения модератора    #}
-        <div class="artbox-moder-message">
-            <div class="moder-message-box">Отклонена</div>
-            <div class="moder-message-box">Черновик</div>
-            <div class="moder-message-box  moder-check">Проверка</div>
-            <div class="moder-message-box">Одобрена</div>
-        </div>
-        <div class="artbox-title mt-5" style="color: #af3c81">
-            Ждите ответа от модератора
-        </div>
-    {% elif article.1 == False %}
-        {#       статья отклонена модератором        #}
-        <div class="artbox-moder-message">
-            <div class="moder-message-box  moder-reject">Отклонена</div>
-            <div class="moder-message-box">Черновик</div>
-            <div class="moder-message-box">Проверка</div>
-            <div class="moder-message-box">Одобрена</div>
-        </div>
-        <div style="opacity: 1">
-            <div class="moder-reason">Причина: {{ article.2|truncatechars:140 }}</div>
-        </div>
-        <div class="artbox-buttons">
-            <a class="btn btn-outline-info blue-word mt-1"
-               href="{% url 'account:edit_article' article.0.id %}">Редактировать</a>
-            {% if not article.0.draft %}
-                <a class="btn btn-outline-warning mt-1" title="отправить в черновик"
-                   href="{% url 'account:draft_article' article.0.id %}" style="font-size: 13px !important;">Снять
-                    публикацию</a>
-            {% elif article.0.draft %}
-                <a class="btn btn-outline-success mt-1" title="Статья будет отправлена на модерацию"
-                   href="{% url 'account:verify_article' article.0.id %}">Опубликовать</a>
-            {% endif %}
-            <a class="btn btn-outline-danger mt-1"
-               href="{% url 'account:del_article'  article.0.id %}">Удалить</a>
-        </div>
-    {% elif article.1 == True %}
-        {#       статья одобрена модератором        #}
-        <div class="artbox-moder-message">
-            <div class="moder-message-box">Отклонена</div>
-            <div class="moder-message-box">Черновик</div>
-            <div class="moder-message-box">Проверка</div>
-            <div class="moder-message-box  moder-accept">Одобрена</div>
-        </div>
-        <div style="opacity: 0">
-            <div class="moder-reason">Причина: {{ article.2 }}</div>
-        </div>
-        <div class="artbox-buttons">
-            <a class="btn btn-outline-info blue-word mt-1"
-               href="{% url 'account:edit_article' article.0.id %}">Редактировать</a>
-            {% if not article.0.draft %}
-                <a class="btn btn-outline-warning mt-1" title="отправить в черновик"
-                   href="{% url 'account:draft_article' article.0.id %}" style="font-size: 13px !important;">Снять
-                    публикацию</a>
-            {% elif article.0.draft %}
-                <a class="btn btn-outline-success mt-1" title="Статья будет отправлена на модерацию"
-                   href="{% url 'account:verify_article' article.0.id %}">Опубликовать</a>
-            {% endif %}
-            <a class="btn btn-outline-danger mt-1"
-               href="{% url 'account:del_article'  article.0.id %}">Удалить</a>
-        </div>
-    {% endif %}
-    {% if article.1 == 'not_checked' %}
-        {#     если статьи нет на проверке и не проверялась      #}
-        {#        да, знаю, жуткий костыль, но без исправления шаблонов иначе никак    #}
-        {#            <div style="background-color: gray"><h1 style="text-align: center">Черновик</h1></div>#}
-        <div class="artbox-moder-message">
-            <div class="moder-message-box">Отклонена</div>
-            <div class="moder-message-box moder-draft">Черновик</div>
-            <div class="moder-message-box">Проверка</div>
-            <div class="moder-message-box">Одобрена</div>
-        </div>
-        <div style="opacity: 0">
-            <div class="moder-reason">Причина: {{ article.2 }}</div>
-        </div>
-        <div class="artbox-buttons">
-            <a class="btn btn-outline-info blue-word mt-1"
-               href="{% url 'account:edit_article' article.0.id %}">Редактировать</a>
-            {% if not article.0.draft %}
-                <a class="btn btn-outline-warning mt-1" title="отправить в черновик"
-                   href="{% url 'account:draft_article' article.0.id %}" style="font-size: 13px !important;">Снять
-                    публикацию</a>
-            {% elif article.0.draft %}
-                <a class="btn btn-outline-success mt-1" title="Статья будет отправлена на модерацию"
-                   href="{% url 'account:verify_article' article.0.id %}">Опубликовать</a>
-            {% endif %}
-            <a class="btn btn-outline-danger mt-1"
-               href="{% url 'account:del_article'  article.0.id %}">Удалить</a>
-        </div>
-    {% endif %}
 </div>
 {##}
 {##}
