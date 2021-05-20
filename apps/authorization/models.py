@@ -17,7 +17,7 @@ class HabrUser(AbstractUser):
         help_text='Required. 150 characters or fewer. Letters, '
                   'digits and @/./+/-/_ only.',
     )
-    email = models.EmailField(max_length=150, unique=True, blank=True)
+    email = models.EmailField(max_length=150, unique=True)
     is_confirmed = models.BooleanField(verbose_name='Подтвержден',
                                        default=False)
     activation_key = models.CharField(max_length=128, blank=True)
