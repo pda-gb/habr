@@ -42,7 +42,7 @@
                 </div>
                 <div class="post-content mt-3">
                     <br/>
-                    <span>{% autoescape off %}{{ article.body | linebreaksbr }}{% endautoescape %}</span>
+                    <span>{% autoescape off %}{{ article.body }}{% endautoescape %}</span>
                     <hr>
                     <div>
                         <span style="font-weight: bold">Ссылка на оригинал: </span>
@@ -114,7 +114,7 @@
             <!-- Конец блока модерации статьи -->
 
             <!-- Начало блока комментариев -->
-            {% if comments.count == 0 and is_moderator %}
+            {% if comments.count == 0 and is_moderator and status == True %}
                 {#    не показывать на проверке статье блок комментариев, если их нет    #}
             {% else %}
                 {% include 'comments/comments.html' %}
