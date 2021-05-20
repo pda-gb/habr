@@ -1038,8 +1038,9 @@ body {
         font-size: 12px;
     }
     .warning-verify {
-    width: 22px;
+    width: 16px;
     margin-right: 0;
+    margin-left: -6px !important;
     position: relative;
 }
 }
