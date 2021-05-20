@@ -855,16 +855,38 @@ body {
 }
 
 .bcgrnd {
-    background: url("../img/background-moderator.jpg") 0 0/100% 100% no-repeat;
-    width: 100px;
+    /*background: url("../img/background-moderator.jpg") 0 0/100% 100% no-repeat;*/
+    /*width: 100px;*/
+}
+
+.bcgrnd_red {
+    border: 1px solid red;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: red;
+    width: 110px;
+}
+
+.bcgrnd_green {
+    border: 1px solid green;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: green;
+    width: 110px;
 }
 
 .bcgrnd_red:hover {
     background-color: darkred;
+    color: black;
+    font-weight: 700;
 }
 
 .bcgrnd_green:hover {
     background-color: darkgreen;
+    color: black;
+    font-weight: 700;
 }
 
 .moderator-text-compl {
@@ -888,6 +910,10 @@ body {
 
 .add-article label {
     display: block;
+}
+
+.django-ckeditor-widget {
+    width: 100% !important;
 }
 
 @media (max-width: 1200px) {

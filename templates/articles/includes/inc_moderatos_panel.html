@@ -8,14 +8,15 @@
     </div>
     <div class="moderator-block-buttons mt-1">
         <div>
+            <a class="btn btn-sm mt-1 bcgrnd bcgrnd_red" style="width: 120px !important;" title=""
+               href="{% url 'moderator:reject_publishing' article.id %}">На доработку</a>
+        </div>
+        <div>
             <a class="btn btn-sm mt-1 bcgrnd bcgrnd_green" style="width: 120px !important;" title=""
                href="{% url 'moderator:allow_publishing' article.id %}">Разрешить</a>
             </a>
         </div>
-        <div>
-            <a class="btn btn-sm mt-1 bcgrnd bcgrnd_red" style="width: 120px !important;" title=""
-               href="{% url 'moderator:reject_publishing' article.id %}">На доработку</a>
-        </div>
+
     </div>
 </div>
 <hr>
