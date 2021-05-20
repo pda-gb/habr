@@ -38,13 +38,15 @@
             </div>
         </div>
     {% else %}
-        <div>
-            <div style="margin-left: 5px;">
-                <a title="Жалоба на статью" href="{% url 'moderator:complain_to_article' article.pk %}">
-                    <img src="{% static 'svg/complaints.svg' %}" alt=""/>
-                </a>
+        {% if request.user.is_authenticated %}
+            <div>
+                <div style="margin-left: 5px;">
+                    <a title="Жалоба на статью" href="{% url 'moderator:complain_to_article' article.pk %}">
+                        <img src="{% static 'svg/complaints.svg' %}" alt=""/>
+                    </a>
+                </div>
             </div>
-        </div>
+        {% endif %}
     {% endif %}
     <!-- Конец блока жалобы -->
 </div>

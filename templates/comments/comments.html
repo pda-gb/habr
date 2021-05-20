@@ -117,12 +117,14 @@
 
                                         {% elif foo.status == False %}
                                             <!-- Начало блока кнопки жалобы -->
-                                            <div style="margin: -5px 0 0 5px;">
-                                                <a title="Жалоба на комментарий"
-                                                   href="{% url 'moderator:complain_to_comment' comment.id article.pk %}">
-                                                    <img src="{% static 'svg/complaints.svg' %}" alt=""/>
-                                                </a>
-                                            </div>
+                                            {% if request.user.is_authenticated %}
+                                                <div style="margin: -5px 0 0 5px;">
+                                                    <a title="Жалоба на комментарий"
+                                                       href="{% url 'moderator:complain_to_comment' comment.id article.pk %}">
+                                                        <img src="{% static 'svg/complaints.svg' %}" alt=""/>
+                                                    </a>
+                                                </div>
+                                            {% endif %}
                                             <!-- Конец блока кнопки жалобы -->
                                         {% endif %}
                                     {% endfor %}
