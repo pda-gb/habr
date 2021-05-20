@@ -17,7 +17,7 @@
                     {#            загрузка заглавной картинки    #}
                     {% if article.image %}
                         <div class="main-image-box">
-                            <img class="main-image" src="{{ article.image }}" alt=""/>
+                            <img class="main-image" src="{{ article.image|media_folder_images }}" alt=""/>
                         </div>
                     {% endif %}
                     <div>

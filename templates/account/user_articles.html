@@ -14,7 +14,7 @@
                     <p style="text-align: center;">У вас нет статей</p>
                 {% endfor %}
             </div>
-            {% if articles.paginator.count > 20 %}
+            {% if articles.paginator.count > 12 %}
                 <!-- Начало блока пагинации -->
                 <br><br>
                 {% include 'account/includes/paginations/pagination_user_article.html' %}

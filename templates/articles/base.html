@@ -28,7 +28,7 @@
 <div class="scrolldown"><i class="fas fa-angle-double-down"></i></div>
 {% block header %}{% include 'articles/includes/header.html' %}{% endblock header %}
 {% if not is_banned %}
-    <div class="container mt-4">
+    <div class="container mt-4" style="overflow: hidden;">
         {% block content %}
         {% endblock content %}
     </div>
