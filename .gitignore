@@ -576,5 +576,5 @@ secret.json
 /media/uploads/*
 /media/img_articles/*
 /media/avatars/*
-
+db.json
 tmp
