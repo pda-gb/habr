@@ -8,7 +8,11 @@
                 <a href="{% url 'articles:article' article.id %}" class="post-link mb-3"
                 >{{ article.title|truncatewords:10  }}</a>
                 {#            загрузка главной картинки    #}
-                <img class="main-image" src="{{ article.image|media_folder_images }}" alt="main-image"/><br/>
+                {% if article.image %}
+                    <div class="main-image-box">
+                        <img class="main-image" src="{{ article.image|media_folder_images }}" alt="main-image"/>
+                    </div>
+                {% endif %}
                 <a href="{% url 'articles:author_profile' article.author_id %}" class="post-author">
                     {#            загрузка аваттарки    #}
                     <img src="{{ article.author.habruserprofile.avatar|media_folder_users }}" alt="avatar"/>
@@ -20,7 +24,7 @@
                     {% endif %}
                 </a>
                 <span class="text-muted">{{ article.published }}</span>
-                <div class="hubs mt-2">
+                <div class="mt-2">
                     <p>Хаб:
                           <a href="{% url 'articles:hub' article.hub.id %}" class="post-author">{{ article.hub }}</a>
                     </p>

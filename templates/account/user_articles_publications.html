@@ -5,13 +5,13 @@
     <div class="container">
         {% include 'account/includes/inc_menu.html' %}
         <div class="row">
-            <div class="col-8">
+            <div class="col-lg-10 col-12">
                 {% for article in articles %}
-                    {% if article.is_active %}
+                    {% if article.0.is_active %}
                         {% include 'account/includes/post.html' %}
                     {% endif %}
                 {% empty %}
-                    <p>У вас нет статей.</p>
+                    <p style="text-align: center;">У вас нет статей</p>
                 {% endfor %}
                 {% if articles.paginator.count > 5 %}
                 <!-- Начало блока пагинации -->

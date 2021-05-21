@@ -50,12 +50,13 @@ def add_article(request):
             article_add.instance.author = request.user
             article_add.save()
             is_success = True
+            return HttpResponseRedirect(reverse("account:user_articles"))
         else:
             is_fail = True
             for error in article_add.errors:
-                error_messages.append(f'Поле {article_add[error].label}: {article_add.errors.errors[error].as_text()}')
-            # return HttpResponseRedirect(reverse("account:user_articles"))
-        # return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+                error_messages.append(
+                    f'Поле {article_add[error].label}: '
+                    f'{article_add.errors[error].as_text()}')
 
     if request.user.is_authenticated:
         notifications = notification(request)
@@ -108,7 +109,10 @@ def edit_profile(request):
         else:
             is_fail = True
             for error in profile_edit_form.errors:
-                error_messages.append(f'Поле {profile_edit_form[error].label}: {profile_edit_form.errors[error].as_text()}')
+                error_messages.append(
+                    f'Поле {profile_edit_form[error].label}:'
+                    f' {profile_edit_form.errors[error].as_text()}'
+                )
     profile_edit_form = HabrUserProfileEditForm(
         instance=request.user.habruserprofile)
 
@@ -135,8 +139,17 @@ def user_articles(request, page=1):
     функция отвечает за Мои статьи
     """
     title = "Мои статьи"
-    articles = Article.get_by_author(author_pk=request.user.id)
-    paginator = Paginator(articles, 5)
+
+    if request.user.is_authenticated:
+        notifications = notification(request)
+        articles_with_statuses = \
+            VerifyArticle.get_articles_with_statuses(request.user.id)
+    else:
+        notifications = None
+        articles_with_statuses = None
+    # articles = Article.get_by_author(request.user.id)
+
+    paginator = Paginator(articles_with_statuses, 12)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:
@@ -144,19 +157,11 @@ def user_articles(request, page=1):
     except EmptyPage:
         articles_paginator = paginator.page(paginator.num_pages)
 
-    if request.user.is_authenticated:
-        notifications = notification(request)
-        all_statuses = \
-            VerifyArticle.get_status_verification_articles(request.user.id)
-    else:
-        notifications = None
-        all_statuses = None
-
     page_data = {
         "title": title,
         "articles": articles_paginator,
         "notifications": notifications,
-        "all_statuses": all_statuses,
+        # "articles_with_statuses": articles_with_statuses,
     }
     return render(request, "account/user_articles.html", page_data)
 
@@ -167,8 +172,17 @@ def publications(request, page=1):
     функция отвечает за мои публикации
     """
     title = "Мои публикации"
-    articles = Article.get_by_author(author_pk=request.user.id, draft=0)
-    paginator = Paginator(articles, 5)
+    # articles = Article.get_by_author(author_pk=request.user.id, draft=0)
+
+    if request.user.is_authenticated:
+        notifications = notification(request)
+        articles_with_statuses = \
+            VerifyArticle.get_articles_with_statuses(request.user.id, draft=0)
+    else:
+        notifications = None
+        articles_with_statuses = None
+
+    paginator = Paginator(articles_with_statuses, 5)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:
@@ -176,20 +190,11 @@ def publications(request, page=1):
     except EmptyPage:
         articles_paginator = paginator.page(paginator.num_pages)
 
-    if request.user.is_authenticated:
-        notifications = notification(request)
-        all_statuses = \
-            VerifyArticle.get_status_verification_articles(request.user.id)
-
-    else:
-        notifications = None
-        all_statuses = None
-
     page_data = {
         "title": title,
         "articles": articles_paginator,
         "notifications": notifications,
-        "all_statuses": all_statuses,
+        # "articles_with_statuses": articles_with_statuses,
 
     }
     return render(request, "account/user_articles_publications.html",
@@ -202,8 +207,17 @@ def draft(request, page=1):
     функция отвечает за Черновик
     """
     title = "Черновик"
-    articles = Article.get_by_author(author_pk=request.user.id, draft=1)
-    paginator = Paginator(articles, 5)
+    # articles = Article.get_by_author(author_pk=request.user.id, draft=1)
+    if request.user.is_authenticated:
+        notifications = notification(request)
+        articles_with_statuses = \
+            VerifyArticle.get_articles_with_statuses(request.user.id, draft=1)
+
+    else:
+        notifications = None
+        articles_with_statuses = None
+
+    paginator = Paginator(articles_with_statuses, 5)
     try:
         articles_paginator = paginator.page(page)
     except PageNotAnInteger:
@@ -211,20 +225,11 @@ def draft(request, page=1):
     except EmptyPage:
         articles_paginator = paginator.page(paginator.num_pages)
 
-    if request.user.is_authenticated:
-        notifications = notification(request)
-        all_statuses = \
-            VerifyArticle.get_status_verification_articles(request.user.id)
-
-    else:
-        notifications = None
-        all_statuses = None
-
     page_data = {
         "title": title,
         "articles": articles_paginator,
         "notifications": notifications,
-        "all_statuses": all_statuses,
+        # "articles_with_statuses": articles_with_statuses,
 
     }
     return render(request, "account/user_articles_draft.html", page_data)
@@ -297,11 +302,15 @@ def edit_article(request, pk):
             edit_article.updated = timezone.now()
             edit_article.save()
             edit_form.save()
-            # снимаем с публикации
+            # снимаем с публикации и удаляем из табл. модерации
             edit_article.draft = True
+            if VerifyArticle.objects.filter(
+                    verification=edit_article.pk).exists():
+                VerifyArticle.objects.get(
+                    verification=edit_article.pk).delete()
             edit_article.save()
             is_success = True
-            # return HttpResponseRedirect(reverse("account:user_articles"))
+            return HttpResponseRedirect(reverse("account:user_articles"))
         else:
             is_fail = True
             for error in edit_form.errors:
@@ -358,19 +367,29 @@ def bookmarks_page(request, page=1):
 def notifications_page(request):
     notification_all= all_notification(request)
     title = f"Все ведомления {request.user}"
+    if request.user.is_authenticated:
+        notifications = notification(request)
+    else:
+        notifications = None
 
     page_data = {
         "title": title,
         "notification_all": notification_all,
+        "notifications": notifications,
     }
     return render(request, "account/notifications.html", page_data)
 
 
 def my_likes(request):
     title = f"Понравившиеся статьи"
+    if request.user.is_authenticated:
+        notifications = notification(request)
+    else:
+        notifications = None
     page_data = {
         "title": title,
         "all_my_likes": LikesViewed.get_likes(request),
+        "notifications": notifications,
     }
     return render (request, "account/my_likes.html", page_data)
 

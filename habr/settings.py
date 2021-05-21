@@ -76,13 +76,14 @@ DATABASES = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     },
-    # "postgresql": {
-    #     "ENGINE": "django.db.backends.postgresql_psycopg2",
+
+    # "default": {
+    #     "ENGINE": "django.db.backends.postgresql",
     #     "NAME": secret_value["DATABASE_NAME"],
     #     "USER": secret_value["DATABASE_USER"],
     #     "PASSWORD": secret_value["DATABASE_PASSWORD"],
-    #     "HOST": secret_value["DATABASE_HOST"],
-    #     "PORT": secret_value["DATABASE_PORT"],
+    #     # "HOST": secret_value["DATABASE_HOST"],
+    #     # "PORT": secret_value["DATABASE_PORT"],
     # },
 }
 # переключение настроек на postgresql
@@ -177,7 +178,7 @@ if DEBUG:
 # Запуск локального smtp сервера: python3 -m smtpd -n -c DebuggingServer localhost:25
 # Настройки для вывода сообщений о подтверждении регистрации в лог-файл\консоль
 EMAIL_HOST = 'localhost'
-EMAIL_PORT = 7725
+EMAIL_PORT = 25
 EMAIL_HOST_USER = None
 EMAIL_HOST_PASSWORD = None
 EMAIL_USE_SSL = False
@@ -227,4 +228,3 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
 )
-

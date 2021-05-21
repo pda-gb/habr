@@ -5,12 +5,16 @@
     <div class="auth-form">
         <form class="form-horizontal" action="{% url 'account:edit_profile' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <img class="ava-img" src="{{ user.habruserprofile.avatar|media_folder_users }}" alt="avatar">
-            {% if user.username %}
-                {{ user.username }}
-            {% else %}
-                ?User?
-            {% endif %}
+            <div class="flex-center" style="flex-direction: column">
+                <div class="flex-center mb-3"><img class="ava-img" src=
+                        "{{ user.habruserprofile.avatar|media_folder_users }}"
+                           alt="avatar"></div>
+                {% if user.username %}
+                    <div class="flex-center">{{ user.username }}</div>
+                {% else %}
+                    ?User?
+                {% endif %}
+            </div>
             <br>
             {{ edit_form.as_table }}
             <br>

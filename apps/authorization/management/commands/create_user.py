@@ -24,7 +24,7 @@ class Command(BaseCommand):
         number = options["number"]
         for i in range(number):
             user = HabrUser(
-                username=person.username(template="UU_d"),
+                username=person.username(template="U_d"),
                 email=person.email(domains=("yandex.ru", "gmail.com")),
                 password=person.password(length=8, hashed=False),
             )
@@ -38,7 +38,7 @@ class Command(BaseCommand):
             profile.full_name = person.full_name(gender=None, reverse=False)
             profile.place_of_work = business.company()
             profile.specialization = person.occupation()
-            profile.gender = person.gender(iso5218=False, symbol=False)
+            profile.gender = 'M' if person.gender(iso5218=False, symbol=False) == 'Муж.' else 'Ж'
             profile.birth_date = datetime.date(start=1950, end=2018)
             profile.country = address.country(allow_random=False)
             profile.region = address.region()

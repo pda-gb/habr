@@ -1,36 +1,62 @@
 {% extends 'moderator/base.html' %}
 {% load my_tags %}
 {% block content %}
-  {% include 'moderator/includes/inc_menu.html' %}
-<table class="table">
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">№</th>
-      <th scope="col">Имя пользователя</th>
-      <th scope="col">Дата блокировки</th>
-      <th scope="col">Причина блокировки</th>
-      <th scope="col">Оставшихся дней блокировки</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for user in banned_users %}
-    <tr>
-      <th scope="row">{{ forloop.counter }}</th>
-      <td><a href="{% url 'articles:author_profile' user.pk %}">{{ user.offender.username }}</a></td>
-      <td>{{ user.date_ban }}</td>
-      <td>{{ user.reason }}</td>
-      {% if user.is_forever %}
-        <td>Бессрочно</td>
-      {% else %}
-        <td>{{ user.get_remaining_days }}</td>
-      {% endif %}
-      <td>
-        <button class="btn btn-link btn-unlock">
-            <a href="{% url 'moderator:remove_user_ban' user.offender_id %}">Разблокировать</a>
-        </button>
-      </td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+    {% include 'moderator/includes/inc_menu.html' %}
+    <div class='string__container moder-string'>
+        <div class="moder-article-row" style="min-height: 35px !important; font-weight: 500">
+            <div class="col-lg-1 bord mobile-hide">№</div>
+            <div class="col-lg-3 col-4 bord">Имя</div>
+            <div class="col-lg-2 mobile-hide bord">Дата блокировки</div>
+            <div class="col-lg-4 col-5 bord">Причина</div>
+            <div class="col-lg-2 col-3 bord">Дней до снятия</div>
+        </div>
+        {% for user in banned_users %}
+            <div class="bookmark__row" style="min-height: 60px !important;">
+                <div class="col-lg-1 bord mobile-hide">
+                    {{ forloop.counter }}
+                </div>
+                <div class="col-lg-3 col-4 bord" style="font-weight: 700">
+                    <a href="{% url 'articles:author_profile' user.offender.pk %}">{{ user.offender.username }}</a>
+                </div>
+                <div class="col-lg-2 mobile-hide bord">{{ user.date_ban }}</div>
+                <div class="col-lg-4 col-5 bord">{{ user.reason|truncatechars:35 }}</div>
+                {% if user.is_forever %}
+                    <div class="col-lg-2 col-3 bord">Бессрочно</div>
+                {% else %}
+                    <div class="col-lg-2 col-3 bord">{{ user.get_remaining_days }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
 {% endblock content %}
+    {#    <table class="table">#}
+    {#        <thead class="thead-dark">#}
+    {#        <tr>#}
+    {#            <th scope="col">№</th>#}
+    {#            <th scope="col">Имя пользователя</th>#}
+    {#            <th scope="col">Дата блокировки</th>#}
+    {#            <th scope="col">Причина блокировки</th>#}
+    {#            <th scope="col">Оставшихся дней блокировки</th>#}
+    {#        </tr>#}
+    {#        </thead>#}
+    {#        <tbody>#}
+    {#        {% for user in banned_users %}#}
+    {#            <tr>#}
+    {#                <th scope="row">{{ forloop.counter }}</th>#}
+    {#                <td><a href="{% url 'articles:author_profile' user.pk %}">{{ user.offender.username }}</a></td>#}
+    {#                <td>{{ user.date_ban }}</td>#}
+    {#                <td>{{ user.reason }}</td>#}
+    {#                {% if user.is_forever %}#}
+    {#                    <td>Бессрочно</td>#}
+    {#                {% else %}#}
+    {#                    <td>{{ user.get_remaining_days }}</td>#}
+    {#                {% endif %}#}
+    {#                <td>#}
+    {#                    <button class="btn btn-link btn-unlock">#}
+    {#                        <a href="{% url 'moderator:remove_user_ban' user.offender_id %}">Разблокировать</a>#}
+    {#                    </button>#}
+    {#                </td>#}
+    {#            </tr>#}
+    {#        {% endfor %}#}
+    {#        </tbody>#}
+    {#    </table>#}

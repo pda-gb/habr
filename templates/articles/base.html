@@ -13,7 +13,7 @@
     />
     {% block css %}
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
-        <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/png">
+        <link rel="shortcut icon" href="{% static 'svg/logo.svg' %}" type="image/svg+xml">
         <link rel="stylesheet" href="{% static 'css/fa.all.min.css' %}">
         <script src="https://kit.fontawesome.com/a92ddd463b.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-social.css' %}"/>
@@ -28,7 +28,10 @@
 <div class="scrolldown"><i class="fas fa-angle-double-down"></i></div>
 {% block header %}{% include 'articles/includes/header.html' %}{% endblock header %}
 {% if not is_banned %}
-    <div class="container mt-4">{% block content %}{% endblock content %}</div>
+    <div class="container mt-4" style="overflow: hidden;">
+        {% block content %}
+        {% endblock content %}
+    </div>
 {% else %}
     {% include 'articles/includes/ban_page.html' %}
 {% endif %}
@@ -57,37 +60,11 @@
         $(document).ready(function () {
             $('.sorted-menu').click(function () {
                 $('#form-sorted').css({
-                    'display': 'block',
+                    'display': 'flex',
                 });
             })
-            $(document).click(function(e) {
-                if (!$(e.target).is('.sorted-icon')
-                && !$(e.target).is('.sorted-input')
-                && !$(e.target).is('.sorted-input-search')
-                && !$(e.target).is('.sorted-list')
-                && !$(e.target).is('.sorted-label')
-                && !$(e.target).is('.sorted-elem')) {
-                    $('#form-sorted').css({
-                        'display': 'none',
-                    });
-                }
-            })
             $('.sorted-input').click(function(e){
-                e.preventDefault()
-                let content = $('#form-sorted').serialize();
-                $(this).prop('checked', true);
-
-                $.ajax({
-                    url: $('#form-sorted').data('url'),
-                    data: content,
-                    type: 'GET',
-                    success: function(response) {
-                        $('.post-list').html(response.result);
-                    }
-                })
-            })
-            $('.sorted-input-search').click(function(e){
-                e.preventDefault()
+                {#e.preventDefault()#}
                 let content = $('#form-sorted').serialize();
                 content = content.split('=')[1];
                 $(this).attr('checked', true);

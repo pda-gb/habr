@@ -1,22 +1,25 @@
-from django.contrib import messages
-from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
-from django.template.loader import render_to_string
-from django.urls import reverse
-from django.utils.timezone import now
-from apps.articles.models import Article
 from datetime import datetime
-from apps.moderator.forms import BannedUserForm
-from apps.moderator.models import VerifyArticle, BannedUser
+
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import reverse
+
 from apps.authorization.models import HabrUser
-from apps.moderator.forms import BannedUserForm, RemarkCreateForm
-from apps.moderator.models import BannedUser, VerifyArticle
+from apps.moderator.forms import BannedUserForm, RemarkCreateForm, \
+    ComplainCreateForm, ReasonCreateForm
+from apps.moderator.models import BannedUser, VerifyArticle, \
+    ComplainToArticle, ComplainToComment
 
 
 def complaints(request):
     title = "Жалобы"
+    complaints_to_article = ComplainToArticle.get_all_complaints()
+    complaints_to_comments = ComplainToComment.get_all_complaints()
     page_data = {
-        'title': title,
+        "title": title,
+        "articles": complaints_to_article,
+        "comments": complaints_to_comments,
     }
     return render(request, "moderator/complaints.html", page_data)
 
@@ -52,13 +55,17 @@ def add_user_ban(request, pk):
                 banned_user.date_ban = datetime.today()
                 banned_user.save()
             else:
-                banned_user = BannedUser.objects.create(offender=current_user,
-                                          reason=request.POST["reason"],
-                                          num_days=request.POST["num_days"],
-                                          is_active=True,
-                                          is_forever=True if request.POST.get("is_forever") else False)
+                banned_user = BannedUser.objects.create(
+                    offender=current_user,
+                    reason=request.POST["reason"],
+                    num_days=request.POST["num_days"],
+                    is_active=True,
+                    is_forever=True if request.POST.get("is_forever")
+                    else False
+                )
             banned_user.set_ban_email()
-            return HttpResponseRedirect(reverse("articles:author_profile", args=[pk]))
+            return HttpResponseRedirect(reverse("articles:author_profile",
+                                                args=[pk]))
         else:
             messages.error(request, 'ошибка')
     else:
@@ -76,6 +83,7 @@ def remove_user_ban(request, pk):
     current_user.delete()
     current_user.unset_ban_email()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 # def remove_user_ban(request, pk):
 #     if request.is_ajax():
@@ -102,9 +110,7 @@ def banned_users(request):
 
 def allow_publishing(request, pk):
     """Разрешение модератором публикации статьи"""
-    VerifyArticle.objects.filter(verification=pk).update(is_verified=True)
-    Article.objects.filter(id=pk).update(draft=False)
-    Article.objects.filter(id=pk).update(published=now(), updated=now())
+    VerifyArticle.allow_publishing(pk)
     return HttpResponseRedirect(reverse('moderator:review_articles'))
 
 
@@ -123,12 +129,101 @@ def return_article(request, pk):
     if request.method == 'POST':
         form_remark = RemarkCreateForm(request.POST or None)
         if form_remark.is_valid():
-            VerifyArticle.objects.filter(verification=pk).update(
-                is_verified=False,
-                remark=request.POST["remark"]
-            )
-            Article.objects.filter(id=pk).update(updated=now())
-
+            VerifyArticle.return_article(request.POST["remark"], pk)
     else:
         form_remark = RemarkCreateForm()
     return HttpResponseRedirect(reverse("moderator:review_articles"))
+
+
+def complain_to_article(request, pk):
+    """Жалоба на статью"""
+    form_complain = ComplainCreateForm(request.POST or None)
+    page_data = {
+        "pk": pk,
+        "form_complain": form_complain,
+    }
+    return render(request, 'moderator/form_complain_article.html',
+                  page_data)
+
+
+def complain_to_comment(request, pk, pk_article=None):
+    """Жалоба на комментарий"""
+    form_complain = ComplainCreateForm(request.POST or None)
+    page_data = {
+        "pk": pk,
+        "form_complain": form_complain,
+        "pk_article": pk_article,
+    }
+    return render(request, 'moderator/form_complain_comment.html',
+                  page_data)
+
+
+def send_complain_to_article(request, pk):
+    """отправка жалобы на статью на модерацию"""
+    if request.method == 'POST':
+        form_complain = ComplainCreateForm(request.POST or None)
+        if form_complain.is_valid():
+            ComplainToArticle.send_complain_to_article(
+                pk,
+                request.POST["text_complain"],
+                request.user.pk
+            )
+    else:
+        form_complain = ComplainCreateForm()
+    return HttpResponseRedirect(reverse("articles:main_page"))
+
+
+def send_complain_to_comment(request, pk, pk_article=None):
+    """отправка жалобы на комментарий на модерацию"""
+    if request.method == 'POST':
+        form_complain = ComplainCreateForm(request.POST or None)
+        if form_complain.is_valid():
+            ComplainToComment.send_complain_to_comment(
+                pk,
+                request.POST["text_complain"],
+                request.user.pk
+            )
+    else:
+        form_complain = ComplainCreateForm()
+    if pk_article is None:
+        return HttpResponseRedirect(reverse("articles:main_page"))
+    return HttpResponseRedirect(reverse("articles:article",
+                                        args=(pk_article,)))
+
+
+def ban_article(request, pk):
+    ComplainToArticle.reject_article(pk)
+    return HttpResponseRedirect(reverse("moderator:complaints"))
+
+
+def no_ban_article(request, pk):
+    ComplainToArticle.allow_article(pk)
+    return HttpResponseRedirect(reverse("moderator:complaints"))
+
+
+def ban_comment(request, pk):
+    form_reason = ReasonCreateForm(request.POST or None)
+    page_data = {
+        "pk": pk,
+        "form_reason": form_reason,
+    }
+    return render(request, 'moderator/form_reason_ban_comment.html',
+                  page_data)
+
+
+def send_ban_comment(request, pk):
+    ComplainToComment.reject_comment(pk)
+    if request.method == 'POST':
+        form_reason = ReasonCreateForm(request.POST or None)
+        if form_reason.is_valid():
+            ComplainToComment.objects.filter(pk=pk).update(
+                text_reason=request.POST["text_reason"]
+            )
+    else:
+        form_reason = ReasonCreateForm()
+    return HttpResponseRedirect(reverse("moderator:complaints"))
+
+
+def no_ban_comment(request, pk):
+    ComplainToComment.allow_comment(pk)
+    return HttpResponseRedirect(reverse("moderator:complaints"))

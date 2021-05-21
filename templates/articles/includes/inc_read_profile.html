@@ -1,10 +1,11 @@
 {% load my_tags %}
 
 <div class="row">
-    <div class="col-3">
-        <img class="ava-img" src="{{ current_user.habruserprofile.avatar|media_folder_users }}" alt="avatar"/>
+    <div class="col-md-4 col-12">
+        <div class="flex-center mb-5"><img class="ava-img" src=
+                "{{ current_user.habruserprofile.avatar|media_folder_users }}" alt="avatar"/></div>
     </div>
-    <div class="col-9">
+    <div class="col-md-8 col-12">
         <table class="table table-striped table-light">
             <tr>
                 <td>Логин:</td>
@@ -16,7 +17,7 @@
             </tr>
             <tr>
                 <td>Настоящее имя:</td>
-                <td>{{ current_user.habruserprofile.full_name|no_data_specified }}</td>
+                <td>{{ current_user.habruserprofile.first_name|no_data_specified }}</td>
             </tr>
             <tr>
             <tr>
@@ -61,11 +62,10 @@
                     {{ current_user.habruserprofile.karma }}</td>
             </tr>
         </table>
-
         {% if user == current_user %}
-            <a href="{% url 'account:edit_profile' %}">
+            <div class="flex-center"><a href="{% url 'account:edit_profile' %}">
                 <button class="btn btn-primary">Редактировать профиль</button>
-            </a>
+            </a></div>
         {% endif %}
     </div>
 </div>

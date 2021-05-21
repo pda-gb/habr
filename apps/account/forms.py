@@ -5,7 +5,6 @@ from django.forms import CharField
 from apps.articles.models import Article
 from apps.authorization.models import HabrUserProfile, HabrUser
 
-
 class HabrUserProfileEditForm(forms.ModelForm):
     class Meta:
         model = HabrUserProfile
@@ -46,6 +45,17 @@ class ArticleCreate(forms.ModelForm):
             field.help_text = ""
             field.required = ""
 
+    def clean_title(self):
+        data = self.cleaned_data['title']
+        if not data:
+            raise forms.ValidationError('Заполните заголовок!')
+        return data
+
+    def clean_body(self):
+        data = self.cleaned_data['body']
+        if not data:
+            raise forms.ValidationError('Заполните текст!')
+        return data
 
 # class ArticleCreate(forms.ModelForm):
 #

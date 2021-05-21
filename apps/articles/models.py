@@ -4,6 +4,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
@@ -41,8 +42,8 @@ class Tag(models.Model):
 
 
 class Article(models.Model):
-    title = models.CharField(max_length=120, verbose_name="заголовок",
-                             blank=False)
+    # title = models.CharField(max_length=240, verbose_name="заголовок")
+    title = models.TextField(verbose_name="заголовок")
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
                                related_name='author_article',
                                on_delete=models.CASCADE)
@@ -144,51 +145,65 @@ class Article(models.Model):
         return hub_articles
 
     @staticmethod
-    def get_search_articles(search_dic):
+    def get_search_articles(request_dict):
         ''' функция отвечает за поиск соответсвий в бд по имени и содержимого статьи '''
-        articles = Article.get_articles()
-        result = Article.get_articles().filter(
-            Q(title__icontains=search_dic['search_query']) | Q(body__icontains=search_dic['search_query'])
-        )
-        if not result:
+        search_string = request_dict.get('search')
+
+        by_date = request_dict.get('searchdate')
+        if by_date == 'month':
+            fromdate = datetime.date.today() - datetime.timedelta(days=30)
+        elif by_date == 'week':
+            fromdate = datetime.date.today() - datetime.timedelta(days=7)
+        elif by_date == 'today':
+            fromdate = datetime.datetime(datetime.date.today().year,
+                                         datetime.date.today().month,
+                                         datetime.date.today().day)
+        else:
+            fromdate = None
+
+        by_rate = request_dict.get('searchrate')
+        if by_rate == 'any':
+            by_rate = False
+
+        hubs_list = request_dict.getlist('hubscheck')
+
+        result = Article.get_articles()
+        # проверяем по искомому слову
+        if search_string:
             result = Article.get_articles().filter(
-                Q(title__iexact=search_dic) | Q(body__iexact=search_dic)
+                Q(title__icontains=search_string) | Q(body__icontains=search_string)
             )
-        if not result:
-            result = Article.get_articles()
-            search_query = search_dic['search_query'].lower()
-            for el in articles.values():
-                if search_query in el['title'].lower() or search_query in \
-                        el['body'].lower():
-                    pass
-                else:
-                    result = result.exclude(pk=el['id'])
-                    
-        try:
-            result = result.filter(updated__range=(search_dic['fromdate'], search_dic['todate']))
-        except ValidationError:
-            pass
-
-        try:
-            result = result.filter(rating__range=(search_dic['fromrating'], search_dic['torating']))
-        except (ValidationError, ValueError):
-            pass
-
-        if search_dic['search_hub'] != '0':
-            result = result.filter(hub=search_dic['search_hub'])
-
-        if search_dic['search_by_name']:
-            search_list = search_dic['search_by_name'].replace(' ', '').split(',')
-            for el in articles:
-                name_count = 0
-                for name in search_list:
-                    if name == el.author.username.lower():
-                        continue
+            if not result:
+                result = Article.get_articles().filter(
+                    Q(title__iexact=search_string) | Q(body__iexact=search_string)
+                )
+            if not result:
+                result = Article.get_articles()
+                search_query = search_string.lower()
+                for el in result.values():
+                    if search_query in el['title'].lower() or search_query in \
+                            el['body'].lower():
+                        pass
                     else:
-                        name_count += 1
-                if name_count == len(search_list):
-                    result = result.exclude(pk=el.id)
-
+                        result = result.exclude(pk=el['id'])
+        # проверяем по временному интервалу
+        if fromdate:
+            try:
+                result = result.filter(published__gte=fromdate)
+            except ValidationError:
+                pass
+        # проверяем на положительный рейтинг
+        if by_rate:
+            try:
+                result = result.filter(rating__gt=0)
+            except (ValidationError, ValueError):
+                pass
+        # проверяем по указанным хабам
+        if hubs_list:
+            try:
+                result = result.filter(hub_id__in=[item.pk for item in Hub.objects.filter(hub__in=hubs_list)])
+            except (ValidationError, ValueError):
+                pass
         return result
 
     @staticmethod
@@ -196,7 +211,11 @@ class Article(models.Model):
         """
         Returns article
         """
-        return Article.objects.get(id=id_article)
+        article = get_object_or_404(Article, id=id_article)
+        # если удалена
+        if article.is_active is False:
+            article = None
+        return article
 
     @staticmethod
     def get_annotation(word_count: int) -> tuple:
@@ -241,8 +260,8 @@ class Article(models.Model):
         Returns articles with the set author
         """
         if draft is None:
-            return Article.objects.filter(author_id__pk=author_pk
-                                          ).order_by("-updated")
+            return Article.objects.filter(
+                author_id__pk=author_pk).order_by("-updated")
         return (
             Article.objects.filter(author_id__pk=author_pk)
                 .filter(draft=draft)
@@ -250,28 +269,31 @@ class Article(models.Model):
         )
 
     @staticmethod
-    def get_bookmarks(id):
-        objects = Article.bookmarks.through.objects.filter(habruser_id=id)
+    def get_bookmarks(id_user):
+        objects = Article.bookmarks.through.objects.filter(
+            habruser_id=id_user,
+            article_id__is_active=True  # удалённые и забаненные не показывать
+        )
         bookmarks = []
         for i in objects:
             bookmarks.append(Article.get_article(i.article_id))
         return bookmarks
 
     @staticmethod
-    def del_article(id):
+    def del_article(id_article):
         """
         delete(is_active = False) article
         """
-        art = Article.objects.get(id=id)
+        art = Article.objects.get(id=id_article)
         art.is_active = False
         art.save()
 
     @staticmethod
-    def draft_article(id):
+    def draft_article(id_article):
         """
         turn draft article(True/False)
         """
-        art = Article.objects.get(id=id)
+        art = Article.objects.get(id=id_article)
         if art.draft is False:
             art.draft = True
         else:
@@ -312,3 +334,5 @@ class DislikesViewed(models.Model):
 
 if __name__ == "__main__":
     hub = Hub(hub="development")
+
+

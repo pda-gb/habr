@@ -9,6 +9,8 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.management import BaseCommand
 
+from apps.moderator.models import Moderator
+
 path_json = settings.BASE_DIR
 
 
@@ -33,3 +35,4 @@ class Command(BaseCommand):
             password=secret_value["SU_password"],
             is_confirmed=True,
         )
+        Moderator.staff = user

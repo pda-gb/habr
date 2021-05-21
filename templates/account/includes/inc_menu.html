@@ -1,14 +1,21 @@
 <div class="featured">
     <div class="featured-menu">
-            <a class="{% if request.resolver_match.url_name == 'read_profile' %}active{% endif %}" href="{% url 'account:read_profile'%}">Мои профиль</a>
-            {% if user.is_confirmed %}
-                <a class="{% if request.resolver_match.url_name == 'user_articles' %}active{% endif %}" href="{% url 'account:user_articles'%}">Мои статьи</a>
-                <a class="{% if request.resolver_match.url_name == 'publications' %}active{% endif %}" href="{% url 'account:publications' %}">Опубликованные статьи</a>
-                <a class="{% if request.resolver_match.url_name == 'add_article' %}active{% endif %}" href="{% url 'account:add_article' %}">Написать статью</a>
-                <a class="{% if request.resolver_match.url_name == 'draft' %}active{% endif %}" href="{% url 'account:draft' %}">Черновик</a>
-                <a class="{% if request.resolver_match.url_name == 'notifications' %}active{% endif %}" href="{% url 'account:notifications_page' %}">Мои уведомления</a>
-                <a class="{% if request.resolver_match.url_name == 'my_likes' %}active{% endif %}" href="{% url 'account:my_likes' %}">Понравившиеся статьи</a>
-            {% endif %}
+        <div><a class="{% if request.resolver_match.url_name == 'read_profile' %}active{% endif %}" href=
+                "{% url 'account:read_profile' %}">Мой профиль</a></div>
+        <div><a class="{% if request.resolver_match.url_name == 'user_articles' %}active{% endif %}" href=
+                "{% url 'account:user_articles' %}">Мои статьи</a></div>
+        <div><a class="{% if request.resolver_match.url_name == 'add_article' %}active{% endif %}"
+                href="{% url 'account:add_article' %}">Написать статью</a></div>
+        {#                <div><a class="{% if request.resolver_match.url_name == 'publications' %}active{% endif %}"#}
+        {#                        href="{% url 'account:publications' %}">Опубликованные</a></div>#}
+        {% if user.is_confirmed %}
+            <div><a class="{% if request.resolver_match.url_name == 'notifications_page' %}active{% endif %}"
+                    href="{% url 'account:notifications_page' %}">Мои уведомления</a></div>
+            <div><a class="{% if request.resolver_match.url_name == 'my_likes' %}active{% endif %}"
+                    href="{% url 'account:my_likes' %}">Понравившиеся статьи</a></div>
+            {#                <div><a class="{% if request.resolver_match.url_name == 'draft' %}active{% endif %}"#}
+            {#                        href="{% url 'account:draft' %}">Черновик</a></div>#}
+        {% endif %}
     </div>
 </div>
 <div class="clear-fix"></div>

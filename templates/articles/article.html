@@ -15,9 +15,11 @@
                 <div class="post-head">
                     <h1>{{ article.title }}</h1>
                     {#            загрузка заглавной картинки    #}
-                    <div class="main-image-box">
-                        <img class="main-image" src="{{ article.image|media_folder_images }}" alt="main-image"/>
-                    </div>
+                    {% if article.image %}
+                        <div class="main-image-box">
+                            <img class="main-image" src="{{ article.image|media_folder_images }}" alt=""/>
+                        </div>
+                    {% endif %}
                     <div>
                         <a href="{% url 'articles:author_profile' article.author_id %}" class="post-author">
                             {#            загрузка аваттарки    #}
@@ -31,7 +33,7 @@
                         </a>
                         <span>{{ article.published }}</span>
                     </div>
-                    <div class="hubs mt-2">
+                    <div class="mt-2">
                         <p>Хаб:
                             <a href="{% url 'articles:hub' article.hub.id %}"
                                class="post-author">{{ article.hub }}</a>
@@ -40,7 +42,7 @@
                 </div>
                 <div class="post-content mt-3">
                     <br/>
-                    <span>{% autoescape off %}{{ article.body | linebreaksbr }}{% endautoescape %}</span>
+                    <span>{% autoescape off %}{{ article.body }}{% endautoescape %}</span>
                     <hr>
                     <div>
                         <span style="font-weight: bold">Ссылка на оригинал: </span>
@@ -51,65 +53,72 @@
                 </div>
             </div>
             <div class="author-row">
-                <div class="author-block">
-                    <img class="author-avatar" src="{{ article.author.habruserprofile.avatar|media_folder_users }}"
-                         alt="avatar"/>
-                    <div class="author-rating"
-                         title="Рейтинг автора на основании лайков и дизлайков его статей и комментариев">
-                        <div class="author-rating-num
+                <div class="flex-column">
+                    <div class="author-block">
+                        <img class="author-avatar" src="{{ article.author.habruserprofile.avatar|media_folder_users }}"
+                             alt="avatar"/>
+                        <div class="author-rating"
+                             title="Рейтинг автора на основании лайков и дизлайков его статей и комментариев">
+                            <div class="author-rating-num
                                 {% if article.author.habruserprofile.rating > 0 %}green
                                 {% elif article.author.habruserprofile.rating < 0 %}red{% endif %}"
-                             id="author_rating">
-                            {{ article.author.habruserprofile.rating }}</div>
-                        <div class="author-rating-text">
-                            Рейтинг
+                                 id="author_rating">
+                                {{ article.author.habruserprofile.rating }}</div>
+                            <div class="author-rating-text">
+                                Рейтинг
+                            </div>
                         </div>
-                    </div>
-                    <div class="author-rating karma"
-                         title="Рейтинг (карма) автора на основании его оценки другими авторами">
-                        <div class="author-karma-num
+                        <div class="author-rating karma"
+                             title="Рейтинг (карма) автора на основании его оценки другими авторами">
+                            <div class="author-karma-num
                                 {% if article.author.habruserprofile.karma > 0 %}pink
                                 {% elif article.author.habruserprofile.karma < 0 %}dark{% endif %}"
-                             id="author_karma">
-                            {{ article.author.habruserprofile.karma }}</div>
-                        <div class="author-karma-text">
-                            Карма
+                                 id="author_karma">
+                                {{ article.author.habruserprofile.karma }}</div>
+                            <div class="author-karma-text">
+                                Карма
+                            </div>
                         </div>
                     </div>
-                    {% if article.author.pk != request.user.pk %}
-                        <div class="author-rating">
-                            <div class="mt-1">
-                                Оцени автора
-                            </div>
-                            <div class="choose-karma post-status">
-                                {% if article.author_liked is True %}
-                                    <img src="{% static 'svg/like(filled).svg' %}" alt="" id="karma_like"/>
-                                {% else %}
-                                    <img src="{% static 'svg/like.svg' %}" alt="" id="karma_like"/>
-                                {% endif %}
-                                <div class="separator"></div>
-                                {% if article.author_disliked is True %}
-                                    <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="karma_dislike"/>
-                                {% else %}
-                                    <img src="{% static 'svg/dislike.svg' %}" alt="" id="karma_dislike"/>
-                                {% endif %}
-                            </div>
+                    <div class="author-block" style="justify-content: center">
+                        <a href="{% url 'articles:author_profile' article.author_id %}">
+                            <div class="author-username">{{ article.author.username }}</div>
+                        </a>
+                    </div>
+                </div>
+                {% if article.author.pk != request.user.pk %}
+                    <div class="author-rating">
+                        <div class="mt-1">
+                            Оцени автора
                         </div>
-                    {% endif %}
-                </div>
-                <div class="author-block">
-                    <a href="{% url 'articles:author_profile' article.author_id %}">
-                        <div class="author-username">{{ article.author.username }}</div>
-                    </a>
-                </div>
+                        <div class="choose-karma post-status">
+                            {% if article.author_liked is True %}
+                                <img src="{% static 'svg/like(filled).svg' %}" alt="" id="karma_like"/>
+                            {% else %}
+                                <img src="{% static 'svg/like.svg' %}" alt="" id="karma_like"/>
+                            {% endif %}
+                            <div class="separator"></div>
+                            {% if article.author_disliked is True %}
+                                <img src="{% static 'svg/dislike(filled).svg' %}" alt="" id="karma_dislike"/>
+                            {% else %}
+                                <img src="{% static 'svg/dislike.svg' %}" alt="" id="karma_dislike"/>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
             </div>
-            <!-- Начало блока модератора -->
-            {% if is_moderator %}
+            <!-- Начало блока модерации статьи -->
+            {% if is_moderator and  status %}
                 {% include 'articles/includes/inc_moderatos_panel.html' %}
             {% endif %}
-            <!-- Конец блока модератора -->
+            <!-- Конец блока модерации статьи -->
+
             <!-- Начало блока комментариев -->
-            {% include 'comments/comments.html' %}
+            {% if comments.count == 0 and is_moderator and status == True %}
+                {#    не показывать на проверке статье блок комментариев, если их нет    #}
+            {% else %}
+                {% include 'comments/comments.html' %}
+            {% endif %}
             <!-- Конец блока комментариев -->
         </div>
         <div class="col-space"></div>
@@ -289,48 +298,48 @@
             });
         </script>
     {% endif %}
-<script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
-<script>
-            function sendCommentAjax(fieldName, id) {
-                $.ajax({
-                    data: {field: fieldName, comment: id},
-                    url: "{% url 'comments:ajax_comment' %}",
-                    success: function (response) {
-                        $("#likes" + response.id).text(response.likes)
-                        $("#dislikes" + response.id).text(response.dislikes)
-                        if (response.like === true) {
-                            $('#like-' + response.id).attr('src', likeFUrl);
-                        } else {
-                            $('#like-' + response.id).attr('src', likeUrl);
-                        }
-                        if (response.dislike === true) {
-                            $('#dislike-' + response.id).attr('src', dislikeFUrl);
-                        } else {
-                            $('#dislike-' + response.id).attr('src', dislikeUrl);
-                        }
-                    }
-                });
-            };
-
-            $(document).ready(function () {
-                $('.comment_like').click(function () {
-                    sendCommentAjax('like', $(this).attr('id'))
-                    if ($(this).attr('src') == likeFUrl) {
-                        $(this).attr('src', likeUrl);
+    {#    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>#}
+    <script>
+        function sendCommentAjax(fieldName, id) {
+            $.ajax({
+                data: {field: fieldName, comment: id},
+                url: "{% url 'comments:ajax_comment' %}",
+                success: function (response) {
+                    $("#likes" + response.id).text(response.likes)
+                    $("#dislikes" + response.id).text(response.dislikes)
+                    if (response.like === true) {
+                        $('#like-' + response.id).attr('src', likeFUrl);
                     } else {
-                        $(this).attr('src', likeFUrl);
+                        $('#like-' + response.id).attr('src', likeUrl);
                     }
-                });
-
-                $('.comment_dislike').click(function () {
-                    sendCommentAjax('dislike', $(this).attr('id'))
-                    if ($(this).attr('src') == dislikeFUrl) {
-                        $(this).attr('src', dislikeUrl);
+                    if (response.dislike === true) {
+                        $('#dislike-' + response.id).attr('src', dislikeFUrl);
                     } else {
-                        $(this).attr('src', dislikeFUrl);
+                        $('#dislike-' + response.id).attr('src', dislikeUrl);
                     }
-                });
+                }
             });
+        };
+
+        $(document).ready(function () {
+            $('.comment_like').click(function () {
+                sendCommentAjax('like', $(this).attr('id'))
+                if ($(this).attr('src') == likeFUrl) {
+                    $(this).attr('src', likeUrl);
+                } else {
+                    $(this).attr('src', likeFUrl);
+                }
+            });
+
+            $('.comment_dislike').click(function () {
+                sendCommentAjax('dislike', $(this).attr('id'))
+                if ($(this).attr('src') == dislikeFUrl) {
+                    $(this).attr('src', dislikeUrl);
+                } else {
+                    $(this).attr('src', dislikeFUrl);
+                }
+            });
+        });
     </script>
     <script>
         $(document).ready(function () {
