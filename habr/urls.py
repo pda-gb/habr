@@ -13,9 +13,11 @@ urlpatterns = [
     path("comments/", include("apps.comments.urls", namespace="comments")),
     path("ckeditor/", include("ckeditor_uploader.urls")),
     path("upload/", login_required(upload), name="ckeditor_upload"),
-    path('oauth/', include("social_django.urls", namespace="social")),
+    path("", include("social_django.urls", namespace="social")),
     path("moderator/", include("apps.moderator.urls", namespace="moderator")),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
