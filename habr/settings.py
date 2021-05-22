@@ -9,7 +9,7 @@ with open(BASE_DIR.joinpath("secret.json"), "r") as secret_file:
 
 SECRET_KEY = secret_value["SECRET_KEY"]
 
-DEBUG = secret_value.get("DEBUG", True)
+DEBUG = True if secret_value.get("DEBUG") == 'True' else False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -116,7 +116,8 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-STATIC_ROOT = os.path.join(BASE_DIR, "static_dev")
+if DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, "static_dev")
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -172,8 +173,7 @@ LOGIN_ERROR_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-if DEBUG:
-    DOMAIN_NAME = 'http://localhost:8000'
+DOMAIN_NAME = 'http://localhost:8000' if DEBUG else 'https://sputnik-seven.xyz'
 
 # Запуск локального smtp сервера: python3 -m smtpd -n -c DebuggingServer localhost:25
 # Настройки для вывода сообщений о подтверждении регистрации в лог-файл\консоль
