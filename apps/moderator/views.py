@@ -1,4 +1,5 @@
 from datetime import datetime
+from smtplib import SMTPDataError
 
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -63,7 +64,10 @@ def add_user_ban(request, pk):
                     is_forever=True if request.POST.get("is_forever")
                     else False
                 )
-            banned_user.set_ban_email()
+            try:
+                banned_user.set_ban_email()
+            except SMTPDataError:
+                pass
             return HttpResponseRedirect(reverse("articles:author_profile",
                                                 args=[pk]))
         else:
@@ -81,7 +85,10 @@ def add_user_ban(request, pk):
 def remove_user_ban(request, pk):
     current_user = BannedUser.objects.get(offender=pk)
     current_user.delete()
-    current_user.unset_ban_email()
+    try:
+        current_user.unset_ban_email()
+    except SMTPDataError:
+        pass
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
