@@ -1,4 +1,5 @@
 import datetime
+from smtplib import SMTPDataError
 
 from django.core.mail import send_mail
 from django.db import models, transaction
@@ -54,7 +55,10 @@ class BannedUser(models.Model):
             if remaining_days <= 0:
                 self.is_active = False
                 self.save()
-                self.unset_ban_email()
+                try:
+                    self.unset_ban_email()
+                except SMTPDataError:
+                    pass
         return remaining_days
 
     def delete(self):

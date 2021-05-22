@@ -1,3 +1,5 @@
+from smtplib import SMTPDataError
+
 from apps.moderator.models import Moderator, BannedUser
 import datetime
 
@@ -32,7 +34,10 @@ def check_is_banned(request):
             if remaining_days <= 0:
                 banned_user.is_active = False
                 banned_user.save()
-                banned_user.unset_ban_email()
+                try:
+                    banned_user.unset_ban_email()
+                except SMTPDataError:
+                    pass
     return {
         'is_banned': is_banned,
         'banned_user': banned_user,
