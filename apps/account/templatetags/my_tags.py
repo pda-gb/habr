@@ -7,20 +7,22 @@ register = template.Library()
 
 @register.filter(name="media_folder_users")
 def media_folder_users(string):
-    if str(string).startswith("http"):
+    string = str(string)
+    if string.startswith("http"):
         return string
     if not string:
-        string = "avatars/default.jpg"
-    return f"{settings.MEDIA_URL}{string}"
+        string = "default/default_ava.jpg"
+    return f"{settings.STATIC_URL}{string}"
 
 
 @register.filter(name="media_folder_images")
 def media_folder_images(string):
-    if str(string).startswith("http"):
+    string = str(string)
+    if string.startswith("http"):
         return string
     elif not string:
-        string = "img_articles/default.jpg"
-    return f"{settings.MEDIA_URL}{string}"
+        string = "default/default_img_art.jpg"
+    return f"{settings.STATIC_URL}{string}"
 
 
 @register.filter(name="no_data_specified")
