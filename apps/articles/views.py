@@ -17,6 +17,7 @@ from apps.comments.models import Comment, Sorted, CommentLikesViewed, \
     CommentDislikesViewed
 from apps.moderator.models import BannedUser, Moderator, VerifyArticle, \
     ComplainToArticle, ComplainToComment
+from apps.moderator.forms import ComplainCreateForm
 
 
 def main_page(request, pk=None, page=1):
@@ -95,6 +96,7 @@ def article(request, pk=None):
     status = False
     is_complained = None
     is_complained_comments = None
+    form_complain = ComplainCreateForm(request.POST or None)
     if current_article is None:
         return HttpResponseRedirect(reverse("articles:main_page"))
     if request.user.is_authenticated:
@@ -145,6 +147,7 @@ def article(request, pk=None):
         "is_moderator": is_moderator,
         "status": status,
         "is_complained": is_complained,
+        "form_complain": form_complain,
         # "is_complained_comments": is_complained_comments,
     }
     return render(request, "articles/article.html", page_data)

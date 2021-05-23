@@ -118,12 +118,15 @@
                                         {% elif foo.status == False %}
                                             <!-- Начало блока кнопки жалобы -->
                                             {% if request.user.is_authenticated %}
-                                                <div style="margin: -5px 0 0 5px;">
-                                                    <a title="Жалоба на комментарий"
-                                                       href="{% url 'moderator:complain_to_comment' comment.id article.pk %}">
+                                                <div style="margin-top: -6px">
+                                                    <button type="button" data-toggle="modal"
+                                                            title="Жалоба на комментарий"
+                                                            data-target="#art-complain-com-modal"
+                                                            style="border: none; background: none">
                                                         <img src="{% static 'svg/complaints.svg' %}" alt=""/>
-                                                    </a>
+                                                    </button>
                                                 </div>
+                                                {% include 'articles/includes/modals/comment_complain.html' %}
                                             {% endif %}
                                             <!-- Конец блока кнопки жалобы -->
                                         {% endif %}
@@ -131,12 +134,14 @@
                                 {% else %}
                                     <!-- Начало блока кнопки жалобы -->
                                     {% if request.user.is_authenticated %}
-                                        <div style="margin: -5px 0 0 5px;">
-                                            <a title="Жалоба на комментарий"
-                                               href="{% url 'moderator:complain_to_comment' comment.id article.pk %}">
+                                        <div style="margin-top: -6px">
+                                            <button type="button" data-toggle="modal" title="Жалоба на комментарий"
+                                                    data-target="#art-complain-com-modal"
+                                                    style="border: none; background: none">
                                                 <img src="{% static 'svg/complaints.svg' %}" alt=""/>
-                                            </a>
+                                            </button>
                                         </div>
+                                        {% include 'articles/includes/modals/comment_complain.html' %}
                                     {% endif %}
                                     <!-- Конец блока кнопки жалобы -->
                                 {% endif %}

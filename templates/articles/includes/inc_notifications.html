@@ -46,7 +46,7 @@
                         <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
                             {{ value.user }}
                         </a>
-                        &nbsp; <img class ="img-notif" src="{% static 'svg/like(filled).svg' %}"/> &nbsp;
+                        &nbsp; <img class ="img-notif" src="{% static 'svg/like(filled).svg' %}"/>&nbsp; статью &nbsp;
                         <a href="{% url 'articles:article' value.article.id %}">{{ value.article|truncatechars:30 }}</a>
                     </div>
                     {% include 'articles/includes/inc_btn_del_notification.html' %}
@@ -58,7 +58,7 @@
                         <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
                             {{ value.user }}
                         </a>
-                        &nbsp; <img class ="img-notif" src="{% static 'svg/dislike(filled).svg' %}"/> %} &nbsp;
+                        &nbsp; <img class ="img-notif" src="{% static 'svg/dislike(filled).svg' %}"/>&nbsp; статью &nbsp;
                         <a href="{% url 'articles:article' value.article.id %}">{{ value.article|truncatechars:30 }}</a>
                     </div>
                     {% include 'articles/includes/inc_btn_del_notification.html' %}
@@ -93,7 +93,7 @@
                         <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
                             {{ value.user }}
                         </a>
-                        &nbsp; <img class ="img-notif" src="{% static 'svg/like(filled).svg' %}"/> комментарий&nbsp;
+                        &nbsp; <img class ="img-notif" src="{% static 'svg/like(filled).svg' %}"/>&nbsp;коммент&nbsp;
                         <a >{{ value.comment.body|truncatechars:30 }}</a>
                     </div>
                     {% include 'articles/includes/inc_btn_del_notification.html' %}
@@ -105,7 +105,7 @@
                         <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
                             {{ value.user }}
                         </a>
-                        &nbsp; <img class ="img-notif" src="{% static 'svg/dislike(filled).svg' %}"/> комментарий&nbsp;
+                        &nbsp; <img class ="img-notif" src="{% static 'svg/dislike(filled).svg' %}"/>&nbsp;коммент&nbsp;
                         <a >{{ value.comment.body|truncatechars:30 }}</a>
                     </div>
                     {% include 'articles/includes/inc_btn_del_notification.html' %}

@@ -1,0 +1,28 @@
+{% load static %}
+{% load my_tags %}
+<div class="modal fade" id="art-complain-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content"  style="max-width: 350px">
+            <div class="text-center">
+                <h6 class="modal-title mt-3">Причина жалобы на статью</h6>
+            </div>
+            <div class="complains-modals">
+                <form class="" action="{% url 'moderator:send_complain_to_article' article.pk %}" method="post"
+                      enctype="multipart/form-data">
+                    <div class="mx-4 mt-2">
+                        {% csrf_token %}
+                        {{ form_complain.as_p }}
+                    </div>
+                    <div style="display: flex; justify-content: space-around; margin-bottom: 15px">
+                        <div>
+                            <button style="width:100px" type="reset" class="btn btn-sm btn-success" data-dismiss="modal">Назад</button>
+                        </div>
+                        <div>
+                            <input style="width:100px" type="submit" value="Отправить" class="btn btn-sm btn-danger">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
