@@ -8,9 +8,11 @@
                 >{{ article.title|truncatewords:10 }}</a>
                 {#            загрузка главной картинки    #}
                 {% if article.image %}
-                    <div class="main-image-box">
-                        <img class="main-image" src="{{ article.image|media_folder_images }}" alt="main-image"/>
-                    </div>
+                    <a href="{% url 'articles:article' article.id %}">
+                        <div class="main-image-box">
+                            <img class="main-image" src="{{ article.image|media_folder_images }}" alt="main-image"/>
+                        </div>
+                    </a>
                 {% endif %}
                 <a href="{% url 'articles:author_profile' article.author_id %}" class="post-author">
                     {#            загрузка аваттарки    #}
