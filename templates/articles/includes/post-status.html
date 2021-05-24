@@ -40,11 +40,10 @@
     {% else %}
         {% if request.user.is_authenticated %}
             <div>
-                <div style="margin-left: 5px;">
-                    <a title="Жалоба на статью" href="{% url 'moderator:complain_to_article' article.pk %}">
-                        <img src="{% static 'svg/complaints.svg' %}" alt=""/>
-                    </a>
-                </div>
+                <button type="button" data-toggle="modal" title="Жалоба на публикацию"
+                        data-target="#art-complain-modal" style="margin-left: 5px; border: none; background: none">
+                    <img src="{% static 'svg/complaints.svg' %}" alt=""/>
+                </button>
             </div>
         {% endif %}
     {% endif %}
@@ -80,3 +79,4 @@
     <hr>
 {% endif %}
 <!-- Конец блока жалобы для модератора -->
+{% include 'articles/includes/modals/article_complain.html' %}

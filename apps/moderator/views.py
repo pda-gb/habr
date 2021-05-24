@@ -177,7 +177,8 @@ def send_complain_to_article(request, pk):
             )
     else:
         form_complain = ComplainCreateForm()
-    return HttpResponseRedirect(reverse("articles:main_page"))
+    return HttpResponseRedirect(reverse("articles:article",
+                                                args=[pk]))
 
 
 def send_complain_to_comment(request, pk, pk_article=None):
@@ -195,7 +196,7 @@ def send_complain_to_comment(request, pk, pk_article=None):
     if pk_article is None:
         return HttpResponseRedirect(reverse("articles:main_page"))
     return HttpResponseRedirect(reverse("articles:article",
-                                        args=(pk_article,)))
+                                        args=[pk_article]))
 
 
 def ban_article(request, pk):

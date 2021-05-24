@@ -490,18 +490,6 @@ body {
     margin: 0 auto;
 }
 
-.form-search {
-
-}
-
-.form-search form {
-
-}
-
-.search-form-box {
-
-}
-
 .magnifier-in-input {
     position: relative;
     right: 51px;
@@ -778,7 +766,7 @@ body {
     margin-top: 10px;
 }
 
-.complains label {
+.complains label, .complains-modals label {
     display: none;
 }
 .artbox-buttons a {
@@ -914,6 +902,11 @@ body {
 
 .django-ckeditor-widget {
     width: 100% !important;
+}
+
+.complains-modals textarea {
+    max-height: 120px;
+
 }
 
 @media (max-width: 1200px) {
