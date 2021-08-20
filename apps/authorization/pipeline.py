@@ -18,7 +18,7 @@ def save_user_profile(backend, user, response, *args, **kwargs):
                               urlencode(dict(fields=','.join(('first_name', 'last_name', 'career', 'email',
                                                               'sex', 'bdate', 'country', 'city', 'photo_max_orig')),
                                              access_token=response['access_token'],
-                                             v='5.92')),
+                                             v='5.131')),
                               None
                               ))
         response = requests.get(api_url)

@@ -1,4 +1,6 @@
 import time
+from smtplib import SMTPDataError
+
 from django.contrib import auth, messages
 from django.shortcuts import HttpResponseRedirect, render
 from django.urls import reverse
@@ -39,7 +41,10 @@ def send_verify_email(user):
     verify_link = reverse('auth:verify', args=[user.email, user.activation_key])
     subject = f'Активация пользователя {user.username}'
     message = f'Для подтверждения активации перейдите по ссылке:\n {settings.DOMAIN_NAME}{verify_link}'
-    return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+    try:
+        return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+    except SMTPDataError:
+        pass
 
 
 def send_repeat_email(request, pk):
@@ -47,7 +52,10 @@ def send_repeat_email(request, pk):
     verify_link = reverse('auth:verify', args=[user.email, user.activation_key])
     subject = f'Активация пользователя {user.username}'
     message = f'Для подтверждения активации перейдите по ссылке:\n {settings.DOMAIN_NAME}{verify_link}'
-    send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+    try:
+        send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+    except SMTPDataError:
+        pass
     time.sleep(5)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
